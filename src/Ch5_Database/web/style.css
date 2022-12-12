@@ -1,0 +1,4 @@
+form  { display: table;      }
+p     { display: table-row;  }
+label { display: table-cell; white-space: nowrap; padding-right: 5px;}
+input { display: table-cell; }
