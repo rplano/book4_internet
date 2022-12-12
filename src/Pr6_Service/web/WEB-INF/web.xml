@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+ 
+    <servlet>
+        <servlet-name>WorldMapServlet</servlet-name>
+        <servlet-class>de.variationenzumthema.internet.servlets.WorldMapServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>WorldMapServlet</servlet-name>
+        <url-pattern>/worldmap</url-pattern>
+    </servlet-mapping>
+    <servlet>
+
+        <servlet-name>rest</servlet-name>
+        <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+        <init-param>
+            <param-name>jersey.config.server.provider.packages</param-name>
+            <param-value>de.variationenzumthema.internet.service</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>rest</servlet-name>
+        <url-pattern>/service/*</url-pattern>
+    </servlet-mapping>
+    
+    <filter>
+        <filter-name>SecurityFilter</filter-name>
+        <filter-class>de.variationenzumthema.internet.securityfilter.SecurityFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>SecurityFilter</filter-name>
+        <url-pattern>/secure/*</url-pattern>
+    </filter-mapping>
+    
+    <session-config>
+        <session-timeout>
+            30
+        </session-timeout>
+    </session-config>
+    
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+</web-app>
