@@ -1,0 +1,1153 @@
+<!DOCTYPE html><html lang="de"><head>
+  <title>Variationen zum Thema: Internet</title>
+  <meta name="title" content="Variationen zum Thema: Internet">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta charset="UTF-8">
+  <meta name="description" content="Eine Einführung in Java Enterprise">
+  <meta name="keywords" content="Java Enterprise,Internet,Einführung">
+  <meta name="author" content="Ralph P. Lano">
+  <meta name="robots" content="index,follow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="book.css">
+</head>
+<body><center>
+<div id="wrap">
+	<ul class="sidenav">
+	  <p><a href="index.html">Variationen zum Thema</a><a href="index.html">Internet</a></p>
+	  <li><a href="Basics.html" class="active">Basics</a></li>
+	  <li><a href="JSP.html">JSP</a></li>
+	  <li><a href="Request.html">Request</a></li>
+	  <li><a href="Session.html">Session</a></li>
+	  <li><a href="Database.html">Database</a></li>
+	  <li><a href="Services.html">Services</a></li>
+	  <li><a href="Projects.html">Projects</a></li>
+	  <li><a href="NetBeans.html">NetBeans</a></li>
+	  <li><a href="JavaScript.html">JavaScript</a></li>
+	</ul>
+<div class="content"><p>
+	<img alt="" src="images/MonaLisa.png" style="display: block; margin-left: auto; margin-right: auto; width: 236px; height: 250px;" /></p>
+<h1>
+	Basics</h1>
+<p>
+	Am Anfang war HTML, und damit hat das Web seinen Siegeszug begonnen.&nbsp; Ursprünglich war HTML auch ganz einfach.&nbsp; Und darauf wollen wir uns auch beschränken, auf die einfachen Seiten von HTML.&nbsp; Nach einer kurzen Einführung in HTML, vor allem Links und Forms, werden wir kurz HTTP und TCP/IP erwähnen und CSS und JavaScript ansprechen.&nbsp; Danach kommen dann ganz viele Beispiele an denen wir unsere HTML Kenntnisse vertiefen können.</p>
+<p>
+	.</p>
+<h2>
+	Browser</h2>
+<p>
+	Bevor wir uns aber mit HTML näher beschäftigen, wollen wir erst mal den Webbrowser kennen lernen.&nbsp; HTML ist zwar so einfach, dass man es in jedem beliebigen Editor ansehen kann, aber eigentlich ist es dafür gedacht mit einem Browser betrachtet zu werden.&nbsp; Vergleichen wir wie eine HTML Seite im Editor aussieht, damit wie sie in einem Browser aussieht:</p>
+<table align="center" border="0" cellpadding="10" cellspacing="10" style="width: 100%;">
+	<tbody>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">
+				<p style="margin-left: 40px;">
+					<img alt="" src="images/Leafpad.png" style="width: 200px; height: 200px;" /><br />
+					Editor</p>
+			</td>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/Browser.png" style="width: 200px; height: 200px;" /><br />
+					Browser</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<p>
+	Es ist ziemlich offensichtlich, warum wir Browser verwenden wenn wir im Netz surfen und keine Editoren!</p>
+<p>
+	Die Erfindung von HTML geht einher mit der Erfindung des Browsers, und an beiden war Sir Tim Berners-Lee maßgeblich beteiligt.&nbsp; Browser gibt es inzwischen wie Sand am Meer, wie z.B. Mozilla&#39;s Firefox, Google&#39;s Chrome, aber auch text-basierte Browser wie etwa Lynx [6]:</p>
+<table align="center" border="0" cellpadding="10" cellspacing="10" style="width: 100%;">
+	<tbody>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">
+				<p style="margin-left: 40px;">
+					<img align="top" alt="" src="images/Browser_Firefox.png" style="width: 200px; height: 117px;" /></p>
+			</td>
+			<td style="text-align: center; vertical-align: middle;">
+				<img align="top" alt="" src="images/Browser_Chrome.png" style="width: 200px; height: 119px;" /></td>
+			<td style="text-align: center; vertical-align: middle;">
+				<img align="top" alt="" src="images/Browser_Lynx.png" style="width: 200px; height: 123px;" /></td>
+		</tr>
+	</tbody>
+</table>
+<p>
+	Als Entwickler von Webseiten sollten wir darauf achten, dass unsere Seiten mit allen Browsern funktionieren.&nbsp; Speziell text-basierte Browser werden aber leider sehr häufig vernachlässigt.&nbsp; Das ist sehr Schade, denn vor allem blinde Personen sind auf text-basierte Browser angewiesen, da diese in der Regel auch über Text-to-Speech die Inhalte vorlesen können.</p>
+<p>
+	<strong>SEP: Alle unsere Webseiten sollten auch mit einem text-basierten Browser funktionieren, und m</strong><strong><strong><strong><strong>an sollte seine Webapplikationen immer mit verschiedenen Browsern testen.</strong></strong></strong></strong></p>
+<p>
+	.</p>
+<h2>
+	Markup</h2>
+<p>
+	HTML steht für &quot;HyperText Markup Language&quot;.&nbsp; Es handelt sich bei HTML also um eine Auszeichnungssprache, im Gegensatz zu Programmiersprachen, beispielsweise.&nbsp; Eine Auszeichnungssprache beschreibt ein Dokument.&nbsp; Zum Beispiel gibt es bei einem Buch einen Titel, einen Autor, eine Inhaltsangabe, eine Kapitelüberschrift, und natürlich auch Text, der meist in Paragraphen unterteilt ist.&nbsp; Eine Auszeichnungssprache für ein Buch, könnte also wie folgt aussehen:</p>
+<pre>
+&nbsp;&nbsp;&nbsp; &lt;book&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;title&gt;Internetprogrammierung&lt;/title&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;autor&gt;Ralph P. Lano&lt;/autor&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;chapter name=&quot;Basics&quot;&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;paragraph&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Am Anfang war HTML, ...
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/paragraph&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/chapter&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...
+&nbsp;&nbsp;&nbsp; &lt;/book&gt;</pre>
+<p>
+	Dabei erkennen wir auch schon die wichtigsten Merkmale von Auszeichnungssprachen:</p>
+<ul>
+	<li>
+		es gibt sogenannte &quot;Tags&quot; die characteristisch für die jeweilige Auszeichnungssprache sind, wie z.B. &lt;book&gt;, &lt;title&gt;, etc.</li>
+	<li>
+		Tags kommen in der Regel paarweise, also auf ein &lt;title&gt; sollte später ein &lt;/title&gt; folgen,</li>
+	<li>
+		und Tags sind verschachtelt, geben einem Dokument also eine gewisse Struktur.</li>
+</ul>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/HtmlTags.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />HTML Markup</h2>
+<p>
+	HTML ist die Auszeichnungssprache die Webseiten beschreibt.&nbsp; Es gibt über hundert verschiedene Tags, für unsere Zwecke sind aber nur ein paar davon wirklich wichtig.&nbsp; Jede HTML Seite beginnt mit einem &lt;html&gt; Tag, welches wiederum ein &lt;head&gt; und ein &lt;body&gt; Tag beinhalten kann:&nbsp;</p>
+<pre style="margin-left: 40px;">
+<span style="color:#0000ff;">&lt;html&gt;</span>
+&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">&lt;head&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;title&gt;Title of Page&lt;/title&gt;
+&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">&lt;/head&gt;</span>
+&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">&lt;body&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h1&gt;Hello Html!&lt;/h1&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;p&gt;Simple text goes inside &amp;lt;p&amp;gt; tags.&lt;/p&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;ul&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;li&gt;this is list item 1&lt;/li&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;li&gt;this is list item 2&lt;/li&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/ul&gt;
+&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">&lt;/body&gt;</span>
+<span style="color:#0000ff;">&lt;/html&gt;</span></pre>
+<p>
+	Der eigentliche Inhalt der Seite befindet sich innerhalb des &lt;body&gt; Tags, beschreibende Information befindet sich im &lt;head&gt; Tag.</p>
+<p>
+	<strong>SEP: Tags sollten immer geschlossen werden, also für jedes Start-tag sollte es ein End-tag geben.</strong></p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/LinkTag.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Links</h2>
+<p>
+	Was einen Browser von einem Editor unterscheidet sind nicht die Bilder, denn ein Textverarbeitungsprogramm wie OpenOffice kann das auch.&nbsp; Es sind die Links, also die Verbindung zwischen zwei Seiten.&nbsp; Ein Link, auch Hyperlink genannt, ist effektiv die Adresse eines Dokuments im Internet.&nbsp; Dieses Dokument kann eine Text oder HTML Datei sein, es kann aber auch ein Bild, eine MP3 Datei oder ein Film sein.&nbsp; Das HTML Tag für einen Link ist das &lt;a&gt; Tag:</p>
+<pre style="margin-left: 40px;">
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;body&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h1&gt;Links&lt;/h1&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; This is an example of a simple
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">&lt;a href=&quot;forms.html&quot;&gt;link&lt;/a&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; to another page.
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>
+	Hier wird die Seite &quot;links.html&quot; mit der Seite &quot;forms.html&quot; verlinkt.&nbsp; Klickt der Benutzer auf den Link wird die Seite&quot;forms.html&quot; im Browser geöffnet.&nbsp;</p>
+<p>
+	Man unterscheidet zwischen &quot;relativen&quot; Links, also Links die auf dem selben Server gehostet werden und &quot;absoluten&quot; Links, also einer festen Adresse im Internet.</p>
+<p>
+	<strong>SEP: Man sollte wenn möglich immer relative Links verwenden.</strong></p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/FormTags.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Forms</h2>
+<p>
+	Das zweite was einen Browser ausmacht sind die Formulare.&nbsp; Mit Formularen kann man den Benutzer bitten Daten einzugeben, die dann ausgewertet werden können.&nbsp; In HTML benutzen wir dafür das &lt;form&gt; Tag:</p>
+<pre style="margin-left: 40px;">
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;body&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h1&gt;Forms&lt;/h1&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">&lt;form action=&quot;index.html&quot; method=&quot;GET&quot;&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; UserID:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">&lt;input type=&quot;text&quot; name=&quot;userId&quot;/&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;br/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Password:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">&lt;input type=&quot;password&quot; name=&quot;password&quot;/&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;br/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">&lt;input type=&quot;submit&quot; value=&quot;Login&quot;/&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">&lt;/form&gt;</span>
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>
+	Dabei ist &quot;index.html&quot; die Seite an die die Daten geschickt werden.&nbsp; Je nach Daten die man schicken möchte, gibt es verschiedene &lt;input&gt; Tags.&nbsp; Die folgenden Tags sind für uns die wichtigsten Tags:&nbsp;</p>
+<pre style="margin-left: 40px;">
+&lt;input type=&quot;text&quot; name=&quot;lastname&quot; value=&quot;Merkel&quot; size=&quot;30&quot; maxlength=&quot;50&quot;&gt;
+&lt;input type=&quot;password&quot;&gt;
+&lt;input type=&quot;checkbox&quot; checked=&quot;checked&quot;&gt;
+&lt;input type=&quot;radio&quot; checked=&quot;checked&quot;&gt;
+&lt;input type=&quot;submit&quot;&gt;
+&lt;input type=&quot;reset&quot;&gt;
+&lt;input type=&quot;hidden&quot;&gt;
+&lt;textarea name=&quot;Comment&quot; rows=&quot;60&quot; cols=&quot;20&quot;&gt;&lt;/textarea&gt;
+&lt;select&gt;
+  &lt;option&gt;Audi
+  &lt;option selected&gt;BMW
+  &lt;option&gt;VW
+&lt;/select&gt;
+</pre>
+<p>
+	Es gibt aber noch ein paar aus der HTML5 Ecke die ganz nützlich sein können.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/GoogleJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Google</h2>
+<p>
+	Eine interessante Anwendung für das Form-Tag ist die Suche.&nbsp; Wir können eine Suche bei Google in unseren Webseite mit einbauen.</p>
+<pre style="margin-left: 40px;">
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;body&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h1&gt;Google&lt;/h1&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;form action=&quot;http://www.google.com/search&quot; method=&quot;GET&quot;&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Query:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;input type=&quot;text&quot; name=&quot;q&quot;/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;input type=&quot;submit&quot; value=&quot;Search Google&quot;/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/form&gt;
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/MetaTags.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Meta Tags</h2>
+<p>
+	Meta Tags gehören zum Kopf Bereich einer HTML Seite.&nbsp; Sie geben zum Einen beschreibende Informationen zur Seite, wie z.B. description, keywords, author und robots Tag, die vor allem für Suchmaschinen interessant sein sollten.&nbsp; Allerdings, werden sie häufig von selbigen ignoriert.</p>
+<pre style="margin-left: 40px;">
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;head&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;title&gt;Meta Tags&lt;/title&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">&lt;meta name=&quot;description&quot;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; content=&quot;Here you can place a short description
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; of your pages content.&quot;/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;meta name=&quot;keywords&quot;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; content=&quot;comma separated list of keyword,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; might be ignored by search engines, html, meta tag&quot;/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;meta name=&quot;author&quot; content=&quot;Ralph P. Lano&quot;/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;meta charset=&quot;UTF-8&quot;/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;meta name=&quot;robots&quot; content=&quot;noindex, nofollow&quot;/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;meta http-equiv=&quot;refresh&quot; content=&quot;10; url=index.html&quot; /&gt;</span>
+&nbsp;&nbsp;&nbsp; &lt;/head&gt;
+    ...
+&lt;/html&gt;</pre>
+<p>
+	Interessant ist allerdings das &quot;refresh&quot; Tag.&nbsp; In dem Beispiel oben besagt es, dass nach 10 Sekunden die Seite &quot;index.html&quot; geladen werden soll.&nbsp; Wir werden gleich mehrere Beispiele sehen wo das nützlich ist.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/HTTP_GET_Request.png" style="width: 200px; height: 190px; float: right; margin-right: 10px; margin-left: 10px;" />HTTP</h2>
+<p>
+	Das Internet basiert auf dem HTTP Protokoll, ohne würde nichts gehen.&nbsp; Wenn wir im Browser &quot;www.google.de&quot; eingeben, dann sendet der Browser einen HTTP Request an den Google Server.&nbsp; Der Server antwortet dann mit einer HTTP Response und liefert in der Regel das was der Browser wollte.e.&nbsp;</p>
+<p style="margin-left: 40px;">
+	<img alt="" src="images/RequestResponse.png" style="margin-left: 10px; margin-right: 10px; width: 175px; height: 81px;" /></p>
+<p>
+	Im HTTP Request sagt der Browser was er will, er enthält also Informationen über das gewünschte Dokument, oder allgemeiner die gewünschte Resource.&nbsp; Der Request enthält aber noch zusätzliche Informationen, wie z.B. die Sprache die der Nutzer spricht, welchen Browser und Betriebssystem er verwendet, die IP Adresse des Computers von dem der Request geschickt wurde, aber auch Cookies und u.U. auch Formulardaten, falls der Nutzer ein Formular ausgefüllt hat.</p>
+<p>
+	<img alt="" src="images/HTTP_Response.png" style="width: 202px; height: 199px; float: right; margin-right: 10px; margin-left: 10px;" />Die HTTP Response enthält natürlich das gewünschte Dokument.&nbsp; Das ist im sogenannten HTTP Body.&nbsp; Der HTTP Header enthält zusätzliche Informationen, wie z.B. den HTTP Status Code, die IP Adresse des Servers, den Datum, Cookies, und Informationen über das Dokument, dessen Typ (Content-Type) und dessen Grösse (Content-Length).</p>
+<p>
+	Der Browser sendet immer als erstes einen Request und der Server antwortet mit der Response.&nbsp; Es geht nie umgekehrt.&nbsp; Sendet der Browser nix, antwortet der Server auch nicht.&nbsp; Das ist ganz zentral.</p>
+<p>
+	TODO: image of HTTP handshake between client and server</p>
+<p>
+	Das HTTP Protokoll gibt es in zwei Versionen, und zwar unverschlüsselt (http) und verschlüsselt (https).&nbsp; Wir werden später noch ein bischen mehr zur verschlüsselten Version hören.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/nslookup.png" style="width: 200px; height: 100px; float: right; margin-right: 10px; margin-left: 10px;" />TCP/IP</h2>
+<p>
+	Wie weiß denn der Browser wo der Server überhaupt ist?&nbsp; Wenn wir im Browser &quot;www.google.de&quot; eintippen, dann ist das in etwas so wie wenn ich sage: &quot;ruf mal den Ralph an&quot;.&nbsp; Wir müssen natürlich die Telefonnummer von Ralph wissen, und genau das sind IP Adressen im Internet.&nbsp; Und so wie es für Telefonnummern ein Telefonbuch gibt, so gibt es für <em>IP Adressen</em> den Domain Name Service (DNS).&nbsp; Der Browser fragt also den DNS, &quot;Hey was ist denn die IP Adresse von Google?&quot;.&nbsp; Und der DNS sagt ihm dann, dass die <em>IP Adresse</em> von Google &quot;216.58.213.227&quot; ist.&nbsp; Wir können im Browser auch &quot;216.58.213.227&quot; anstelle von &quot;www.google.de&quot; eingeben, das ist dem Browser sogar lieber, weil es ihm Arbeit spart.</p>
+<p>
+	Eine Sache noch, und das sind die Ports.&nbsp; Wenn wir so mit dem Browser unterwegs sind, dann verwendet der zusätzlich zur IP (damit findet er den Server) auch noch den Port, genauer den TCP-Port.&nbsp; Normalerweise verwendet HTTP den Port 80, und wenn wir diesen Port verwenden, müssen wir auch nichts sagen.&nbsp; Der Browser denkt sich einfach, &quot;oh der Typ hat nix gesagt, also muss er wohl Port 80 meinen&quot;.&nbsp; Wenn der Typ aber den Port angibt, wie z.B. &quot;http://localhost:8080&quot;, dann ist die Zahl hinter dem Doppelpunkt, also die &quot;8080&quot; der Port.&nbsp; Insgesamt gibt es etwas über 65000 Ports.&nbsp; Das hört sich jetzt nach viel an, ist es aber nicht.&nbsp; Denn im Internet gibt es viele Nutzer.&nbsp; Und die Zahl 65000 heißt, dass wir maximal 65000 Nutzer gleichzeitig an unserem Server haben können.&nbsp; Und für Websites wie Amazon oder Facebook ist das ein Problem.&nbsp; Deswegen haben die auch so viele Server.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/CssTags.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />CSS</h2>
+<p>
+	HTML beschreibt <em>was</em> dargestellt werden soll, CSS beschreibt <em>wie</em> es dargestellt werden soll.&nbsp; Ein einfaches Beispiel soll zeigen wie wir z.B. Überschriften in blau erscheinen lassen:</p>
+<pre style="margin-left: 40px;">
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;head&gt;
+<span style="color:#0000ff;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;style type=&quot;text/css&quot;&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; h1 {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; color: blue;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/style&gt;</span>
+&nbsp;&nbsp;&nbsp; &lt;/head&gt;
+&nbsp;&nbsp;&nbsp; ...
+&lt;/html&gt;</pre>
+<p>
+	Cascading Style Sheets (CSS) sind allerdings nicht Gegenstand dieses Buches, dafür gibt es bereits genügend andere gute Bücher.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/JavaScriptTag.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />JavaScript</h2>
+<p>
+	Auch für JavaScript gibt es bereits eine Menge anderer guter Bücher.&nbsp; Hier wollen wir nur kurz zeigen, wie man JavaScript in HTML einbettet:&nbsp;</p>
+<pre style="margin-left: 40px;">
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;body&gt;
+<span style="color:#0000ff;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;script type=&quot;text/javascript&quot;&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; alert(&quot;Hello JavaScript!&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/script&gt;</span>
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>
+	Ansonsten werden wir JavaScript in diesem Buch nur sehr selten verwenden.&nbsp; Aber im Anhang finden sich noch ein paar Zeilen zu JavaScript.</p>
+<p>
+	.</p>
+<hr />
+<h1>
+	Review</h1>
+<p>
+	Was haben wir in diesem Kapitel gelernt?&nbsp; Wir haben gelernt</p>
+<ul>
+	<li>
+		dass es verschiedene Browser gibt</li>
+	<li>
+		wie Links und Forms funktionieren</li>
+	<li>
+		wofür Meta Tags gut sind</li>
+	<li>
+		und kurz gehört was HTTP ist und was eine HTTP Request und die entsprechende HTTP Response ist</li>
+	<li>
+		uns was es mit TCP/IP auf sich hat.</li>
+</ul>
+<p>
+	Dass es CSS gibt und auch JavaScript wurde zwar erwähnt, mehr aber auch nicht.</p>
+<p>
+	.</p>
+<hr />
+<h1>
+	Projekte</h1>
+<p>
+	Mit den Projekten wollen wir unsere HTML Kenntnisse an Beispielen vertiefen.&nbsp; Alle Beispiele die wir hier behandeln, werden wir später im Buch wiedersehen, deswegen sollten wir so viele wie möglich versuchen umzusetzen.&nbsp; Es kommt hier nicht darauf an, dass die Seiten super hübsch oder genauso wie angedeutet aussehen, es geht vor allem um die Funktionalität.</p>
+<p>
+	Die Anforderungen für jedes Projekt werden kurz beschrieben, begleitet von einem UseCase Diagramm und einer Liste der zentralen UseCases.&nbsp; Daraus ergibt sich dann die Seitenstruktur der Webanwendung.&nbsp; Das mag am Anfang nicht sofort nachvollziehbar sein, wird aber mit der Zeit ganz logisch erscheinen.&nbsp; Es folgen dann Screenshots oder auch Mockups der jeweiligen Seiten.&nbsp; Diese sollen dann in HTML umgesetzt werden.&nbsp; Das ist das Ziel.&nbsp;</p>
+<p>
+	Obwohl es sich im Moment noch um reine HTML Seiten handelt und sie deshalb ja eigentlich auf &quot;.html&quot; enden müssten, werden wir die Seiten gleich mit &quot;.jsp&quot; enden lassen, da wir in späteren Kapiteln daraus ja JSP Seiten machen werden, und wir sparen uns dann viel Umbenennarbeit.&nbsp;</p>
+<p>
+	Falls wir einen kleinen HTML Auffrischer benötigen, dann sind die Tutorials der Website W3Schools [1] sehr hilfreich.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/UseCaseDiagram_Messenger.png" style="width: 200px; height: 216px; float: right; margin-right: 10px; margin-left: 10px;" />Messenger</h2>
+<p>
+	Bei Messanger handelt es sich um eine kleine Anwendung in der sich verschiedene Nutzer Messages senden können, ähnlich wie Email.&nbsp; Es gibt eine Login Seite, auf der man sich einfach mit einem Alias anmeldet.&nbsp; Von dort gelangt man auf die Home Seite.&nbsp; Die erlaubt es einem Messages an andere Nutzer zu senden und hat einen Link auf die Read Seite mit der man seine Messages lesen kann.&nbsp; Zusammengefasst also:</p>
+<ul>
+	<li>
+		sich mit einem Alias beim Messenger einloggen</li>
+	<li>
+		eine Message schreiben und versenden</li>
+	<li>
+		eigene Messages lesen.</li>
+</ul>
+<p>
+	Daraus ergibt sich folgende einfache Seitenstruktur:</p>
+<p style="margin-left: 40px;">
+	<img alt="" src="images/WebPages_Messenger.png" style="width: 112px; height: 232px;" /></p>
+<p>
+	Was die Mockups angeht, könnten die wie folgt aussehen:</p>
+<table align="center" border="0" cellpadding="0" cellspacing="10">
+	<tbody>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/Messenger_index.png" style="width: 200px; height: 150px;" /><br />
+					index.jsp</p>
+			</td>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/Messenger_home.png" style="width: 200px; height: 150px;" /><br />
+					home.jsp</p>
+			</td>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/Messenger_read.png" style="width: 200px; height: 150px;" /><br />
+					read.jsp</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<p>
+	Die erste Seite, index.jsp, enthält ein einfaches Formular mit einem Textfeld mit dem Namen &quot;alias&quot; und einen Submit Knopf.&nbsp; Das Ziel des Formulars soll home.jsp sein.</p>
+<p>
+	Auf der Seite home.jsp soll es einen Link zur Seite read.jsp geben.&nbsp; Ausserdem soll das Formular der Seite aus einer 2 mal 40 grossen Textarea bestehen, einem Hidden Feld, einem Select Tag und einem Submit Knopf.&nbsp; Das Ziel des Formulars soll auch home.jsp sein.</p>
+<pre style="margin-left: 40px;">
+    &lt;input type=&quot;hidden&quot; name=&quot;senderId&quot; value=&quot;ralph&quot;/&gt;
+    ...
+    &lt;select name=&quot;receiverId&quot;&gt;
+        &lt;option value=&#39;ralph&#39;&gt;ralph&lt;/option&gt;
+        &lt;option value=&#39;vince&#39;&gt;vince&lt;/option&gt;
+    &lt;/select&gt;
+</pre>
+<p>
+	Die Seite read.jsp soll einen Link zurück zur Seite home.jsp haben, und ein paar Beispiel Messages als Aufzählungsliste (bulleted list).</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/UseCaseDiagram_ TwoPlayer_Chat.png" style="width: 200px; height: 301px; float: right; margin-right: 10px; margin-left: 10px;" />TwoPlayer Chat</h2>
+<p>
+	Ein sehr interessantes Problem ist ein Chat zwischen zwei Personen.&nbsp; Wir wollen uns hier mit dem Fall beschäftigen in dem sich die zwei Personen nicht kennen.&nbsp; Das mag jetzt für einen Chat etwas ungewöhnlich sein, aber für Spiele in denen zwei zufällige Spieler gegeneinander spielen wollen, ist es nicht so ungewöhnlich, dieser Fall tritt sogar bei sehr vielen Spielen im Netz auf.&nbsp; Die UseCases sind die folgenden:</p>
+<ul>
+	<li>
+		den Chat beginnen, evtl auf einen Partner warten</li>
+	<li>
+		Chat Messages schreiben</li>
+	<li>
+		Chat Messages ansehen</li>
+	<li>
+		den Chat verlassen.</li>
+</ul>
+<p>
+	Daraus ergibt sich folgende Seitenstruktur:</p>
+<p style="margin-left: 40px;">
+	<img alt="" src="images/WebPages_TwoPlayerChat.png" style="width: 263px; height: 143px;" /></p>
+<p>
+	Was die Mockups angeht, könnten die wie folgt aussehen:</p>
+<table align="center" border="0" cellpadding="0" cellspacing="10">
+	<tbody>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/TwoPlayer_index.png" style="width: 200px; height: 150px;" /><br />
+					index.jsp</p>
+			</td>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/TwoPlayer_chat.png" style="width: 200px; height: 150px;" /><br />
+					chat.jsp</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<p>
+	Die erste Seite von TwoPlayer soll einfach aus etwas Text und einem Link zu Seite chat.jsp bestehen.&nbsp; Zusätzlich soll im &lt;head&gt; Teil der Seite ein Meta-Refresh Tag sein:</p>
+<pre style="margin-left: 40px;">
+&nbsp;&nbsp;&nbsp; &lt;head&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;meta http-equiv=&quot;refresh&quot; content=&quot;5&quot; /&gt;
+&nbsp;&nbsp;&nbsp; &lt;/head&gt;</pre>
+<p>
+	Die Seite chat.jsp hat zum einen ein Formular mit eine Textfeld namens &quot;msg&quot;, einen Submit Knopf, und das Ziel des Formulars soll chat.jsp sein.&nbsp; Des weiteren soll es einen Link &quot;Reset&quot; geben der zur Seite home.jsp führt.&nbsp; Ausserdem soll es auf der Seite einen iFrame geben:</p>
+<pre style="margin-left: 40px;">
+&nbsp;&nbsp;&nbsp; &lt;iframe src=&quot;conversation.jsp&quot; height=&quot;100&quot;&gt;&lt;/iframe&gt;</pre>
+<p>
+	iFrames sind sozusagen Webseiten innerhalb von Webseiten, manchmal total praktisch, sollten aber nicht zu oft verwendet werden.</p>
+<p>
+	Schliesslich benötigen wir noch die Seite conversation.jsp.&nbsp; Das ist eine ganz einfache HTML Seite mit ein bischen Text, aber auch diese Seite sollte ein Meta-Refresh Tag haben, genauso wie die Seite index.jsp.</p>
+<p>
+	.</p>
+<h2>
+	Navigation</h2>
+<p>
+	Alle der nachfolgenden Webseiten haben eine Navigationszeile.&nbsp; Navigationszeilen gibt es in vielen verschiedenen Formen, aber gemeinsam ist ihnen allen, dass sie immer gleich sind.&nbsp; Wie wir ja schon im ersten Semester gehört haben, sind Programmierer relativ faule Leute und wenn möglich vermeidet man doppelten Code.&nbsp; Wir definieren also eine <em>navigation.jsp</em> Seite:</p>
+<pre style="margin-left: 40px;">
+&lt;small&gt;
+&nbsp;&nbsp;&nbsp; &lt;a href=&quot;login.jsp&quot;&gt;login&lt;/a&gt; /
+&nbsp;&nbsp;&nbsp; &lt;a href=&quot;logout.jsp&quot;&gt;logout&lt;/a&gt; /
+&nbsp;&nbsp;&nbsp; &lt;a href=&quot;protected.jsp&quot;&gt;protected&lt;/a&gt;
+&lt;/small&gt;</pre>
+<p>
+	und wollen, dass alle unsere Webseiten diese Navigationszeile enthalten.&nbsp; Das macht man mit einer &quot;include directive&quot;:</p>
+<pre style="margin-left: 40px;">
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;body&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">&lt;%@include file=&quot;navigation.jsp&quot; %&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h1&gt;Login&lt;/h1&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>
+	Genau verstehen müssen wir das noch nicht, aber es ist super-praktisch.</p>
+<p>
+	<strong>SEP: Wir sollten doppelten Code vermeiden.</strong></p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/UseCaseDiagram_ Wiki.png" style="width: 200px; height: 300px; float: right; margin-right: 10px; margin-left: 10px;" />Wiki</h2>
+<p>
+	Wir alle kennen die Wikipedia.&nbsp; Und man denkt, dass das eine super-komplizierte Webanwendung sein muss.&nbsp; Interessant ist, dass wir sehr bald schon in der Lage sind ein kleines Wiki selbst zu schreiben, also sozusagen &quot;Wikipedia 0.1&quot;.&nbsp;</p>
+<p>
+	Unsere Anforderungen an unser Wiki sind folgende:&nbsp; Wir möchten zum einen ganz normal in unserem Wiki browsen und navigieren können, also Links folgen.&nbsp; Wir möchten jede beliebige Seite editieren können.&nbsp; Wir möchten auch neue Seiten anlegen können, in dem wir wie in Wikis üblich, einfach einen neuen Link zu einer noch nicht existierenden Seite einfügen, und das System dann beim ersten Aufruf diese Seite erzeugt.&nbsp; Schliesslich, möchten wir alle Seiten in unserem Wiki auflisten können, und natürlich möchten wir unser Wiki auch durchsuchen können.</p>
+<p>
+	Wenn wir das kurz zusammenfassen ergeben sich folgende UseCases:</p>
+<ul>
+	<li>
+		durch das Wiki browsen</li>
+	<li>
+		alle Wiki Seiten auflisten</li>
+	<li>
+		neue Seiten erstellen</li>
+	<li>
+		nach Schlagwörtern suchen</li>
+</ul>
+<p>
+	Daraus ergibt sich folgende Seitenstruktur:</p>
+<p style="margin-left: 40px;">
+	<img alt="" src="images/WebPages_Wiki.png" style="width: 396px; height: 145px;" /></p>
+<p>
+	Was die Mockups angeht, könnten die wie folgt aussehen:</p>
+<table align="center" border="0" cellpadding="0" cellspacing="10">
+	<tbody>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/Wiki_index.png" style="width: 200px; height: 150px;" /><br />
+					index.jsp</p>
+			</td>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/Wiki_all.png" style="width: 200px; height: 150px;" /><br />
+					all.jsp</p>
+			</td>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/Wiki_search.png" style="width: 200px; height: 150px;" /><br />
+					search.jsp</p>
+			</td>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/Wiki_edit.png" style="width: 200px; height: 150px;" /><br />
+					edit.jsp</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<p>
+	Die Seiten sind eigentlich trivial, das Einzige ist, dass wir in jeder Seite die Include Directive nicht vergessen:</p>
+<pre style="margin-left: 40px;">
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;body&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">&lt;%@include file=&quot;navigation.jsp&quot; %&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h1&gt;Login&lt;/h1&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>
+	Der Link &quot;help&quot; auf der index.jsp Seite, führt wieder zurück zur index.jsp Seite (macht noch nicht viel Sinn, kommt später).&nbsp; Das Gleiche gilt für die Links auf der Seite all.jsp.&nbsp;</p>
+<p>
+	Das Ziel des Formulars auf search.jsp ist auch wieder index.jsp.&nbsp; Neben dem Submit Knopf, soll es ein Inputfeld mit dem Namen &quot;searchTerm&quot; geben und ein Hidden-Tag mit dem Namen &quot;search&quot;.&nbsp; Wert braucht das Hidden-Tag keinen.</p>
+<p>
+	Auf der Seite edit.jsp gibt es wieder ein Formular mit einer 10 mal 50 grossen TextArea, sowie zwei Hidden-Tags, eines mit Namen &quot;page&quot; und Wert &quot;home&quot; und ein zweites mit Namen &quot;edit&quot;.&nbsp; Das Ziel des Formulars soll eine Seite &quot;wikiLogic.jsp&quot; sein, in die wir einfach folgenden Text reinschreiben:&nbsp;</p>
+<pre style="margin-left: 40px;">
+Not yet implemented.</pre>
+<p>
+	(Also einfach Text, kein HTML)</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/UseCaseDiagram_ Mensa.png" style="width: 200px; height: 527px; float: right; margin-right: 10px; margin-left: 10px;" />Mensa</h2>
+<p>
+	Aus dem ersten Semester stammt das Mensa Beispiel.&nbsp; Damals haben wir es verwendet um die Objektorientierte Analyse zu üben.&nbsp; Jetzt werden wir das Beispiel als Webanwendung umsetzen.&nbsp; Erinnern wir uns an die Anforderungen:</p>
+<p>
+	Die Mensa hat Gerichte und Zutaten. Ein Gericht hat einen Namen, einen Preis und eine Liste von Zutaten. Eine Zutat hat einen Namen, einen Preis und Kalorien. Es können alle Gerichte anzeigen, neue Gerichte angelegen, sowie existierende Gerichte löschen.&nbsp; Wir können alle Zutaten auflisten, die zu einem Gericht gehören.&nbsp; Wir können neue Zutaten anlegen und wir können existierende Zutaten löschen, sowie alle Zutaten auflisten.</p>
+<p>
+	Wenn wir das zusammenfassen, speziell im Hinblick auf die Webseiten die wir benötigen, ergeben sich folgende UseCases:</p>
+<ul>
+	<li>
+		erste Seite mit heutigem Menu: index.jsp</li>
+	<li>
+		alle Gerichte anzeigen</li>
+	<li>
+		neues Gericht hinzufügen</li>
+	<li>
+		bestehendes Gericht löschen</li>
+	<li>
+		alle Zutaten auflisten</li>
+	<li>
+		neue Zutaten hinzufügen</li>
+	<li>
+		bestehende Zutat löschen</li>
+</ul>
+<p>
+	Daraus ergibt sich folgende Seitenstruktur:</p>
+<p style="margin-left: 40px;">
+	<img alt="" src="images/WebPages_Mensa.png" style="width: 816px; height: 152px;" /></p>
+<p>
+	Was die Mockups angeht, könnten die wie folgt aussehen:</p>
+<table align="center" border="0" cellpadding="0" cellspacing="10">
+	<tbody>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/Mensa_index.png" style="width: 200px; height: 150px;" /><br />
+					index.jsp</p>
+			</td>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/Mensa_listDishes.png" style="width: 200px; height: 150px;" /><br />
+					listDishes.jsp</p>
+			</td>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/Mensa_listIngredients.png" style="width: 200px; height: 150px;" /><br />
+					listIngredients.jsp</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<p>
+	.</p>
+<table align="center" border="0" cellpadding="0" cellspacing="10">
+	<tbody>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/Mensa_addDish.png" style="width: 200px; height: 150px;" /><br />
+					addDish.jsp</p>
+			</td>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/Mensa_deleteDish.png" style="width: 200px; height: 150px;" /><br />
+					deleteDish.jsp</p>
+			</td>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/Mensa_addIngredient.png" style="width: 200px; height: 150px;" /><br />
+					addIngredient.jsp</p>
+			</td>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/Mensa_deleteIngredient.png" style="width: 200px; height: 150px;" /><br />
+					deleteIngredient.jsp</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<p>
+	Mit der Übung die wir jetzt schon haben, sollten die Seiten ein Klacks sein.&nbsp; Die Ziele der jeweilgen Formulare ergeben sich aus der Seitenstruktur.&nbsp; Auch, alle Seiten haben wieder eine Navigationszeile.&nbsp; Was evtl. neu ist, sind die Checkboxes, z.B. für die addDish.jsp Seite würde das so aussehen:</p>
+<pre style="margin-left: 40px;">
+&nbsp;&nbsp;&nbsp; &lt;input type=&#39;checkbox&#39; name=&#39;ingredient&#39; value=&#39;Egg&#39;/&gt;Egg &nbsp;
+&nbsp;&nbsp;&nbsp; &lt;input type=&#39;checkbox&#39; name=&#39;ingredient&#39; value=&#39;Butter&#39;/&gt;Butter &nbsp;
+&nbsp;&nbsp;&nbsp; &lt;input type=&#39;checkbox&#39; name=&#39;ingredient&#39; value=&#39;Milk&#39;/&gt;Milk &nbsp;
+&nbsp;&nbsp;&nbsp; &lt;input type=&#39;checkbox&#39; name=&#39;ingredient&#39; value=&#39;Flour&#39;/&gt;Flour &nbsp;
+</pre>
+<p>
+	Alle Formulare sollten als Ziel die Seite index.jsp haben.&nbsp; Und jedes Formular sollte noch ein Hidden-Tag beinhalten</p>
+<pre style="margin-left: 40px;">
+&nbsp;&nbsp;&nbsp; &lt;input type=&quot;hidden&quot; name=&quot;addDish&quot;/&gt;
+</pre>
+<p>
+	mit dem Namen der Seite in der es sich befindet.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/UseCaseDiagram_ Login.png" style="width: 200px; height: 528px; float: right; margin-right: 10px; margin-left: 10px;" />Login</h2>
+<p>
+	Für fast jede Webanwendung gibt es einen Login.&nbsp; Es gibt also einen öffentlichen und einen geschützten Bereich.&nbsp; Wir wollen das in einem einfachen Beispiel durchspielen.&nbsp; Unsere Login Anwendung soll folgende Anforderungen erfüllen:</p>
+<ul>
+	<li>
+		öffentliche Seiten: index.jsp, terms.jsp</li>
+	<li>
+		eine geschützte Seite: protected.jsp</li>
+	<li>
+		man soll sich einloggen können: login.jsp</li>
+	<li>
+		man soll sich ausloggen können: logout.jsp</li>
+	<li>
+		man soll sich registrieren können: register.jsp</li>
+	<li>
+		Passwort ändern können: changePassword.jsp</li>
+	<li>
+		Passwort vergessen dürfen: forgotPassword.jsp</li>
+</ul>
+<p>
+	Das sind so in etwas die Seiten die die meisten Websites bieten rund um das Login.</p>
+<p>
+	Daraus ergibt sich folgende Seitenstruktur:</p>
+<p style="margin-left: 40px;">
+	<img alt="" src="images/WebPages_Login.png" style="width: 393px; height: 329px;" /></p>
+<p>
+	Was die Mockups angeht, könnten die wie folgt aussehen:</p>
+<table align="center" border="0" cellpadding="0" cellspacing="10">
+	<tbody>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/Login_index.png" style="width: 200px; height: 150px;" /><br />
+					index.jsp</p>
+			</td>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/Login_login.png" style="width: 200px; height: 150px;" /><br />
+					login.jsp</p>
+			</td>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/Login_forgotPassword.png" style="width: 200px; height: 150px;" /><br />
+					forgotPassword.jsp</p>
+			</td>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/Login_verifyEmail.png" style="width: 200px; height: 150px;" /><br />
+					verifyEmail.jsp</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<p>
+	.</p>
+<table align="center" border="0" cellpadding="0" cellspacing="10">
+	<tbody>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/Login_protected.png" style="width: 200px; height: 150px;" /><br />
+					protected.jsp</p>
+			</td>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/Login_changePassword.png" style="width: 200px; height: 150px;" /><br />
+					changePassword.jsp</p>
+			</td>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/Login_register.png" style="width: 200px; height: 150px;" /><br />
+					register.jsp</p>
+			</td>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/Login_terms.png" style="width: 200px; height: 150px;" /><br />
+					terms.jsp</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<p>
+	Alle Seiten haben wieder eine gemeinsame Navigationsleiste.&nbsp; Die Seiten home.jsp, protected.jsp und tems.jsp sind absolut trivial.&nbsp;</p>
+<p>
+	Die Seiten logout.jsp und verifyEmail.jsp bestehen einfach aus einem</p>
+<pre style="margin-left: 40px;">
+Not yet implemented.</pre>
+<p>
+	Die Seite login.jsp besteht aus einem Formular mit einem Textfeld mit Namen &quot;emailId&quot; und einem Passwortfeld mit Namen &quot;password&quot;, sowie einem Hidden-Tag namens &quot;login&quot;.&nbsp; Das Ziel des Formular soll protected.jsp sein, und ganz wichtig die Methode sollte &quot;POST&quot; sein.&nbsp; Ausserdem soll es einen Link auf die Seite forgotPassword.jsp geben.</p>
+<p>
+	Die Seite forgotPassword.jsp besteht aus einem Formular mit zwei Textfeldern mit Namen &quot;emailId&quot; und &quot;favoriteColor&quot;, sowie ein Hidden-Tag namens &quot;forgotPassword&quot;.&nbsp; Das Ziel des Formular soll verifyEmail.jsp sein, und ganz wichtig ist wieder die Methode sollte &quot;POST&quot; sein.</p>
+<p>
+	Die Seite changePassword.jsp besteht aus einem Formular mit drei Passwortfelder mit den Namen &quot;password&quot;, &quot;newPassword1&quot; und &quot;newPassword2&quot;, sowie ein Hidden-Tag namens &quot;changePassword&quot;.&nbsp; Das Ziel des Formular soll verifyEmail.jsp sein, und ganz wichtig ist wieder die Methode sollte &quot;POST&quot; sein.</p>
+<p>
+	Die Seite register.jsp besteht aus einem Formular mit drei Textfeldern mit Namen &quot;emailId&quot;, &quot;alias&quot; und &quot;favoriteColor&quot;, einem Passwortfeld mit Namen &quot;password&quot;, sowie ein Hidden-Tag namens &quot;registration&quot;.&nbsp; Ausserdem soll die Seite ein numerische Feld namens &quot;sum&quot; enthalten mit assozierten HiddenTag namens &quot;result&quot;:</p>
+<pre style="margin-left: 40px;">
+    &lt;input type=&quot;number&quot; name=&quot;sum&quot; size=&quot;4&quot;/&gt;
+    &lt;input type=&quot;hidden&quot; name=&quot;result&quot; value=&quot;3&quot;/&gt;
+</pre>
+<p>
+	Und wir benötigen noch eine Checkbox für die Terms and Conditions:</p>
+<pre style="margin-left: 40px;">
+    &lt;input type=&quot;checkbox&quot; name=&quot;acceptTerms&quot;/&gt;</pre>
+<p>
+	Das Ziel des Formular soll protected.jsp sein, und ganz wichtig ist wieder die Methode sollte &quot;POST&quot; sein.&nbsp; Schliesslich soll es noch einen Link auf die Seite terms.jsp geben.</p>
+<p>
+	Wir haben es bisher vermieden CSS Stylesheets zu verwenden, aber hier macht es Sinn eine Ausnahme zu machen.&nbsp; Wir verwenden das folgende Stylesheet namens &quot;style.css&quot;:</p>
+<pre style="margin-left: 40px;">
+form&nbsp; { display: table;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+p&nbsp;&nbsp;&nbsp;&nbsp; { display: table-row;&nbsp; }
+label { display: table-cell; white-space: nowrap; padding-right: 5px;}
+input { display: table-cell; }</pre>
+<p>
+	Darin werden Styles für die Tags form, p, label und input definiert.&nbsp; Alles was wir tun müssen, ist im Header jeder JSP Seite das Stylesheet einzubinden:</p>
+<pre style="margin-left: 40px;">
+&lt;head&gt;&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;<span style="color:#0000ff;">style.css</span>&quot;&gt;&lt;/head&gt;
+</pre>
+<p>
+	und wenn wir unsere Formulare definieren auf folgende Struktur zu achten:</p>
+<pre style="margin-left: 40px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;form action=&quot;protected.jsp&quot; method=&quot;POST&quot;&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;p&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;label&gt;Email:&lt;/label&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;input type=&quot;text&quot; name=&quot;emailId&quot;/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/p&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;p&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;label&gt;Password:&lt;/label&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;input type=&quot;password&quot; name=&quot;password&quot;/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/p&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/form&gt;</pre>
+<p>
+	Dann sehen die Formulare viel angenehmer aus.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/UseCaseDiagram_ Chirpr.png" style="width: 200px; height: 450px; float: right; margin-right: 10px; margin-left: 10px;" />Chirpr</h2>
+<p>
+	&quot;Zwitschern&quot; heißt auf Englisch &quot;chirp&quot;, und darum geht es bei Chirpr: es handelt sich um ein Mini-Soziales-Netzwerk in dem man kurze Nachrichten (Chirps) mit maximal 42 Zeichen posten kann.&nbsp; Man kann in seinen Nachrichten auch Tags verwenden, um diese einem gewissen Thema zuzuordnen.&nbsp; Das Ganze ist natürlich von einer relativ bekannten Webanwendung die mit Vögeln zu tun hat inspiriert.</p>
+<p>
+	Beginnen wir wieder mit unseren Anforderungen: Nutzer sollen</p>
+<ul>
+	<li>
+		sich identifizieren: login.jsp</li>
+	<li>
+		neue Chirps erstellen können: protected.jsp</li>
+	<li>
+		gewissen Tags folgen können: tags.jsp</li>
+	<li>
+		gewissen Birds folgen können: birds.jsp</li>
+	<li>
+		alle Chirps auflisten können: chirps.jsp</li>
+	<li>
+		sich ausloggen können: logout.jsp</li>
+</ul>
+<p>
+	Daraus ergibt sich folgende Seitenstruktur:</p>
+<p style="margin-left: 40px;">
+	<img alt="" src="images/WebPages_Chirpr.png" style="width: 401px; height: 328px;" /></p>
+<p>
+	Was die Mockups angeht, könnten die wie folgt aussehen:</p>
+<table align="center" border="0" cellpadding="0" cellspacing="10">
+	<tbody>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/Chirpr_index.png" style="width: 200px; height: 150px;" /><br />
+					index.jsp</p>
+			</td>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/Chirpr_protected.png" style="width: 200px; height: 150px;" /><br />
+					protected.jsp</p>
+			</td>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/Chirpr_tags.png" style="width: 200px; height: 150px;" /><br />
+					tags.jsp</p>
+			</td>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/Chirpr_tag.png" style="width: 200px; height: 150px;" /><br />
+					tag.jsp</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<p>
+	.</p>
+<table align="center" border="0" cellpadding="0" cellspacing="10">
+	<tbody>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/Chirpr_birds.png" style="width: 200px; height: 150px;" /><br />
+					birds.jsp</p>
+			</td>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/Chirpr_bird.png" style="width: 200px; height: 150px;" /><br />
+					bird.jsp</p>
+			</td>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/Chirpr_chirps.png" style="width: 200px; height: 150px;" /><br />
+					chirps.jsp</p>
+			</td>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/Chirpr_logout.png" style="width: 200px; height: 150px;" /><br />
+					logout.jsp</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<p>
+	Hier gibt es nicht viel zu sagen, aus der Seitenstruktur ergeben sich die Links, und mit dem bisher gelernten sind die Seiten ganz einfach zu erstellen.</p>
+<p>
+	.</p>
+<hr />
+<h1>
+	Challenges</h1>
+<p>
+	Gegen Ende dieses Buches wollen wir auch eine etwas anspruchsvollere Webanwendung schreiben.&nbsp; Dafür können wir aber bereits jetzt die Vorarbeit leisten.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/UseCaseDiagram_ Quizs.png" style="width: 200px; height: 406px; float: right; margin-right: 10px; margin-left: 10px;" />Quizs</h2>
+<p>
+	Quizs ist eine Webanwendung mit der man anhand von Multiplechoice-Fragen sein Wissen überprüfen kann.&nbsp; Ausserdem kann man auch Prüfungen erstellen.&nbsp; Auch diese Anwendung ist bereits aus dem ersten Semester bekannt, damals haben wir Teile als Swing Anwendung programmiert aber natürlich ohne Datenbank.</p>
+<p>
+	Beginnen wir wieder mit unseren Anforderungen.&nbsp; Aus der Sicht eines Studierenden können wir</p>
+<ul>
+	<li>
+		uns identifizieren: login.jsp</li>
+	<li>
+		an einer Prüfung teilnehmen: exam.jsp</li>
+	<li>
+		die Resultate einsehen: results.jsp</li>
+	<li>
+		uns ausloggen: logout.jsp</li>
+</ul>
+<p>
+	Falls ein Studierender noch nicht exisitiert, wird einfach ein neuer angelegt.</p>
+<p>
+	Aus Sicht eines Lehrenden können wir</p>
+<ul>
+	<li>
+		uns identifizieren: login.jsp</li>
+	<li>
+		neue Fragen erstellen: question.jsp</li>
+	<li>
+		neue Prüfungen erstellen: exam.jsp</li>
+	<li>
+		alle Studierende auflisten: results.jsp</li>
+	<li>
+		uns ausloggen: logout.jsp</li>
+</ul>
+<p>
+	Lehrende soll es nur einen geben: den &#39;teacher&#39;.&nbsp; Wenn sich also jemand mit der ID &#39;teacher&#39; einlogged, hat er die teacher Privilegien.&nbsp; Es gibt also zwei verschiedene Nutzer-Typen in dieser Webanwendung.</p>
+<p>
+	Daraus ergibt sich folgende Seitenstruktur:</p>
+<p style="margin-left: 40px;">
+	<img alt="" src="images/WebPages_Quizs.png" style="width: 678px; height: 414px;" /></p>
+<p>
+	Was die Mockups angeht, könnten die wie folgt aussehen:</p>
+<table align="center" border="0" cellpadding="0" cellspacing="10">
+	<tbody>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/Quizs_index.png" style="width: 200px; height: 150px;" /><br />
+					index.jsp</p>
+			</td>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/Quizs_student_index.png" style="width: 200px; height: 150px;" /><br />
+					student/index.jsp</p>
+			</td>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/Quizs_student_results.png" style="width: 200px; height: 150px;" /><br />
+					student/results.jsp</p>
+			</td>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/Quizs_student_showResults.png" style="width: 200px; height: 150px;" /><br />
+					student/showResult.jsp</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<p>
+	.</p>
+<table align="center" border="0" cellpadding="0" cellspacing="10">
+	<tbody>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/Quizs_student_exam.png" style="width: 200px; height: 150px;" /><br />
+					student/exam.jsp</p>
+			</td>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/Quizs_student_takeExam.png" style="width: 200px; height: 150px;" /><br />
+					student/takeExam.jsp</p>
+			</td>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/Quizs_student_gradeExam.png" style="width: 200px; height: 150px;" /><br />
+					student/gradeExam.jsp</p>
+			</td>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/Quizs_teacher_index.png" style="width: 200px; height: 150px;" /><br />
+					teacher/index.jsp</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<p>
+	.</p>
+<table align="center" border="0" cellpadding="0" cellspacing="10">
+	<tbody>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/Quizs_teacher_students.png" style="width: 200px; height: 150px;" /><br />
+					teacher/students.jsp</p>
+			</td>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/Quizs_teacher_exams.png" style="width: 200px; height: 150px;" /><br />
+					teacher/exam.jsp</p>
+			</td>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/Quizs_teacher_question.png" style="width: 200px; height: 150px;" /><br />
+					teacher/question.jsp</p>
+			</td>
+			<td style="text-align: center; vertical-align: middle;">
+				<p>
+					<img alt="" src="images/Quizs_teacher_quizsLogic.png" style="width: 200px; height: 150px;" /><br />
+					teacher/quizsLogic.jsp</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<p>
+	Auch hier gibt es nicht viel zu sagen, aus der Seitenstruktur ergeben sich die Links, und mit dem bisher gelernten sind die Seiten ganz einfach zu erstellen.&nbsp; Wir sollten auch darauf achten, dass alle Seiten für Studierende sich im Unterverzeichnis &quot;/student/&quot; befinden, und alle Seiten für Lehrende im Unterverzeichnis &quot;/teacher/&quot;.&nbsp; Evtl. eine Anmerkung zur Seite takeExam.jsp:&nbsp; wie gruppiert man Radiobuttons?&nbsp; Das geht über den Namen:</p>
+<pre style="margin-left: 40px;">
+What is 1 + 1?&lt;br/&gt;
+&lt;input type=&#39;radio&#39; name=&#39;0&#39; value=&#39;1&#39;/&gt;1&lt;br/&gt;
+&lt;input type=&#39;radio&#39; name=&#39;0&#39; value=&#39;2&#39;/&gt;2&lt;br/&gt;
+&lt;input type=&#39;radio&#39; name=&#39;0&#39; value=&#39;3&#39;/&gt;4&lt;br/&gt;
+&lt;hr/&gt;
+Which color is the sky?&lt;br/&gt;
+&lt;input type=&#39;radio&#39; name=&#39;1&#39; value=&#39;1&#39;/&gt;red&lt;br/&gt;
+&lt;input type=&#39;radio&#39; name=&#39;1&#39; value=&#39;2&#39;/&gt;black&lt;br/&gt;
+&lt;input type=&#39;radio&#39; name=&#39;1&#39; value=&#39;3&#39;/&gt;blue&lt;br/&gt;
+&lt;hr/&gt;</pre>
+<p>
+	Radiobuttons mit dem gleichen Namen gehören zusammen.</p>
+<p>
+	.</p>
+<hr />
+<h1>
+	Research</h1>
+<p>
+	In diesem Kapitel haben wir uns auf das absolut Notwendige beschränkt.&nbsp; Es gibt aber natürlich noch viele andere Dinge die wir im Internet recherchieren können.&nbsp;</p>
+<p>
+	.</p>
+<h2>
+	Browsers</h2>
+<p>
+	Leider ist es nicht so, dass unsere Webseiten auf allen Browsern gleich aussehen, oder wenn wir sehr viel JavaScript oder ähnliches verwenden, überhaupt funktionieren.&nbsp; Deswegen muss man seine Webanwendung auf den verschiedenen Browser testen.&nbsp;</p>
+<p>
+	Es kommt häufig vor, dass unser Kunde verlangt, dass seine Seiten auf 90% aller Webbrowser laufen sollen.&nbsp; Um zu wissen was 90% bedeutet muss man natürlich erst einmal wissen welche Browser wie populär sind.&nbsp; Das letzte Mal als ich nachgesehen habe, war das folgende Popularität:</p>
+<ul>
+	<li>
+		Google Chrome (72%)</li>
+	<li>
+		Firefox (17%)</li>
+	<li>
+		Internet Explorer (5%)</li>
+	<li>
+		Safari (3%)</li>
+	<li>
+		Opera (1%)</li>
+</ul>
+<p>
+	In diesem Fall müssten wir unsere Anwendung also mindestens auf den ersten drei Browsern testen.&nbsp; Da sich diese Zahlen innerhalb von ein paar Monaten ändern, sollten wir jetzt mal recherchieren, wie denn die Verteilung heute aussieht: <a href="http://www.w3schools.com/browsers/default.asp">http://www.w3schools.com/browsers/default.asp</a>.&nbsp; Auch zu beachten ist in wiefern unsere Anwendung auf mobilen Endgeräte laufen soll.</p>
+<p>
+	.</p>
+<h2>
+	Markup Languages</h2>
+<p>
+	HTML ist eine Markup Sprache.&nbsp; Markup Sprachen sollte man nicht mit Programmiersprachen verwechseln, denn das sind sie nicht.&nbsp; Neben HTML gibt es noch ganz viele, wichtig ist XML, interessant sind aber auch&nbsp; die Ursprünge SGML und GML.&nbsp; HTML5 ist was heute meistens verwendet wird, aber man findet auch noch ältere Version.&nbsp; Es macht Sinn sich im Internet mal zu den Hintergründen all dieser &quot;ML&quot; Sprachen zu erkundigen.</p>
+<p>
+	.</p>
+<h2>
+	MIME</h2>
+<p>
+	Die &quot;Multipurpose Internet Mail Extensions&quot;, kurz MIME, sind extrem wichtig wenn wir irgendetwas im Internet machen.&nbsp; Die wichtigste ist wohl &quot;text/html&quot; oder &quot;image/png&quot;, aber es gibt noch ganz viele andere.&nbsp; Auch hier ist das Internet eine gute Möglichkeit sich über MIME und die MIME Types einen Überblick zu verschaffen.</p>
+<p>
+	.</p>
+<h2>
+	RFC 2616</h2>
+<p>
+	RFC 2616 [2] ist die Spezifikation des HTTP Protokolls.&nbsp; Wir sollten uns die Spezifikation mal ansehen, nach bekannten Namen unter den Autoren suchen, und im Inhaltsverzeichnis mal nach Request und Response suchen, sowie identifizieren welche HTTP Methoden und welche HTTP Status Codes es gibt.&nbsp; Speziell, wenn wir im letzten Kapitel uns mit Webservices beschäftigen, wird diese RFC sehr wichtig werden.</p>
+<p>
+	.</p>
+<h2>
+	CSS and JavaScript</h2>
+<p>
+	Wir werden uns in diesem Buch nur ganz am Rande mit CSS und JavaScript beschäftigen.&nbsp; Beide sind aber relativ wichtig.&nbsp; Deswegen macht es durchaus Sinn sich hier ein paar Tutorials anzusehen.&nbsp; M.E. die besten gibt es bei W3Schools.&nbsp; Wenn man altmodisch ist kann man sich aber auch ein Buch kaufen, wie z.B. &rsquo;Bulletproof WebDesign&rsquo; von Dan Cederholm [3] oder &#39;JavaScript: The Definitive Guide&#39; von David Flanagan [4].</p>
+<p>
+	.</p>
+<h2>
+	HTML Editors</h2>
+<p>
+	Wenn ich HTML schreibe, dann verwende ich meist einen einfachen Texteditor.&nbsp; Manchmal ist es aber praktisch eine WYSIWYG Editor zu verwenden.&nbsp; Da gibt es ganz viele verschiedene, auch einige mit einer Open Source Lizenz wie z.B. BlueGriffon [5].&nbsp; Wenn man viel mit der Erstellung von Webseiten zu tun hat, macht es durchaus Sinn sich hier einen Überblick zu verschaffen, denn mit einem guten Tool lässt sich die eigene Produktivität locker verdoppeln.</p>
+<p>
+	.</p>
+<hr />
+<h1>
+	Fragen</h1>
+<ol>
+	<li>
+		Wer war einer der Erfinder von HTML?<br />
+		&nbsp;</li>
+	<li>
+		Wer war einer der Erfinder von HTTP?</li>
+	<li>
+		<p>
+			Nennen Sie die Namen von drei verschiedenen Browsern.</p>
+	</li>
+	<li>
+		<p>
+			Erklären Sie den Unterschied zwischen URI, URL and URN.</p>
+	</li>
+	<li>
+		<p>
+			Warum sollte man nur relative und keine absoluten Links verwenden?</p>
+	</li>
+	<li>
+		<p>
+			Wofür sind Meta-Tags gut?</p>
+	</li>
+	<li>
+		<p>
+			Was ist MIME und wofür wird es verwendet?</p>
+	</li>
+	<li>
+		<p>
+			Schreiben Sie HTML Code, der es Ihnen erlaubt eine Wikipedia Suche in Ihre Webseiten zu integrieren. (Hinweis: wenn Sie nach &ldquo;BMW&rdquo; in Wikipedia suchen, so wird dies durch folgende URI bewerkstelligt: en.wikipedia.org/w/index.php?search=BMW).</p>
+	</li>
+	<li>
+		<p>
+			Write an HTML page using the form tag, that when the user clicks on the submit button, performs a search on DMOZ, the open directory project.&nbsp; The query URL for DMOZ is: &#39;http://www.dmoz.org/search?q=xyz&#39;, where &#39;xyz&#39; is the query the user entered.</p>
+	</li>
+	<li>
+		<p>
+			Schreiben Sie eine HTML Seite die eine Suche in Google durchführt (die URI für eine Suche bei Google lautet: www.google.com/search?q=bmw)</p>
+	</li>
+	<li>
+		<p>
+			Schreiben Sie HTML Code, der einen Benutzer nach Namen und Passwort fragt, und die eingegebenen Daten mittel POST Request and die Seite &#39;www.server.com/login.jsp&#39; schickt.<br />
+			&nbsp;</p>
+	</li>
+	<li>
+		<p>
+			Angenommen, Sie haben zwei Seiten, &ldquo;1.html&rdquo; und &ldquo;2.html&rdquo;. Wie müsste das Link-Tag aussehen, welches einem Link von Seite &ldquo;1.html&rdquo; auf Seite &ldquo;2.html&rdquo; setzt?</p>
+	</li>
+	<li>
+		<p>
+			Skizzieren Sie wie die folgende Webseite aussieht.</p>
+		<pre style="margin-left: 40px;">
+&lt;HTML&gt;
+   &lt;HEAD&gt;
+      &lt;TITLE&gt;A dynamic JSP page&lt;/TITLE&gt;
+   &lt;/HEAD&gt;
+   &lt;BODY&gt;
+      &lt;FONT color=&quot;green&quot; face=&quot;arial&quot;&gt;
+         &lt;CENTER&gt;Hello World!&lt;/CENTER&gt;
+         &lt;UL&gt;
+            &lt;LI&gt;Welcome to the J2EE MasterClass&lt;/LI&gt;
+            &lt;LI&gt;Today is Monday.&lt;/LI&gt;
+         &lt;/UL&gt;
+      &lt;/FONT&gt;
+   &lt;/BODY&gt;
+&lt;/HTML&gt;</pre>
+	</li>
+</ol>
+<p>
+	.</p>
+<hr />
+<h1>
+	Referenzen</h1>
+<p>
+	Zu allen Themen die einem neu erscheinen, kann man erst mal in der Wikipedia nachschauen, um sich eine Überblick und ersten Eindruck zu verschaffen.&nbsp; Allerdings zwei Referenzen die für dieses Kapitel noch hilfreich sein könnten.</p>
+<p>
+	[1] W3Schools Online Web Tutorials, <a href="http://www.w3schools.com/">www.w3schools.com/</a></p>
+<p>
+	[2] RFC 2616, <a href="http://tools.ietf.org/html/rfc2616">tools.ietf.org/html/rfc2616</a></p>
+<p>
+	[3] Bulletproof WebDesign von Dan Cederholm</p>
+<p>
+	[4] JavaScript: The Definitive Guide von David Flanagan</p>
+<p>
+	[5] BlueGriffon, <a href="http://bluegriffon.org">bluegriffon.org</a></p>
+<p>
+	[6] Lynx, <a href="http://lynx.browser.org/">http://lynx.browser.org/</a></p>
+<p>
+	.</p>
+<p class="footer">
+Copyright &copy; 2016-2021 <a href="http://www.lano.de">Ralph P. Lano</a>.  All rights reserved.
+</p>
+</div>
+</center>
+</div>
+</body>
+</html>

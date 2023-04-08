@@ -1,0 +1,938 @@
+<!DOCTYPE html><html lang="de"><head>
+  <title>Variationen zum Thema: Internet</title>
+  <meta name="title" content="Variationen zum Thema: Internet">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta charset="UTF-8">
+  <meta name="description" content="Eine Einführung in Java Enterprise">
+  <meta name="keywords" content="Java Enterprise,Internet,Einführung">
+  <meta name="author" content="Ralph P. Lano">
+  <meta name="robots" content="index,follow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="book.css">
+</head>
+<body><center>
+<div id="wrap">
+	<ul class="sidenav">
+	  <p><a href="index.html">Variationen zum Thema</a><a href="index.html">Internet</a></p>
+	  <li><a href="Basics.html">Basics</a></li>
+	  <li><a href="JSP.html">JSP</a></li>
+	  <li><a href="Request.html">Request</a></li>
+	  <li><a href="Session.html" class="active">Session</a></li>
+	  <li><a href="Database.html">Database</a></li>
+	  <li><a href="Services.html">Services</a></li>
+	  <li><a href="Projects.html">Projects</a></li>
+	  <li><a href="NetBeans.html">NetBeans</a></li>
+	  <li><a href="JavaScript.html">JavaScript</a></li>
+	</ul>
+<div class="content"><p>
+	<img alt="" src="images/Mines.png" style="display: block; margin-left: auto; margin-right: auto; width: 184px; height: 227px;" /></p>
+<h1>
+	Session and Application</h1>
+<p>
+	Bisher sind unsere Webanwendungen sehr dumm, sie haben kein Gedächtnis, weder Kurzzeit noch Langzeit. Mit den Session und Applikation Objekten erhalten wir auf einmal ein Kurzzeitgedächtnis, d.h. wir können uns auf einmal Dinge merken.&nbsp; Und damit ergeben sich viele neue Anwendungsszenarien.</p>
+<p>
+	.</p>
+<h2>
+	Session</h2>
+<p>
+	Die wichtigsten Anwendungen im Internet haben mit Shopping zu tun.&nbsp; Und das zentrale Konzept hinter jeder Shopping Anwendung ist der Warenkorb.&nbsp; Der Warenkorb ist einfach eine Liste von Artikeln, z.B. Büchern, die unser Kunde gerne kaufen möchte.</p>
+<p>
+	Ganz wichtig ist natürlich, dass jeder Kunde seinen eigenen Warenkorb hat.&nbsp; Und genau für diesen Zweck wurde das <em>session</em> Objekt erfunden.&nbsp; Eine &quot;Session&quot; ist sozusagen eine &quot;Einkaufs-Session&quot;.&nbsp; Jeder Nutzer hat seine eigene Session.&nbsp; Und so wie es in JSP die Objekte <em>out</em>, <em>request</em> und <em>response</em> bereits gibt, gibt es auch das <em>session</em> Objekt bereits vordefiniert.&nbsp;</p>
+<p>
+	Das <em>session</em> Objekt ist einfach eine HashMap mit beliebigen key-value Paaren.&nbsp; Die Benutzung ist denkbar einfach:</p>
+<pre style="margin-left: 40px;">
+&lt;%
+    <span style="color:#0000ff;">session</span>.setAttribute(&quot;key&quot;, &quot;value&quot;);
+    String v = (String) <span style="color:#0000ff;">session</span>.getAttribute(&quot;key&quot;);
+%&gt;
+</pre>
+<p>
+	Das wirklich schöne ist, dass wir von jeder unserer JSP Seiten auf das <em>session</em> Objekt zugreifen können.&nbsp; Bisher war es immer kompliziert wenn wir Daten zwischen zwei Seiten transferieren wollten.&nbsp; Im letzten Kapitel haben wir drei Varianten kennengelernt:&nbsp;</p>
+<ul>
+	<li>
+		das &quot;Reverse Text&quot; Beispiel benutzte einem Link</li>
+	<li>
+		das &quot;Captcha&quot; Beispiel benutzte ein Hidden Tag</li>
+	<li>
+		das &quot;Cookies&quot; Beispiel benutze Cookies.</li>
+</ul>
+<p>
+	Aber wenn wir kurz nachdenken, sehen wir dass eigentlich alle immer über das <em>request</em> Objekt gingen.&nbsp; Ausserdem mussten die Daten immer über den Browser gehen, was z.B. bei unserer Captcha Anwendung dazu führte, dass sie ganz einfach zu knacken war.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/CaptchaJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Captcha</h2>
+<p>
+	Betrachten wir das Captcha Beispiel aus dem letzten Kapitel noch einmal.&nbsp; Anstelle das Hidden-Tag zu verwenden, würden wir die richtige Antwort in der Session speichern:</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp;&nbsp; int a = (int) (Math.random() * 9) + 1;
+&nbsp;&nbsp;&nbsp; int b = (int) (Math.random() * 9) + 1;
+    <span style="color:#0000ff;">session.setAttribute(&quot;correctAnswer&quot;, a+b);</span>
+%&gt;</pre>
+<p>
+	um dann im captchaLogic.jsp das Resultat wieder aus der Session zu holen:</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp;&nbsp; String sum = request.getParameter(&quot;sum&quot;);
+&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">Integer result = (Integer) session.getAttribute(&quot;correctAnswer&quot;);</span>
+&nbsp;&nbsp;&nbsp; ...
+%&gt;</pre>
+<p>
+	Der Rest des Codes bleibt gleich.&nbsp; Versuchen wir jetzt aber mal diese neue Variante von Captcha zu knacken.&nbsp; Mit View Source sehen wir nichts.&nbsp; Und auch sonst lässt sich diese neue Version nicht knacken.&nbsp; Das hat damit zu tun, dass das Resultat, also die <em>correctAnswer</em>, nie zum Browser geschickt wird, sie verlässt den Server nie.&nbsp; Es ist ganz wichtig das zu verstehen!</p>
+<p style="margin-left: 40px;">
+	<img alt="" src="images/CookieVsSession.png" style="margin-left: 10px; margin-right: 10px; width: 228px; height: 199px;" /></p>
+<p>
+	.</p>
+<p>
+	<strong>SEP: Daten die wir im <em>session</em> Objekt speichern werden immer nur auf dem Server gespeichert.</strong></p>
+<p>
+	.</p>
+<h2>
+	Expiration</h2>
+<p>
+	Daten die im <em>session</em> Objekt gespeichert sind werden also auf dem Server gehalten, der Browser bekommt die nie zu sehen.&nbsp; Das kann aber auch zu einem Problem werden, und zwar wenn wir zu viele Nutzer haben, oder zu große Datenmengen in der <em>session</em> Hashmap speichern.&nbsp; Deswegen haben Sessions immer einen <em>Timeout</em>:&nbsp; wenn eine Session für eine bestimmte Zeit (meist 15 Minuten) nicht genutzt wird, wird sie einfach gelöscht. Und deswegen sollten wir auch nicht zu große Datenmengen in Sessions speichern.</p>
+<p>
+	Wie funktioniert das mit der Session?&nbsp; Wir könnten das auch selbst machen, wie wir in den Beispielen StateURL und StateCookie im letzten Kapitel gesehen haben, aber warum kompliziert wenn es auch einfach geht.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/ShoppingJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Shopping</h2>
+<p>
+	Der Klassiker für den Einsatz von Sessions ist die Shopping Anwendung.&nbsp; In unserer sehr einfachen Shopping Anwendung gibt es einen Warenkorb (einfach eine Liste) und der Kunde kann Artikel zum Warenkorb hinzufügen oder wieder aus dem Warenkorb entfernen. Und natürlich wollen wir den Inhalt des Warenkorbs auflisten.</p>
+<pre style="margin-left: 40px;">
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;body&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h1&gt;Shopping&lt;/h1&gt;
+&lt;%
+&nbsp;&nbsp;&nbsp; Vector&lt;String&gt; cart = (Vector&lt;String&gt;)<span style="color:#0000ff;">session.getAttribute(&quot;Cart&quot;)</span>;
+&nbsp;&nbsp;&nbsp; if ( cart == null ) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cart = new Vector&lt;String&gt;();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">session.setAttribute(&quot;Cart&quot;, cart)</span>;
+&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; out.println( &quot;&lt;ul&gt;&quot; );
+&nbsp;&nbsp;&nbsp; for (int i = 0; i &lt; cart.size(); i++) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String item = cart.get(i);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println( &quot;&lt;li&gt;&quot; );
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println( item );
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println( &quot;&nbsp; &lt;a href=&#39;shoppingLogic.jsp?id=&quot;+i+&quot;&#39;&gt;(delete)&lt;/a&gt;&quot; );
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println( &quot;&lt;/li&gt;&quot; );
+&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp; out.println( &quot;&lt;/ul&gt;&quot; );
+%&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; &lt;form action=&quot;shoppingLogic.jsp&quot; method=&quot;POST&quot;&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;textarea name=&quot;item&quot; rows=&quot;1&quot; cols=&quot;40&quot;&gt;&lt;/textarea&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;input type=&quot;submit&quot; value=&quot;Add to cart&quot; /&gt;
+&nbsp;&nbsp;&nbsp; &lt;/form&gt;
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>
+	Das Löschen und Hinzufügen passiert in der <em>shoppingLogic.jsp</em> Seite.</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp;&nbsp; // add a new item
+&nbsp;&nbsp;&nbsp; String item = request.getParameter(&quot;item&quot;);
+&nbsp;&nbsp;&nbsp; if ( (item != null) &amp;&amp; (item.length() &gt; 3) &amp;&amp; (item.length() &lt; 1000) ) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Vector&lt;String&gt; cart = (Vector&lt;String&gt;)<span style="color:#0000ff;">session.getAttribute(&quot;Cart&quot;)</span>;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cart.add( item );
+&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; // delete existing item
+&nbsp;&nbsp;&nbsp; String idToDelete = request.getParameter(&quot;id&quot;);
+&nbsp;&nbsp;&nbsp; if ( idToDelete != null) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Vector&lt;String&gt; cart = (Vector&lt;String&gt;)<span style="color:#0000ff;">session.getAttribute(&quot;Cart&quot;)</span>;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int id = Integer.parseInt( idToDelete );
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ( ( id &gt;= 0 ) &amp;&amp; ( id &lt; cart.size() ) ) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cart.remove( id );
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp; response.sendRedirect(&quot;shopping.jsp&quot;);
+&nbsp;&nbsp;&nbsp; return;
+%&gt;</pre>
+<p>
+	Wenn wir fertig sind schicken wir den Nutzer einfach zurück zur <em>shopping.jsp</em> Seite.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/LoginJSP2.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Login</h2>
+<p>
+	Kommen wir zu unserem nächsten Klassiker: der Login Seite.&nbsp; Praktisch jeder Website hat eine.&nbsp; Im Prinzip ist das Schema immer das Gleiche: Es gibt ein paar Seiten, die kann jeder sehen, es gibt aber auch einen geschützten Bereich, protected, den kann man nur sehen, wenn man sich vorher eingeloggt hat.</p>
+<p>
+	Wir brauchen also mindestens drei Seiten: die <em>login.jsp</em> Seite, die jeder sehen kann, dann eine <em>protected.jsp</em> Seite, die kann man nur sehen wenn man sich erfolgreich eingeloggt hat, und eine <em>loginLogic.jsp</em> Seite, die checkt, ob man die richtige Benutzernamen-Passwort Kombination eingegeben hat.&nbsp; Um das Ganze etwas einfacher testen zu können fügen wir noch eine Navigationsleiste in jede Seite mit ein.&nbsp; Ach ja, und ausloggen sollten wir uns auch noch können, also eine Seite <em>logout,jsp</em> brauchen wir noch.</p>
+<p>
+	Die <em>login.jsp</em> Seite ist trivial, da brauchen wir gar nichts mehr dazu zu sagen.&nbsp; Interessanter wird die <em>loginLogic.jsp</em> Seite.</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp;&nbsp; String id = request.getParameter(&quot;userId&quot;);
+&nbsp;&nbsp;&nbsp; String passwd = request.getParameter(&quot;password&quot;);
+&nbsp;&nbsp;&nbsp; if ((id != null) &amp;&amp; (passwd != null)) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ((id.equals(&quot;ralph&quot;)) &amp;&amp; (passwd.equals(&quot;123456&quot;))) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">session.setAttribute(&quot;User&quot;, id);</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; response.sendRedirect(&quot;protected.jsp&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#ff0000;">return;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">session.removeAttribute(&quot;User&quot;);</span>
+&nbsp;&nbsp;&nbsp; response.sendRedirect(&quot;login.jsp&quot;);
+&nbsp;&nbsp;&nbsp; return;
+%&gt;</pre>
+<p>
+	Wir checken also ob der Nutzer den richtigen Benutzernamen und das richtige Passwort eingegeben hat. Wenn ja, dann fügen wir einen neuen Eintrag in das Session Map mit dem Key &quot;User&quot; ein und schicken ihn zu Seite <em>protected.jsp</em>.&nbsp; Falls nein, dann löschen wir das Attribute &quot;User&quot; sicherheitshalber, und schicken den Nutzer zurück zu <em>login.jsp</em> Seite.&nbsp; Es ist ganz wichtig, nach dem response.sendRedirect() immer ein return zu setzen, denn ohne, würden im Beispiel oben die Zeilen danach noch ausgeführt werden.</p>
+<p>
+	Interessant ist jetzt wie wir die Seite <em>protected.jsp</em> schützen.&nbsp; Das geht überraschend einfach: wir müssen nur nachschauen, ob das Attribute &quot;User&quot; gesetzt wurde oder nicht:</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp;&nbsp; String user = (String)<span style="color:#0000ff;">session.getAttribute(&quot;User&quot;);</span>
+&nbsp;&nbsp;&nbsp; if ( <span style="color:#0000ff;">user == null</span> ) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; response.sendRedirect(&quot;login.jsp&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return;
+&nbsp;&nbsp;&nbsp; }
+%&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;body&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;%@include file=&quot;navigation.jsp&quot; %&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h1&gt;Protected&lt;/h1&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;p&gt;Welcome &lt;%= user %&gt;.&lt;/p&gt;
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>
+	Falls es nämlich nicht gesetzt wurde, dann darf der Nutzer die Seite nicht sehen, wir schicken ihn einfach zur <em>login.jsp</em> Seite zurück.&nbsp; Ansonsten darf er die Seite sehen.&nbsp; Wir müssten das natürlich mit jeder Seite tun die wir schützen wollen.&nbsp; Das ist zwar etwas umständlich, aber funktioniert ganz gut.&nbsp; In zwei Kapiteln werden wir sehen wie man das auch weniger umständlich machen kann.</p>
+<p>
+	Bleibt noch zu klären wie das mit dem logout funktioniert.&nbsp; Das ist eigentlich ein Einzeiler:</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">session.removeAttribute(&quot;User&quot;);</span>
+&nbsp;&nbsp;&nbsp; response.sendRedirect(&quot;login.jsp&quot;);
+&nbsp;&nbsp;&nbsp; return;
+%&gt;</pre>
+<p>
+	Wir löschen also das &quot;User&quot; Attribut aus der Session und schicken den Nutzer zurück auf Los.</p>
+<p>
+	<strong>SEP: Nach einem sendRedirect() sollte immer ein <em>return</em> Statement folgen.</strong></p>
+<p>
+	.</p>
+<h2>
+	Include Directive</h2>
+<p>
+	Noch eine kurze Anmerkung zur &quot;include directive&quot;, die haben wir schon mal kurz im ersten Kapitel benutzt ohne zu wissen wie das wirklich funktioniert.</p>
+<pre style="margin-left: 40px;">
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;body&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">&lt;%@include file=&quot;navigation.jsp&quot; %&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h1&gt;Login&lt;/h1&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>
+	Wir verwenden sie zur Vermeidung von doppelten Code.&nbsp; Was das Include macht, es fügt die einzufügende Datei, in der Regel eine JSP Datei, an der Stelle ein, an der das Tag steht.&nbsp; Es ist also so, wie wenn der Inhalt von navigation.jsp an der Stelle stehen würde.&nbsp; Das passiert bevor aus der JSP Seite ein Servlet generiert wird.&nbsp; Das führt dazu, dass das Inkludieren zur&nbsp; &quot;compile time&quot; passiert, also die Seite wird schon beim Kompilieren eingefügt, macht also unseren Website nicht langsamer.&nbsp; Deswegen können wir soviele Dateien einfügen wie wir lustig sind.&nbsp; Anbieten tut es sich natürlich ganz speziell für Header und Footer, die auf allen Seiten gleich sein sollen.</p>
+<p>
+	.</p>
+<h2>
+	Application</h2>
+<p>
+	Mit dem <em>session</em> Objekt können wir Daten zwischen verschiedenen Seiten eines Nutzers austauschen.&nbsp; Wie können wir aber Daten zwischen verschiedenen Nutzern austauschen, oder besser wie können wir Daten zentral mehreren Nutzern zur Verfügung stellen?&nbsp; Dafür gibt es das <em>application</em> Object. Es funktioniert genauso wie das session Objekt, nur dass halt jeder von überall darauf zugreifen kann.&nbsp; Sozusagen eine Art &quot;globale&quot; Hashmap.</p>
+<pre style="margin-left: 40px;">
+&lt;%
+    <span style="color:#0000ff;">application</span>.setAttribute(&quot;key&quot;, &quot;value&quot;);
+    String v = (String) <span style="color:#0000ff;">application</span>.getAttribute(&quot;key&quot;);
+%&gt;
+</pre>
+<p>
+	.</p>
+<h2>
+	Visitor</h2>
+<p>
+	Schauen wir unser Visitor Beispiel aus dem zweiten Kapitel noch einmal an.&nbsp; Damals haben wir Instanzvariablen verwendet um einen globalen Zähler zu implementieren.&nbsp; Die Lösung hatte aber Probleme wie wir damals bereits angedeutet haben.</p>
+<p>
+	Eine besser Lösung einen Visitor Counter zu implementieren ist mit Hilfe des <em>application</em> Objekts.&nbsp; Der Code ist ganz einfach, wir speichern den Zähler im <em>application</em> Objekt.&nbsp; Das einzige was noch zu checken ist, dass der Zähler beim allerersten Aufruf auf eins gesetzt wird.</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp;&nbsp; Integer counter = (Integer)<span style="color:#0000ff;">application.getAttribute(&quot;visitorCounter&quot;)</span>;
+&nbsp;&nbsp;&nbsp; if ( counter == null ) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; counter = 1;
+&nbsp;&nbsp;&nbsp; } else {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; counter++;
+&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">application.setAttribute(&quot;visitorCounter&quot;, counter)</span>;
+%&gt;
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;body&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h2&gt;Welcome, Visitor Nr. &lt;%= counter %&gt;&lt;/h2&gt;
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>
+	Diese neue Version löst fast alle Probleme unserer alten Version, bis auf eines: wenn der Server neu gestartet wird, dann wird der Zähler wieder zurück gesetzt.&nbsp; Die Lösung dafür sind <em>jspInit()</em> und <em>jspDestroy()</em>.&nbsp; Für unseren &quot;new and improved&quot; Visitor Counter bedeutet das, dass wir wenn die <em>jspDestroy()</em> Methode aufgerufen wird, den momentanen Wert des Zählers in eine Datei (oder später Datenbank) speichern, und wenn die <em>jspInit()</em> Methode aufgerufen wird, den Wert des Zählers aus der Datei lesen.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/GuestbookJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Guestbook</h2>
+<p>
+	Ein typisches Anwendungsszenario für das <em>application</em> Objekt ist das klassische Guestbook.&nbsp; Im Guestbook können Nutzer unseres Sites Kommentare hinterlassen.&nbsp; Foren funktionieren auch ganz ähnlich.&nbsp; Da jeder auf dem Guestbook Kommentare hinterlassen kann, bietet es sich an diese im <em>application</em> Objekt zu speichern.</p>
+<p>
+	In unsere Guestbook Anwendung sollen also Nutzer Kommentare abgeben können, die Kommentare aller Nutzer sollen aufgelistet werden, und es soll auch die Möglichkeit geben Kommentare zu löschen.&nbsp; Unsere Anwendung besteht wieder aus zwei Teilen, der <em>guestbook.jsp</em>, die das Anzeigen der Kommentare übernimmt, die Links zum Löschen vom Kommentaren enthält und einer Textarea um neue Kommentare abzugeben.&nbsp; Interessant ist, dass der Code identisch mit dem der Shopping List ist, lediglich <em>session</em> wird durch <em>application</em> ersetzt.</p>
+<pre style="margin-left: 40px;">
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;body&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h1&gt;Guestbook&lt;/h1&gt;
+&lt;%
+&nbsp;&nbsp;&nbsp; Vector&lt;String&gt; comments = (Vector&lt;String&gt;) <span style="color:#0000ff;">application.getAttribute(&quot;Guestbook&quot;)</span>;
+&nbsp;&nbsp;&nbsp; if (comments == null) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; comments = new Vector&lt;String&gt;();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">application.setAttribute(&quot;Guestbook&quot;, comments)</span>;
+&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp; out.println(&quot;&lt;ul&gt;&quot;);
+&nbsp;&nbsp;&nbsp; for (int i = 0; i &lt; comments.size(); i++) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String msg = comments.get(i);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(&quot;&lt;li&gt;&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(msg);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(&quot;&nbsp; &lt;a href=&#39;guestbookLogic.jsp?id=&quot; + i + &quot;&#39;&gt;(delete)&lt;/a&gt;&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(&quot;&lt;/li&gt;&quot;);
+&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp; out.println(&quot;&lt;/ul&gt;&quot;);
+%&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;form action=&quot;guestbookLogic.jsp&quot; method=&quot;POST&quot;&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;textarea name=&quot;comment&quot; cols=&quot;40&quot; rows=&quot;1&quot;&gt;&lt;/textarea&gt;&lt;br /&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;input type=&quot;submit&quot; value=&quot;Post new comment&quot; /&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/form&gt;
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>
+	Ausserdem gibt es wieder eine Seite, <em>guestbookLogic.jsp</em>, für die Logik, die also neue Kommentare zum <em>application</em> Objekt hinzufügt, oder exisitierende löscht.</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp;&nbsp; // add a new guestbook entry
+&nbsp;&nbsp;&nbsp; String comment = request.getParameter(&quot;comment&quot;);
+&nbsp;&nbsp;&nbsp; if ( (comment != null) &amp;&amp; (comment.length() &gt; 5) &amp;&amp; (comment.length() &lt; 1000) ) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Vector&lt;String&gt; comments = (Vector&lt;String&gt;)<span style="color:#0000ff;">application.getAttribute(&quot;Guestbook&quot;)</span>;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; comments.add( comment );
+&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; // delete existing guestbook entry
+&nbsp;&nbsp;&nbsp; String idToDelete = request.getParameter(&quot;id&quot;);
+&nbsp;&nbsp;&nbsp; if ( idToDelete != null) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Vector&lt;String&gt; comments = (Vector&lt;String&gt;)<span style="color:#0000ff;">application.getAttribute(&quot;Guestbook&quot;)</span>;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int id = Integer.parseInt( idToDelete );
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ( ( id &gt;= 0 ) &amp;&amp; ( id &lt; comments.size() ) ) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; comments.remove( id );
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp; response.sendRedirect(&quot;guestbook.jsp&quot;);
+&nbsp;&nbsp;&nbsp; return;
+%&gt;</pre>
+<p>
+	Wie wir im Code sehen, nehmen wir ein paar einfach Checks des User-Inputs vor.&nbsp; Allerdings vor XSS Attacken bewahrt uns das nicht, wenn wir aber unsere escapeXml() Methode verwenden würden, wäre wir auch dagegen gefeit.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/DictionaryJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Dictionary</h2>
+<p>
+	Ein sehr schönes Beispiel sowohl für die Nutzung des <em>application</em> Objekts, als auch die Nutzung der <em>jspInit</em><em>()</em> Methode ist unsere Dictionary Anwendung.&nbsp; Es geht darum Wörter aus dem Englischen ins Deutsche zu übersetzen.&nbsp;</p>
+<p>
+	Das Wörterbuch selbst ist in einer Datei gespeichert.&nbsp; Wir könnten also her gehen und jedes Mal wenn eine Übersetzung ansteht, das gesamte Wörterbuch von Dateisystem einlesen, nach dem gesuchten Wort suchen und es übersetzen.&nbsp; Dass das weder besonders effektiv noch sehr schnell sein wird dürfte jedem klar sein.</p>
+<p>
+	Also machen wir folgendes: in der <em>jspInit</em><em>()</em> Methode laden wir das gesamte Wörterbuch und speichern es in einer Hashmap.&nbsp; Diese Hashmap fügen wir dann einfach dem <em>application</em> Objekt hinzu.&nbsp; Dieser Vorgang passiert nur einmal, wenn die JSP Seite das erste Mal aufgerufen wird.&nbsp;</p>
+<pre style="margin-left: 40px;">
+&lt;%!
+&nbsp;&nbsp;&nbsp; public void jspInit() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String sPath = getServletContext().getRealPath(&quot;/&quot;) + &quot;dictionary_en_de.txt&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Map&lt;String,String&gt; dictionary = loadDictionaryFromFile(sPath);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ServletContext application = getServletConfig().getServletContext();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; application.setAttribute(&quot;Dictionary&quot;, dictionary);
+&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; private Map&lt;String,String&gt; loadDictionaryFromFile(String fileName) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // look at example from first semester...
+&nbsp;&nbsp;&nbsp; }
+%&gt;
+&lt;%
+&nbsp;&nbsp;&nbsp; Map&lt;String,String&gt; dictionary =
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (Map&lt;String,String&gt;)application.getAttribute(&quot;Dictionary&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; String english = request.getParameter(&quot;englishWord&quot;);
+&nbsp;&nbsp;&nbsp; String german = dictionary.get(english);
+&nbsp;&nbsp;&nbsp; out.println(&quot;The German translation of &#39;&quot; + english + &quot;&#39; is &#39;&quot; + german + &quot;&#39;&quot;);
+%&gt;</pre>
+<p>
+	Danach holen wir uns einfach die dictionary Hashmap aus dem <em>application</em> Objekt, suchen nach dem gewünschten Wort und seiner Übersetzung und geben diese aus.</p>
+<p>
+	<strong>SEP: Wir sollten vermeiden Instanzvariablen in JSP Seiten zu verwenden.</strong></p>
+<p>
+	<strong>SEP: Wir sollte das Dateisystem so wenig wie möglich verwenden. </strong></p>
+<p>
+	.</p>
+<hr />
+<h1>
+	Review</h1>
+<p>
+	Was haben wir in diesem Kapitel gelernt?&nbsp; Wir haben auf einmal ein Kurzzeitgedächtnis in den Formen</p>
+<ul>
+	<li>
+		session: für individuelle Informationen die nur einen Nutzer betreffen, Stichwort Warenkorb und</li>
+	<li>
+		application: für globale Informationen die eine von allen Nutzern geteilt werden, Stichwort Guestbook.</li>
+</ul>
+<p>
+	Dass wir damit sehr interessante Projekte realisieren können werden wir gleich sehen.</p>
+<p>
+	.</p>
+<hr />
+<h1>
+	Projekte</h1>
+<p>
+	Wir haben jetzt das nötige Handwerkszeug, dass wir viele Beispiele aus dem ersten Semester &quot;webifizieren&quot; können.&nbsp; Wir werden dabei sehen, dass wir sehr viel vom Code aus dem ersten Semester wiederverwenden können, man nennt das auch &quot;Re-Use&quot;.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/NumberGuessJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />NumberGuess</h2>
+<p>
+	Ähnlich wie beim Visitor Counter Beispiel, haben wir beim NumberGuess Beispiel aus dem letzten Kapitel, das Hidden-Tag verwendet.&nbsp; Das ist natürlich nicht so schlau, denn jeder der weiß wie das mit dem &quot;View Source&quot; funktioniert, kann die Zahl sehr schnell erraten.&nbsp; Deswegen wollen wir in unserem ersten Projekt das NumberGuess Beispiel so abändern, dass es die zu ratende Zahl im session Objekt speichert und nicht im Hidden-Tag, ganz in Analogie zu dem Visitor Counter Beispiel.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/HangmanJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Hangman</h2>
+<p>
+	Wir haben Hangman ja bereits im ersten Semester programmiert, und es wäre natürlich Unsinn jetzt wieder von vorne zu beginnen.&nbsp; Anstelle nehmen wir einfach die Klasse Hangman aus dem ersten Semester und machen ein paar kleine Modifikationen:</p>
+<ul>
+	<li>
+		zuerst einmal entfernen wir das &quot;extends ConsoleProgram&quot;,</li>
+	<li>
+		dann verschieben wir die Klasse in ein Paket, z.B. &quot;de.variationenzumthema.internet&quot;,</li>
+	<li>
+		wir nehmen den Inhalt der run() Methode und kopieren ihn in den Konstuktor</li>
+	<li>
+		und wir machen Methoden auf die wir von aussen zugreifen müssen public.</li>
+</ul>
+<p>
+	Nach diesen Vorbereitungen, überlegen wir uns kurz wie die Webanwendung funktionieren soll: erst einmal, soll jeder Nutzer sein eigenes Hangman Spiel bekommen.&nbsp; Das bedeutet, dass wir mit dem <em>session</em> Objekt arbeiten müssen.&nbsp; Beim ersten Laden der Seite, muss Hangman initialisiert werden, also ein neues Wort soll erzeugt werden.&nbsp; Das passiert im Konstuktor der Hangman Klasse.&nbsp; Die fügen wir dann zum <em>session</em> Objekt hinzu.&nbsp;</p>
+<pre style="margin-left: 40px;">
+&lt;%@page import=&quot;de.variationenzumthema.internet.Hangman&quot;%&gt;
+&lt;% &nbsp;
+&nbsp;&nbsp;&nbsp; // get handle to Hangman object
+&nbsp;&nbsp;&nbsp; Hangman hangman = (Hangman)session.getAttribute(&quot;Hangman&quot;);
+&nbsp;&nbsp;&nbsp; if ( (hangman == null) || (request.getParameter(&quot;reset&quot;) != null) ) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hangman = new Hangman();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; session.setAttribute(&quot;Hangman&quot;, hangman);
+&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; // check if a guess was made
+&nbsp;&nbsp;&nbsp; String guess = request.getParameter(&quot;guess&quot;);
+&nbsp;&nbsp;&nbsp; if ( (guess != null) &amp;&amp; (guess.length() == 1) ) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hangman.checkGuess(guess);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ( hangman.areWeDone() ) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(&quot;Congratulations!&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp; }
+%&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;body&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h1&gt;Hangman&lt;/h1&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;p&gt;The word looks like this: &lt;strong&gt;&lt;%= hangman.getHintWord() %&gt;&lt;/strong&gt;.&lt;br/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; You used &lt;%= hangman.getCounter() %&gt; guesses.&lt;/p&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;form action=&quot;hangman.jsp&quot; method=&quot;POST&quot; &gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Your guess:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;input type=&quot;text&quot; name=&quot;guess&quot; /&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;input type=&quot;submit&quot; value=&quot;Guess&quot; /&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/form&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (&lt;a href=&quot;hangman.jsp?reset=true&quot;&gt;Reset&lt;/a&gt;)
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+<p>
+	Wir haben hier auch noch gleich eine &quot;Reset&quot; Funktion mit eingebaut, falls das Wort zu schwer war.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/TicTacToeJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />TicTacToe</h2>
+<p>
+	TicTacToe ist ein anderes sehr schönes Beispiel, wie wir ein Programm aus dem ersten Semester webifizieren können.&nbsp; In unserem TicTacToe soll Mensch gegen Maschine spielen.&nbsp; Die Maschine fängt an mit dem ersten Zug.&nbsp; Da wir das Problem ja schon im ersten Semester gelöst haben, machen wir das Gleiche wie oben: wir nehmen den Code aus dem ersten Semester und folgen den Schritten von Hangman um aus dem GraphicsProgram eine allgemeine Klasse zu machen.&nbsp;</p>
+<p>
+	Natürlich haben wir in einer Webanwendung keine MouseEvents, da müssen wir uns was überlegen.&nbsp; Eine Lösung sind Links: z.B. könnten wir die Position x=2 und y=0 wie folgt in einem Link kodieren:</p>
+<pre style="margin-left: 40px;">
+<span>&lt;<span class="start-tag">a</span> <span class="attribute-name">href</span>=&#39;<a class="attribute-value">ticTacToe.jsp?posI=</a></span><a class="attribute-value"><span style="color:#0000ff;">2</span></a><span><a class="attribute-value"><span><span class="error" title="“&amp;” did not start a character reference. (“&amp;” probably should have been escaped as “&amp;amp;”.)">&amp;</span>po</span>sJ=</a></span><a class="attribute-value"><span style="color:#0000ff;">0</span></a><span>&#39;&gt;</span><span>_</span><span>&lt;/<span class="end-tag">a</span>&gt;</span></pre>
+<p>
+	Das TicTacToe Feld selbst stellen wir dann als HTML Tabelle dar.&nbsp; Und die Logik haben wir uns ja im ersten Semester schon ausgedacht.</p>
+<pre style="margin-left: 40px;">
+&lt;%@page import=&quot;de.variationenzumthema.internet.TicTacToeLogic&quot;%&gt;
+&lt;%&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; // get handle to TicTacToe object
+&nbsp;&nbsp;&nbsp; TicTacToeLogic ttt = (TicTacToeLogic)session.getAttribute(&quot;TicTacToe&quot;);
+&nbsp;&nbsp;&nbsp; if ( (ttt == null) || (request.getParameter(&quot;reset&quot;) != null) ) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ttt = new TicTacToeLogic();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; session.setAttribute(&quot;TicTacToe&quot;, ttt);
+&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; // check if human made a move
+&nbsp;&nbsp;&nbsp; if ( request.getParameter(&quot;posI&quot;) != null ) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int posI = Integer.parseInt(request.getParameter(&quot;posI&quot;));
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int posJ = Integer.parseInt(request.getParameter(&quot;posJ&quot;));
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ttt.setNewPosition(posI,posJ);
+&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp; &nbsp;
+%&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;body&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h1&gt;TicTacToe&lt;/h1&gt;
+&lt;table border=&quot;1&quot;&gt;
+&lt;%
+&nbsp;&nbsp;&nbsp; for (int i = 0; i &lt; 3; i++) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.print(&quot;&lt;tr&gt;&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for (int j = 0; j &lt; 3; j++) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.print(&quot;&lt;td style=&#39;width:20px;text-align:center&#39;&gt;&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ( ttt.getBoardAt(i, j) == &#39;_&#39;) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.print(&quot;&lt;a href=&#39;ticTacToe.jsp?posI=&quot;+i+&quot;&amp;posJ=&quot;+j+&quot;&#39;&gt;&quot;);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.print( ttt.getBoardAt(i, j) );
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ( ttt.getBoardAt(i, j) == &#39;_&#39;) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.print(&quot;&lt;/a&gt;&quot;);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.print(&quot;&lt;/td&gt;&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.print(&quot;&lt;/tr&gt;&quot;);
+&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; // check for game over:
+&nbsp;&nbsp;&nbsp; if ( ttt.isGameOver() ) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(&quot;Game over!&quot;);
+&nbsp;&nbsp;&nbsp; }
+%&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&lt;/table&gt;
+&nbsp;&nbsp;&nbsp; (&lt;a href=&quot;ticTacToe.jsp?reset=true&quot;&gt;Reset&lt;/a&gt;)
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>
+	Wie bei Hangman, instanziieren wir beim ersten Aufrufen der Seite eine Objekt der Klasse TicTacToeLogic.&nbsp; Dieses wird dann einfach im <em>session</em> Objekt gespeichert.&nbsp; Was ein klein bischen Arbeit macht, ist die Tabelle zu generieren und die Links richtig zu setzen.&nbsp;</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/AdventureJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Adventure</h2>
+<p>
+	Machen wir weiter mit dem Adventure Spiel aus dem ersten Semester.&nbsp; Inzwischen kennen wir den Drill: wir nehmen wieder unsere Adventure ConsoleProgram Klasse aus dem ersten Semester und machen daraus eine ganz normale Klasse mit Konstruktor.&nbsp; Etwas müssen wir allerdings beachten: die Daten für das Adventure Spiel kommen ja aus einer Datei, und den Pfad zu dieser Datei (die ja irgendwo auf dem Server liegt) müssen wir dem Konstruktor übergeben:</p>
+<pre style="margin-left: 40px;">
+<span>public class Adventure {
+&nbsp;&nbsp;&nbsp; public Adventure(String filePath) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; loadWorld(filePath);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; currentRoom = &quot;kitchen&quot;;
+&nbsp;&nbsp;&nbsp; }
+    ...
+}
+</span></pre>
+<p>
+	Die Klasse wird wie immer beim ersten Laden der JSP Seite instanziiert.</p>
+<pre style="margin-left: 40px;">
+<span>&lt;%
+&nbsp;&nbsp;&nbsp; Adventure advntr = (Adventure) session.getAttribute(&quot;Adventure&quot;);
+&nbsp;&nbsp;&nbsp; if (advntr == null) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String filePath = config.getServletContext().getRealPath(&quot;/&quot;) + &quot;adventure.txt&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; advntr = new Adventure(filePath);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; session.setAttribute(&quot;Adventure&quot;, advntr);
+&nbsp;&nbsp;&nbsp; }
+%&gt;</span></pre>
+<p>
+	Wir beginnen unser Adventure in der Küche.&nbsp; Von da können wir in eine Liste von Räumen, die wir mittels getAvailableRooms() erhalten.&nbsp; Wir könnten diese Liste einfach aufzählen, viel besser ist es hier aber das HTML Select-Tag zu verwenden.&nbsp; Der Vorteil des Select-Tags ist, dass der Nutzer eigentlich keine falschen Eingaben machen kann.</p>
+<pre style="margin-left: 40px;">
+<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;form action=&quot;adventureLogic.jsp&quot; method=&quot;POST&quot; &gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; You can go to:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:#0000ff;">&lt;select name=&quot;room&quot;&gt;</span>
+<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;%
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for (String room : advntr.getAvailableRooms()) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(&quot;&lt;option value=&#39;&quot; + room + &quot;&#39;&gt;&quot; + room + &quot;&lt;/option&gt;&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; %&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:#0000ff;">&lt;/select&gt;</span>
+<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;input type=&quot;submit&quot; value=&quot;Go&quot; /&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/form&gt;</span></pre>
+<p>
+	Die Logik um zum nächsten Raum zu gelangen haben wir in die <span><em>adventureLogic.jsp</em> Datei ausgelagert:</span></p>
+<pre style="margin-left: 40px;">
+<span>&lt;%@page import=&quot;de.variationenzumthema.internet.Adventure&quot;%&gt;
+&lt;%
+&nbsp;&nbsp;&nbsp; if (request.getParameter(&quot;reset&quot;) != null) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; session.removeAttribute(&quot;Adventure&quot;);
+&nbsp;&nbsp;&nbsp; } else {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String room = request.getParameter(&quot;room&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Adventure advntr = (Adventure) session.getAttribute(&quot;Adventure&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; advntr.setCurrentRoom(room);
+&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp; response.sendRedirect(&quot;adventure.jsp&quot;);
+%&gt;</span></pre>
+<p>
+	Das ist zwar nicht nötig, macht unseren Code aber viel lesbarer und wartbarer.&nbsp;</p>
+<p>
+	Sowohl in Hangman als auch TicTacToe verwendeten wir nur eine Datei für Logik und für View.&nbsp; Aber eigentlich sollte man die beiden trennen, das ist was wir hier gemacht haben: der View ist in <em>adventure.jsp</em> und die Logik in <span><em>adventureLogic.jsp</em></span>.&nbsp; Später wird uns das in Richtung Model-View-Controller Pattern führen, aus unserer Logik wird der Controller.</p>
+<p>
+	<strong>SEP: Je weniger Optionen ein Nutzer hat, desto weniger kann schief gehen.</strong></p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/ChatJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Chat</h2>
+<p>
+	Bisher haben wir nur mit dem <em>session</em> Objekt gearbeitet, es wird Zeit dass wir auch ein Beispiel mit dem <em>application</em> Objekt machen.&nbsp; Ein Chat in dem mehrere Menschen miteinander chatten können ist eine schöne Anwendung für das <em>application</em> Objekt.&nbsp; Wir können das Formular aus dem TwoPlayer Chat aus Kapitel eins verwenden, wir brauchen die Seiten <em>chat.jsp</em> und <em>conversation.jsp</em>.</p>
+<p>
+	In der <span><em>chatLogic.jsp</em> Seite nehmen wir die einzelnen Messages und fügen sie zur Liste der Konversation hinzu.&nbsp; Die Konversations-Liste speichern wir im <em>application</em> Objekt.&nbsp; Damit wir zwischen den verschiedenen Nutzern unterscheiden können verwenden wir die letzten zwei Ziffern der <em>sessionId</em>, und fügen die vor die eigentliche Message.&nbsp; </span></p>
+<pre style="margin-left: 40px;">
+<span>&lt;%
+&nbsp;&nbsp;&nbsp; String msg = request.getParameter(&quot;msg&quot;);
+&nbsp;&nbsp;&nbsp; if (msg != null) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Vector&lt;String&gt; conversation = (Vector&lt;String&gt;) application.getAttribute(&quot;Chat&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (conversation == null) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; conversation = new Vector&lt;String&gt;();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; application.setAttribute(&quot;Chat&quot;, conversation);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:#0000ff;">String id = session.getId();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; id = id.substring(id.length()-2);</span><span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; conversation.add(id + &quot;: &quot; + msg);
+&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp; response.sendRedirect(&quot;chat.jsp&quot;);
+%&gt;</span></pre>
+<p>
+	Kommen wir zu der Geschichte mit dem IFrame-Tag: das Problem mit dem Web ist, dass es nach dem Poll-Prinzip funktioniert.&nbsp; Soll heißen, der Browser muss beim Server nachfragen ob sich irgendetwas geändert hat.&nbsp; Der Server kann nicht von sich aus irgendwelche Daten an den Browser schicken (das geht erst mit HTML5&#39;s WebSockets).&nbsp; In unserem Beispiel bedeutet das, dass wir nicht mitbekommen, wenn ein anderer Nutzer eine neue Message gepostet hat.&nbsp; Wir müssten also eigentlich einmal alle paar Sekunden auf den Reload Knopf drücken um festzustellen, ob irgendjemand was Neues gepostet hat.</p>
+<p>
+	Das können wir aber auch automatisch machen, mit Hilfe des Refresh Meta-Tags.&nbsp; Wir schreiben also eine Seite <em>chatConversation.jsp</em>, die nichts anderes macht, als sich selbst alle 5 Sekunden neu zu laden.&nbsp; Alles was die Seite macht, ist einfach den Inhalt der Konversation zu listen.&nbsp; Und hier kommt der IFrame-Tag ganz gelegen, er erlaubt es uns nämlich eine andere Seite in unsere Hauptseite einzubetten.</p>
+<pre style="margin-left: 40px;">
+<span>&lt;%&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; Vector&lt;String&gt; conversation = (Vector&lt;String&gt;)application.getAttribute(&quot;Chat&quot;);
+&nbsp;&nbsp;&nbsp; if ( conversation == null ) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; conversation = new Vector&lt;String&gt;();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; application.setAttribute(&quot;Chat&quot;, conversation);
+&nbsp;&nbsp;&nbsp; }
+%&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;head&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:#0000ff;">&lt;meta http-equiv=&quot;refresh&quot; content=&quot;5&quot; /&gt;</span>
+<span>&nbsp;&nbsp;&nbsp; &lt;/head&gt;
+&nbsp;&nbsp;&nbsp; &lt;body&gt;
+&lt;%
+&nbsp;&nbsp;&nbsp; for (int i=conversation.size()-1; i&gt;=0; i--) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println( conversation.get(i) +&quot;&lt;br/&gt;&quot; );
+&nbsp;&nbsp;&nbsp; }
+%&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;</span></pre>
+<p>
+	Die Lösung funktioniert.&nbsp; Allerdings, und das sollten wir nicht aus den Augen verlieren, generieren wir mit dem Refresh-Tag eine konstante Hintergrundlast auf unserem Server.&nbsp; Alle fünf Sekunden kommt von jedem Browser der an dem Chat teilnimmt ein Request.&nbsp; Bei vielen Benutzern kann das zu einem Problem werden.&nbsp; Eleganter wäre wenn man das Ganze mit HTML5&#39;s WebSockets machen würde.&nbsp; Aber erstens benötigt man JavaScript dazu, und zweitens ist das etwas komplizierter.</p>
+<p>
+	<strong>SEP: Man sollte regelmäßige Refreshs vermeiden, da sie eine unnötige Last auf dem Server erzeugen.</strong></p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/MinesJSP.png" style="width: 200px; height: 277px; float: right; margin-right: 10px; margin-left: 10px;" />Mines</h2>
+<p>
+	Bisher waren alle unsere Beispiele eher textlastig.&nbsp; Wie wäre es mit einem kleinen Graphikbeispiel?&nbsp; Da wir ja weder JavaScript, Applets oder geschweige denn Flash verwenden wollen, werden wir auf Animationen verzichten müssen.&nbsp; Aber ein Spiel wie Mines aus dem ersten Semester oder Kartenspiele sind kein Problem.</p>
+<p>
+	Wir nehmen wieder den Mines Code aus dem ersten Semester und machen aus dem GraphicsProgram wieder eine allgemeine Klasse, wie wir das auch bei Hangman gemacht haben.&nbsp; Die Bilder laden wir auf den Server hoch, und wir verwenden das img-Tag und eine HTML Tabelle um das Spielfeld grafisch im Browser darzustellen.&nbsp; Inzwischen dürfte das schon fast zu Routine geworden sein:</p>
+<pre style="margin-left: 40px;">
+<span>&lt;%
+&nbsp;&nbsp;&nbsp; MinesClone mc = (MinesClone)session.getAttribute(&quot;MinesClone&quot;);
+&nbsp;&nbsp;&nbsp; if ( mc == null ) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mc = new MinesClone();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; session.setAttribute(&quot;MinesClone&quot;, mc);
+&nbsp;&nbsp;&nbsp; }
+%&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;body&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h1&gt;Mines&lt;/h1&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;%= </span><span style="color:#0000ff;">mc.drawWholeField()</span><span> %&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;a href=&quot;minesLogic.jsp?reset=true&quot;&gt;(Reset)&lt;/a&gt;
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;
+</span></pre>
+<p>
+	Das Zeichnen des Spielfeldes überlassen wir der MinesClone Klasse, das macht unser HTML übersichtlicher, und löst auch die Kopplung, soll heißen wir müssen weniger Methoden der MinesClone Klasse public machen.&nbsp; Die <em><span>drawWholeField() </span></em>Methode sieht wie folgt aus:</p>
+<pre style="margin-left: 40px;">
+<span>&nbsp;&nbsp;&nbsp; public String drawWholeField() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String html = &quot;&lt;table style=&#39;border-spacing: 0;border-collapse: collapse;&#39;&gt;&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for (int i = 0; i &lt; FIELD_SIZE; i++) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; html += &quot;&lt;tr&gt;&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for (int j = 0; j &lt; FIELD_SIZE; j++) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; html += drawOneTile(i, j);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; html += &quot;&lt;/tr&gt;&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; html += &quot;&lt;/table&gt;&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return html;
+&nbsp;&nbsp;&nbsp; }
+</span></pre>
+<p>
+	Bleibt nur noch die <em>minesLogic.jsp</em> Seite, und die simuliert eigentlich nur den MouseClick, ähnlich wie bei TicTacToe:</p>
+<pre style="margin-left: 40px;">
+<span>&lt;%@page import=&quot;de.variationenzumthema.internet.MinesClone&quot;%&gt;
+&lt;%
+&nbsp;&nbsp;&nbsp; if ( request.getParameter(&quot;reset&quot;) != null ) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; session.removeAttribute(&quot;MinesClone&quot;);
+&nbsp;&nbsp;&nbsp; } else {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int i = Integer.parseInt( request.getParameter(&quot;i&quot;) );
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int j = Integer.parseInt( request.getParameter(&quot;j&quot;) );
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MinesClone mc = (MinesClone)session.getAttribute(&quot;MinesClone&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mc.mouseClicked(i, j);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp; response.sendRedirect(&quot;mines.jsp&quot;);
+%&gt;</span></pre>
+<p>
+	Eigentlich überraschend einfach.&nbsp; Falls wir uns jetzt inspiriert fühlen, können wir auch unserem TicTacToe Spiel einen grafischen Facelift verpassen.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/MessangerJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Messenger</h2>
+<p>
+	Bei Messanger handelt es sich um eine kleine Anwendung in der sich verschiedene Nutzer Messages senden können.&nbsp; Die Details zu dieser Anwendung haben wir ja bereits im ersten Kapitel beschrieben und auch das UI haben wir dort schon umgesetzt.&nbsp; Hier wollen wir uns jetzt um die Datenhaltung und Businesslogik kümmern.</p>
+<p>
+	Die Login Seite ist reine UI, sie sendet lediglich den Alias des Nutzers an die Seite <em>messengerHome.jsp</em>. &nbsp;</p>
+<p>
+	Die zentrale Frage die sich stellt bevor wir weitermachen können, verwendet man das <em>session</em> oder das <em>application</em> Objekt?&nbsp; Oder vielleicht beide?&nbsp; Da wir Messages zwischen verschiedenen Personen hin und her schicken wollen, ist klar das wir etwas brauchen, auf das alle Nutzer zugreifen können.&nbsp; Deswegen ist auf jeden Fall das <em>application</em> Objekt notwendig.&nbsp; In ihm speichern wir eine Map, die den Nutzer-Alias als Key hat und die Messages für diesen Nutzer als Value:</p>
+<pre style="margin-left: 40px;">
+<span>Map&lt;String, List&lt;String&gt;&gt; users = 
+    (Map&lt;String, List&lt;String&gt;&gt;) application.getAttribute(&quot;Messenger&quot;);
+</span></pre>
+<p>
+	Wie üblich müssen wir beim allerersten Aufruf dafür sorgen, dass die Map initialisiert wird.&nbsp;</p>
+<p>
+	Die nächste Frage die sich stellt, handelt es sich um einen neuen Nutzer, oder hat sich der Nutzer schon mal bei uns angemeldet.&nbsp; Dies können wir einfach mittels</p>
+<pre style="margin-left: 40px;">
+<span>    if (!users.containsKey(alias)) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; List&lt;String&gt; msgs = new ArrayList&lt;String&gt;();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; msgs.add(&quot;Welcome to Messenger!&quot; + &quot;; System&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; users.put(alias, msgs);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; }</span></pre>
+<p>
+	klären.&nbsp; Gibt es den Nutzer noch nicht, müssten wir eine neue Liste für Messages anlegen.</p>
+<p>
+	<img alt="" src="images/Messenger_home.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Danach können wir dem Nutzer das Formular zum versenden von Messages zeigen:</p>
+<pre style="margin-left: 40px;">
+<span>&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;body&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h1&gt;Messenger Home&lt;/h1&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;p&gt;&lt;a href=&#39;messengerRead.jsp?alias=&lt;%= alias %&gt;&#39;&gt;Read my messages.&lt;/a&gt;&lt;/p&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;form action=&quot;messengerSend.jsp&quot; method=&quot;GET&quot;&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Enter message to send:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;textarea name=&quot;message&quot; rows=&quot;2&quot; cols=&quot;40&quot;&gt;&lt;/textarea&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:#0000ff;">&lt;input type=&quot;hidden&quot; name=&quot;senderId&quot; value=&quot;&lt;%= alias %&gt;&quot;/&gt;</span>
+<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;br/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; to user
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:#0000ff;">&lt;select name=&quot;receiverId&quot;&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;%
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for (String name : users.keySet()) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(&quot;&lt;option value=&#39;&quot; + name + &quot;&#39;&gt;&quot; + name + &quot;&lt;/option&gt;&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; %&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/select&gt;&nbsp;&nbsp;&nbsp;</span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;input type=&quot;submit&quot; value=&quot;Send&quot;/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/form&gt;
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;</span></pre>
+<p>
+	Als kleinen Bonus können wir dem Nutzer noch die möglichen Adressaten mit einem Select-Tag auflisten.&nbsp; Wir verwenden hier das Hidden-Tag um mitzuteilen wer der Sender der Nachricht ist.&nbsp; Alternativ, könnte man wie im Captcha Beispiel auch den Sender Alias im <em>session</em> Objekt speichern.</p>
+<p>
+	Die <em>messengerSend.jsp</em> Seite holt sich die Parameter und fügt die neue Message in der users-Map für den Empfänger ein:</p>
+<pre style="margin-left: 40px;">
+<span>&lt;%
+    ... get parameter ...
+
+&nbsp;&nbsp;&nbsp; Map&lt;String, List&lt;String&gt;&gt; users = 
+        (Map&lt;String, List&lt;String&gt;&gt;) application.getAttribute(&quot;Messenger&quot;);
+&nbsp;&nbsp;&nbsp; List&lt;String&gt; msgs = users.get(receiverId);
+&nbsp;&nbsp;&nbsp; msgs.add(message + &quot;; &quot;+senderId);
+%<span>&gt;</span></span>
+</pre>
+<p>
+	<img alt="" src="images/Messenger_read.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />DanachDie <em>messengerRead.jsp</em> Seite</p>
+<pre style="margin-left: 40px;">
+<span>&lt;%
+&nbsp;&nbsp;&nbsp; String alias = request.getParameter(&quot;alias&quot;);
+&nbsp;&nbsp;&nbsp; Map&lt;String, List&lt;String&gt;&gt; users = 
+        (Map&lt;String, List&lt;String&gt;&gt;) application.getAttribute(&quot;Messenger&quot;);
+&nbsp;&nbsp;&nbsp; List&lt;String&gt; msgs = users.get(alias);
+%&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;body&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h1&gt;Messenger Read&lt;/h1&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;p&gt;&lt;a href=&#39;messengerHome.jsp?alias=&lt;%= alias %&gt;&#39;&gt;Home&lt;/a&gt;&lt;/p&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;p&gt;Your messages:&lt;/p&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;ul&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;%
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for ( int i=msgs.size()-1; i&gt;=0; i-- ) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(&quot;&lt;li&gt;&quot;+msgs.get(i) +&quot;&lt;/li&gt;&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; %&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/ul&gt;
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;</span></pre>
+<p>
+	listet einfach alle Messages die für einen bestimmten Nutzer bestimmt sind.</p>
+<p>
+	<strong>SI: Wir sollten den Messanger auf Sicherheitsprobleme hin untersuchen.</strong></p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/TwoPlayerJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />TwoPlayer</h2>
+<p>
+	Nach dem Multiplayer-Chat wollen wir uns hier mit dem Two-Player Chat beschäftigen.&nbsp; Die genauen Anforderungen und die UI haben wir ja schon im ersten Kapitel abgehandelt.&nbsp; Kommen wir zum interessanten Teil, der Logik.</p>
+<p>
+	Um das Problem zu lösen benötigen wir sowohl das <em>application</em> als auch das <em>session</em> Objekt. Überlegen wir uns wie die Logik funktionieren soll: wenn der erste Spieler kommt, dann muss der erst einmal warten, und er bekommt eine <em>waitingId</em>, die der Einfachheit halber gleich seine <em>sessionId</em> ist.&nbsp; Deswegen brauchen wir das <em>session</em> Objekt.&nbsp; Und natürlich müssen wir uns irgendwo global (application) merken, dass jemand wartet.&nbsp; Ausserdem sollte der erste Spieler gelegentlich nachfragen, ob denn schon ein anderer Spieler aufgetaucht ist, das machen wir wie üblich mit dem Refresh-Tag:</p>
+<pre style="margin-left: 40px;">
+<span>&lt;%
+    // check logic...
+%&gt;
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;head&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:#0000ff;">&lt;meta http-equiv=&quot;refresh&quot; content=&quot;5&quot; /&gt;</span>
+<span>&nbsp;&nbsp;&nbsp; &lt;/head&gt;
+&nbsp;&nbsp;&nbsp; &lt;body&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h1&gt;TwoPlayer&lt;/h1&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;p&gt;Waiting for other player to join...&lt;/p&gt;
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;</span></pre>
+<p>
+	Kommt der zweite Spieler, dann kann der ja an unserem globalen Merker erkennen, dass schon jemand wartet, und wir können die beiden verbinden.&nbsp; Wir vergeben dann eine <em>pairId</em>, die auch wieder der Einfachheit halber einfach die beiden sessionIds verknüpft ist.&nbsp; Der zweite Spieler kennt jetzt seine <em>pairId</em>, dem ersten Spieler müssen wir sie noch mitteilen.&nbsp; Da der ja aber alle 5 Sekunden fragt, können wir sie ihm dann beim nächsten Fragen mitteilen.</p>
+<p>
+	Sobald beide die <em>pairId</em> haben ist es ganz einfach: wir fügen zum <em>application</em> Objekt eine HashMap namens <em>messageMap</em>, die als Key die <em>pairId</em> hat und als Wert eine Liste mit der Konversation zwischen den beiden.&nbsp; Jedes mal wenn einer was sagt, wird das einfach an die Liste angehängt. Der Ansatz ist dann genauso wie bei unserer Chat Applikation weiter oben.&nbsp;</p>
+<p>
+	Da die Logik doch etwas komplizierter ist, macht es Sinn diese in eine eigene Klasse auszulagern.&nbsp; Das hat mehrere Vorteile: unsere JSP Seiten werden nicht so messy und bleiben übersichtlicher.&nbsp; Wir können die Klasse TwoPlayerLogic auch in anderen Anwendungen leicht wiederverwenden.&nbsp; Und wir können die Klasse unabhängig testen, z.B. mit JUnit.</p>
+<pre style="margin-left: 40px;">
+<span>package de.variationenzumthema.internet;
+
+public class TwoPlayerLogic {
+
+&nbsp;&nbsp;&nbsp; private String waitingId = null;
+&nbsp;&nbsp;&nbsp; private Map&lt;String, String&gt; pairMap;
+&nbsp;&nbsp;&nbsp; private Map&lt;String, Vector&lt;String&gt;&gt; messageMap;
+
+&nbsp;&nbsp;&nbsp; public TwoPlayerLogic() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pairMap = new HashMap&lt;String, String&gt;();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; messageMap = new HashMap&lt;String, Vector&lt;String&gt;&gt;();
+&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; public void sendMessage(String pairId, String msg) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Vector&lt;String&gt; msgs = messageMap.get(pairId);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (msgs != null) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; msgs.add(msg);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; public Vector&lt;String&gt; receiveMessages(String pairId) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Vector&lt;String&gt; msgs = messageMap.get(pairId);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return msgs;
+&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; public String findPartner(String mySessionId) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // check if I am paired already:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String pairId = pairMap.get(mySessionId);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (pairId == null) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ((waitingId != null) &amp;&amp; (waitingId != mySessionId)) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // somebody is already waiting:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pairId = waitingId + mySessionId;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pairMap.put(waitingId, pairId);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pairMap.put(mySessionId, pairId);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; waitingId = null;
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // add a first welcome message
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Vector&lt;String&gt; msgs = new Vector&lt;String&gt;();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; msgs.add(&quot;Welcome!&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; messageMap.put(pairId, msgs);
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // nobody is waiting:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pairId = null;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; waitingId = mySessionId;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return pairId;
+&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; public void removeFromPairMap(String pairId) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // check if I am paired already:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (pairId != null) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int len = pairId.length() / 2;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String id1 = pairId.substring(0, len);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String id2 = pairId.substring(len);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pairMap.remove(id1);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pairMap.remove(id2);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; messageMap.remove(pairId);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp; }
+}
+</span></pre>
+<p>
+	Was noch ein bischen Kopfzerbrechen bereitet ist, wie wir den Chat wieder beenden.&nbsp; Das ist subtil kompliziert, aber auch machbar.</p>
+<p>
+	Obwohl unser Beispiel sich auf Zwei-Spieler beschränkt, dürfte es relativ klar sein, dass Gruppen-Chats oder Gruppen-Spiele ganz ähnlich gelöst werden können.&nbsp;</p>
+<p>
+	Wie sicher ist unsere Anwendung?&nbsp; Ein Hacker (oder die NSA) müsste an die <em>sessionId</em> gelangen, um einen Chat abzuhören.&nbsp; D.h. von der Sicherheit her ist die Anwendung so gut wie jede online Banking Anwendung, vorausgesetzt man verwendet HTTPS.</p>
+<p>
+	Eine Sache die uns evtl noch stört, der ganz Datenverkehr läuft über unseren Server und produziert dort natürlich eine Last für die wir bezahlen müssen.&nbsp; Manchmal möchte man das, so wie bei WhatsApp.&nbsp; Wenn man aber nicht alles mit anhören möchte, was sich die Leute so erzählen, dann könnte man einen Peer-to-Peer Ansatz wählen, wie Skype das macht.&nbsp; Die Technologie dazu heißt WebRTC.</p>
+<p>
+	.</p>
+<hr />
+<h1>
+	Research</h1>
+<p>
+	Zu diesem Kapitel gibt es nicht ganz so viel zu erforschen.&nbsp; Aber die Themen &quot;Session HIjacking&quot; und auch wie funktioniert das mit den Sessions z.B. in Tomcat sind schon interessant.</p>
+<p>
+	.</p>
+<h2>
+	Session Hijacking</h2>
+<p>
+	Als erstes sollten wir nachlesen was &quot;Session Hijacking&quot; überhaupt ist.&nbsp; Dann sollten wir verstehen warum &quot;Session Hijacking&quot; mit HTTPS viel schwieriger ist.&nbsp; Lange haben sich auch grosse Website wie Facebook und eBay geweigert HTTPS zu verwenden (warum?).&nbsp; Erst mit dem Firefox Plugin Firesheep [1] wurde Session Hijacking aber auf einmal so einfach, dass fast alle Grossen jetzt HTTPS verwenden.</p>
+<p>
+	.</p>
+<h2>
+	Tomcat</h2>
+<p>
+	Tomcat ist ein sehr populärer Servlet Engine.&nbsp; Auch GlassFish verwendet ihn, wir merken das nur nicht.&nbsp; Interessant wäre jetzt mal herauszufinden, ob Tomcat Cookies oder URL Rewrite für sein Session Management verwendet.&nbsp; Und eine andere Frage wäre, kann man das vielleicht ändern?</p>
+<p>
+	.</p>
+<hr />
+<h1>
+	Fragen</h1>
+<ol>
+	<li>
+		Und deswegen sollten wir auch nicht zu große Datenmengen in Sessions speichern.&nbsp; Sie speichern das&nbsp; Profilbild ihres Users mit 1 MegaByte in der Session.&nbsp; Wieviel Speicher (RAM) braucht ihr Server wenn 1000 Leute pro Minute gerade ihren Server besuchen. Beachten Sie, dass eine Session erst nach 15 Minuten Inaktivität wieder gelöscht wird! (15 GByte)<br />
+		&nbsp;</li>
+	<li>
+		Session vs Application: Gehen Sie durch die Projekte im Anhang und entscheiden Sie ob für die Lösung des Projektes ein Session, ein Applikation Objekt, evtl. beide oder evtl. gar keines notwendig ist.<br />
+		&nbsp;</li>
+	<li>
+		In einem der Assignments sollten Sie einen Dictionary Service implementieren. Also ein deutsch-englisches Wörterbuch mittels JSP. Beschreiben Sie kurz wie Sie dabei vorgegangen sind.<br />
+		&nbsp;</li>
+	<li>
+		Betrachten Sie die folgenden fünf Web-Anwendungen. Bei der Entwicklung der Web-Anwendung müssen Sie entscheiden, ob Sie ein &ldquo;session&rdquo; Objekt, ein &ldquo;application&rdquo; Objekt, vielleicht beides, vielleicht aber auch keines brauchen. Für die unten aufgeführten Anwendungen entscheiden Sie welche nötig sind und begründen Sie Ihre Entscheidung.<br />
+		- Calendar: Persönlicher Terminkalender.<br />
+		- Roulette: Einfache Version von Roulette in der ein Spieler gegen den Computer spielt.<br />
+		- Personal Phone Book: Ein Service um seine persönlichen Telefonnummern zu verwalten.<br />
+		- Corporate Phone Book: Das Corporate Phone Book enthält die Telefonnummern aller Mitarbeiter einer Firma. Ist für alle Mitarbeiter zugänglich.<br />
+		- BattleShip: Auch bekannt als &quot;Schiffeversenken&quot;, hier spielen zwei Spieler gegeneinander.<br />
+		&nbsp;</li>
+	<li>
+		Betrachten Sie die folgenden sechs Web-Anwendungen. Bei der Entwicklung der Web-Anwendung müssen Sie entscheiden, ob Sie ein &ldquo;session&rdquo; Objekt, ein &ldquo;application&rdquo; Objekt, vielleicht beides, vielleicht aber auch keines brauchen. Für die unten aufgeführten Anwendungen entscheiden Sie welche nötig sind und begründen Sie Ihre Entscheidung.<br />
+		- Doodle: Doodle ist eine Web Anwendung, die es ermöglicht freie Zeitfenster für gemeinsame Treffen zu finden.<br />
+		- ToDo: ToDo hat ein einfaches Textfeld in dem ein Benutzer eine ToDo-Liste eintragen kann. Jeder Benutzer sollten seine eigene ToDo-Liste sehen.<br />
+		- Chat: Chat implementiert einen privaten Chat zwischen zwei Personen. TicTacToe: Schreiben Sie eine TicTacToe Web-App für einen Spieler, also Spieler gegen Computer.<br />
+		- NumberGuess: Der Computer wählt eine Zufallszahl zwischen 0 und 100. Der Benutzer soll dann erraten welche Zahl das war, und erhält Feedback ob diese kleiner, größer oder gleich der Zufallszahl war, bis der Benutzer die Zahl richtig hat.<br />
+		- Dictionary: Dictionary besteht aus einem HTML Formular in dem der Benutzer ein Wort eingibt und das dann übersetzt wird.<br />
+		&nbsp;</li>
+	<li>
+		JSP hat 9 vordefinierte Objekte. Nennen Sie vier von ihnen und erklären Sie wofür diese gut sind.</li>
+</ol>
+<p>
+	.</p>
+<hr />
+<h1>
+	Referenzen</h1>
+<p>
+	[1] Firesheep, codebutler.github.io/firesheep/</p>
+<p>
+	.</p>
+<p class="footer">
+Copyright &copy; 2016-2021 <a href="http://www.lano.de">Ralph P. Lano</a>.  All rights reserved.
+</p>
+</div>
+</center>
+</div>
+</body>
+</html>

@@ -1,0 +1,889 @@
+<!DOCTYPE html><html lang="de"><head>
+  <title>Variationen zum Thema: Internet</title>
+  <meta name="title" content="Variationen zum Thema: Internet">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta charset="UTF-8">
+  <meta name="description" content="Eine Einführung in Java Enterprise">
+  <meta name="keywords" content="Java Enterprise,Internet,Einführung">
+  <meta name="author" content="Ralph P. Lano">
+  <meta name="robots" content="index,follow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="book.css">
+</head>
+<body><center>
+<div id="wrap">
+	<ul class="sidenav">
+	  <p><a href="index.html">Variationen zum Thema</a><a href="index.html">Internet</a></p>
+	  <li><a href="Basics.html">Basics</a></li>
+	  <li><a href="JSP.html">JSP</a></li>
+	  <li><a href="Request.html">Request</a></li>
+	  <li><a href="Session.html">Session</a></li>
+	  <li><a href="Database.html">Database</a></li>
+	  <li><a href="Services.html" class="active">Services</a></li>
+	  <li><a href="Projects.html">Projects</a></li>
+	  <li><a href="NetBeans.html">NetBeans</a></li>
+	  <li><a href="JavaScript.html">JavaScript</a></li>
+	</ul>
+<div class="content"><p>
+	<img alt="" src="images/Stocks.png" style="display: block; margin-left: auto; margin-right: auto; width: 255px; height: 222px;" /></p>
+<h1>
+	Services</h1>
+<p>
+	Mit der Verbreitung von Apps und mobilen Endgeräten hat auch der Bedarf an Web-Services explosionsartig zugenommen.&nbsp; In diesem Kapitel werden wir sehen wie wir Services zur Verfügung stellen, und wie diese im Detail funktionieren.&nbsp; Nächstes Semester können wir dann basierend auf diesen Services mobilen Anwendungen realisieren.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/SimpleServletJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />SimpleServlet</h2>
+<p>
+	Wir haben Servlets bereits im zweite Kapitel kennengelernt: damals haben wir gesehen, dass aus jeder JSP Seite erst einmal ein Servlet generiert wird, das dann kompiliert und später ausgeführt wird.&nbsp; Was sind Servlets?&nbsp; Servlets sind einfach Java Klassen die die Klasse <em>HttpServlet</em> als Elternklasse haben:</p>
+<pre style="margin-left: 40px;">
+public class SimpleServlet extends HttpServlet {
+
+&nbsp;&nbsp;&nbsp; @Override
+&nbsp;&nbsp;&nbsp; protected void <span style="color:#0000ff;">doGet</span>(HttpServletRequest request, HttpServletResponse response)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; throws ServletException, IOException {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PrintWriter out = response.getWriter();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(&quot;Hello from SimpleServlets doGet() method.&quot;);
+&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; @Override
+&nbsp;&nbsp;&nbsp; protected void <span style="color:#0000ff;">doPost</span>(HttpServletRequest request, HttpServletResponse response)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; throws ServletException, IOException {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PrintWriter out = response.getWriter();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(&quot;Hello from SimpleServlets doPost() method.&quot;);
+&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; @Override
+&nbsp;&nbsp;&nbsp; public String getServletInfo() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return &quot;Demonstration of servlets.&quot;;
+&nbsp;&nbsp;&nbsp; }
+}</pre>
+<p>
+	Es gibt eine <em>doGet()</em> und eine <em>doPost()</em> Methode, die wir überschreiben können, wie im obigen Beispiel.&nbsp; Die erstere wird aufgerufen wenn wir einen HTTP GET Request erhalten, die letztere wenn wir einen POST Request erhalten.&nbsp; Servlets erlauben es uns also zwischen den beiden zu unterscheiden.&nbsp; Um den Unterschied zu sehen, betrachten wir eine kleine JSP Seite:</p>
+<pre style="margin-left: 40px;">
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;body&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h1&gt;SimpleServlet&lt;/h1&gt;
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;p&gt;Access servlet via <span style="color:#0000ff;">&lt;a href=&quot;simpleservlet&quot;&gt;GET&lt;/a&gt;</span> request.&lt;/p&gt;
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">&lt;form action=&quot;simpleservlet&quot; method=&quot;POST&quot;&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;p&gt;Access servlet via &lt;input type=&quot;submit&quot; value=&quot;POST&quot;/&gt; request.&lt;/p&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/form&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>
+	Über den Link rufen wir die <em>doGet()</em> Methode auf, über das Formular die <em>doPost()</em> Methode.</p>
+<p>
+	Interessant ist auch wie Servlets aufgerufen werden.&nbsp; Die URL lautet einfach</p>
+<pre style="margin-left: 40px;">
+http://localhost:8080/Pr6_Service/<span style="color:#0000ff;">simpleservlet</span></pre>
+<p>
+	wir sagen einfach &quot;simpleservlet&quot; also ohne eine Endung wie &quot;.jsp&quot; oder &quot;.servlet&quot; oder so.&nbsp; Der Grund dafür ist die <em>web.xml</em> Datei.&nbsp; Die Datei befindet sich im /WEB-INF Verzeichnis bei unseren JSP Seiten, und war schon immer da, nur bisher haben wir sie ignoriert, bzw. nicht gebraucht.&nbsp; Allerdings für jedes Servlet das wir schreiben, müssen wir einen Eintrag in die <em>web.xml</em> Datei machen:</p>
+<pre style="margin-left: 40px;">
+&lt;web-app version=&quot;3.1&quot; ...&gt;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; &lt;servlet&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;servlet-name&gt;SimpleServlet&lt;/servlet-name&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;servlet-class&gt;de.variationenzumthema.internet.simpleservlet.SimpleServlet&lt;/servlet-class&gt;
+&nbsp;&nbsp;&nbsp; &lt;/servlet&gt;
+&nbsp;&nbsp;&nbsp; &lt;servlet-mapping&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;servlet-name&gt;SimpleServlet&lt;/servlet-name&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">&lt;url-pattern&gt;/simpleservlet&lt;/url-pattern&gt;</span>
+&nbsp;&nbsp;&nbsp; &lt;/servlet-mapping&gt;
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; &lt;session-config&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">&lt;session-timeout&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 30
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/session-timeout&gt;</span>
+&nbsp;&nbsp;&nbsp; &lt;/session-config&gt;
+
+&nbsp;&nbsp;&nbsp; &lt;welcome-file-list&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">&lt;welcome-file&gt;index.jsp&lt;/welcome-file&gt;</span>
+&nbsp;&nbsp;&nbsp; &lt;/welcome-file-list&gt;
+&lt;/web-app&gt;</pre>
+<p>
+	Wir sehen also, dass der URL-Pattern &quot;simpleservlet&quot; auf das Servlet mit Namen <em>SimpleServlet</em> gemapped wird.&nbsp; Dessen Deklaration wiederum in der Klasse de.variationenzumthema.internet.simpleservlet.SimpleServlet zu finden ist.</p>
+<p>
+	Zwei andere Dinge die wir hier noch sehen: zum Einen wird hier anscheinend die Session-Timeout Zeit festgelegt, in diesem Fall 30 Minuten.&nbsp; Und die Begrüssungsdatei, also das welcome-file, ist &quot;index.jsp&quot;.&nbsp; Das bedeutet, immer wenn ein Nutzer nur das Verzeichnis und keine genaue Dateiangabe für die URL macht, wird diese Datei angezeigt.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/StocksJSP2.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />StocksServlet</h2>
+<p>
+	Natürlich können Servlets auch auf Datenbanken zugreifen.&nbsp; Als Beispiel nehmen wir das Aktienbeispiel aus dem letzten Kapitel.&nbsp; POJO, Dao und Hibernate Konfiguration sind vollkommen unverändert.&nbsp; Nur anstelle einer JSP Datei, verwenden wir jetzt ein Servlet für die Ausgabe:</p>
+<pre style="margin-left: 40px;">
+public class StocksServlet extends HttpServlet {
+
+&nbsp;&nbsp;&nbsp; @Override
+&nbsp;&nbsp;&nbsp; public void <span style="color:#0000ff;">init()</span> throws ServletException {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; super.init();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String path = getServletContext().getRealPath(&quot;/&quot;) + &quot;SP500_HistoricalStockDataMonthly.csv&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ServletContext application = getServletContext();
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // init database with data from file:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; StockDao dao = new StockDao();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; List&lt;String&gt; dates = dao.initStockPriceTable(path);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; application.setAttribute(&quot;Stocks.dao&quot;, dao);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; application.setAttribute(&quot;Stocks.dates&quot;, dates);
+&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; @Override
+&nbsp;&nbsp;&nbsp; protected void doGet(HttpServletRequest request, HttpServletResponse response)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; throws ServletException, IOException {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // query database for symbol
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String symbol = <span style="color:#0000ff;">request.getParameter(&quot;symbol&quot;)</span>;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; StockDao dao = (StockDao) getServletContext().getAttribute(&quot;Stocks.dao&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; List&lt;String&gt; dates = (List&lt;String&gt;) getServletContext().getAttribute(&quot;Stocks.dates&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; StockSymbol sp = dao.getStockPrice(symbol);
+&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">PrintWriter out = response.getWriter();</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (sp != null) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(<span style="color:#0000ff;">sp.getJSON()</span>);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //out.println(&quot;symbol not found&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; response.sendError(HttpServletResponse.SC_NOT_FOUND,&quot;stock symbol not found&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp; }
+}
+</pre>
+<p>
+	Wir sehen, dass Servlets auch eine <em>init()</em> Methode haben, die vollkommen analog zur <em>jspInit()</em> Methode funktioniert.&nbsp; Auch auf das <em>application</em> Objekt können wir dort zugreifen.&nbsp; In der doGet() Methode ist dann die eigentlich Logik: auch wieder mit request.getParameter() greifen wir auf die Parameter zu.&nbsp; Einzig, das <em>out</em> Objekt ist jetzt nicht mehr vordefiniert, das können wir aber auch selbst machen, wie wir oben sehen.</p>
+<p>
+	.</p>
+<h2>
+	JSON</h2>
+<p>
+	Ein kleiner Unterschied zur JSP Version existiert:&nbsp; die Klasse StockSymbol hat zusätzlich eine Methode namens <em>getJSON()</em>:</p>
+<pre style="margin-left: 40px;">
+public class StockSymbol {
+    ...
+&nbsp;&nbsp;&nbsp; public String getJSON() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return &quot;{\&quot;symbol\&quot;: \&quot;&quot; + symbol + &quot;\&quot;, \&quot;prices\&quot;: &quot; + prices + &#39;}&#39;;
+&nbsp;&nbsp;&nbsp; }
+}
+</pre>
+<p>
+	JSON steht für &quot;JavaScript Object Notation&quot; [1] und ist ein Standard der sehr häufig im Zusammenhang mit Webservices verwendet wird.&nbsp; Es ist ein sehr einfaches Format das es erlaubt Daten, und vor allem Objekte, zwischen zwei Parteien auszutauschen.&nbsp; Früher war dafür hauptsächlich XML vorgesehen, heute wird aber fast ausschliesslich JSON verwendet.</p>
+<p>
+	In JSON werden Arrays einfach mit eckigen Klammern dargestellt, also aus dem Java</p>
+<pre style="margin-left: 40px;">
+String[] months = {&quot;Jan&quot;,&quot;Feb&quot;,...,&quot;Dec&quot;};</pre>
+<p>
+	wird einfach das folgende JSON</p>
+<pre style="margin-left: 40px;">
+[&quot;Jan&quot;,&quot;Feb&quot;,...,&quot;Dec&quot;]</pre>
+<p>
+	Noch interessanter aber ist, dass wir auch Objekte mit JSON darstellen können.&nbsp; Wenn wir aus der Java Klasse <em>Dog</em>:</p>
+<pre style="margin-left: 40px;">
+public class Dog {
+    private String name;
+    private int age;
+    public Dog(String n, int a) {
+        name = n;
+        age = a;
+    }
+}
+</pre>
+<p>
+	ein Objekt erzeugen, z.B., new Dog(&quot;Lassie&quot;, 42), dann wird daraus folgendes JSON Objekt:</p>
+<pre style="margin-left: 40px;">
+{name: &quot;Lassie&quot;, age: 42}</pre>
+<p>
+	Richtig cool ist, wie JavaScript mit JSON Objekten umgehen kann, und das ist eigentlich der Hauptgrund für den Siegeszug von JSON.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/HistogramJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Histogram</h2>
+<p>
+	Wir können natürlich Servlets verwenden um Webservices zu schreiben.&nbsp; Das geht ohne Problem, denn neben den doGet() und doPost() Methoden gibt es auch noch eine doPut() und eine doDelete() Methode.&nbsp; Allerdings geht es etwas einfacher mit dem <em>Jersey Framework</em> [2], das inziwschen Teil von Standard Java ist.&nbsp; Damit Jersey funktioniert muss man einen Eintrag in die <em>web.xml</em> Datei hinzufügen:</p>
+<pre style="margin-left: 40px;">
+&lt;web-app version=&quot;3.1&quot; ...&gt;&nbsp;&nbsp; &nbsp;
+    ...
+&nbsp;&nbsp;&nbsp; &lt;servlet&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;servlet-name&gt;rest&lt;/servlet-name&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;servlet-class&gt;org.glassfish.jersey.servlet.ServletContainer&lt;/servlet-class&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;init-param&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;param-name&gt;jersey.config.server.provider.packages&lt;/param-name&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;param-value&gt;de.variationenzumthema.internet.service&lt;/param-value&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/init-param&gt;
+&nbsp;&nbsp;&nbsp; &lt;/servlet&gt;
+&nbsp;&nbsp;&nbsp; &lt;servlet-mapping&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;servlet-name&gt;rest&lt;/servlet-name&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">&lt;url-pattern&gt;/service/*&lt;/url-pattern&gt;</span>
+&nbsp;&nbsp;&nbsp; &lt;/servlet-mapping&gt;
+
+&lt;/web-app&gt;</pre>
+<p>
+	Wie wir sehen basiert Jersey auf Servlets.&nbsp; Und wir sehen, dass alles was mit der URL /service/ beginnt an Jersey weitergeleitet wird.</p>
+<p>
+	Betrachten wir unser Histogram Beispiel aus dem ersten Semester.&nbsp; Zunächst geht es wieder darum JSON zu erzeugen.&nbsp; Beginnen wir mit einer Klasse <em>HistogramData</em>, die die Daten für ein Histogramm beinhaltet.</p>
+<pre style="margin-left: 40px;">
+<span style="color:#0000ff;">@XmlRootElement</span>
+public class HistogramData {
+&nbsp;&nbsp;&nbsp; private Integer[] data = {5, 11, 15, 20, 17, 20};
+
+&nbsp;&nbsp;&nbsp; public Integer[] getData() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return data;
+&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; public void setData(Integer[] data) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; this.data = data;
+&nbsp;&nbsp;&nbsp; }&nbsp;&nbsp; &nbsp;
+}</pre>
+<p>
+	Es handelt sich um eine ganz einfache Klasse, aber es könnte natürlich auch ein POJO sein, dessen Daten aus einer Datenbank kommen.&nbsp; Die Annotation @XmlRootElement ist nur nötig wenn wir XML erzeugen wollen.&nbsp; Solange wir nur JSON erzeugen wollen können wir sie auch weglassen.</p>
+<p>
+	<img alt="" src="images/Histogram_JSON.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Um daraus jetzt einen Webservice zu machen, verwenden wir wie bei Hibernate Annotationen:</p>
+<pre style="margin-left: 40px;">
+<span style="color:#0000ff;">@Path(&quot;/histogram&quot;)</span>
+public class HistogramResource {
+
+&nbsp;&nbsp;&nbsp; public HistogramResource() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; super();
+&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">@GET</span>&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">@Produces(MediaType.APPLICATION_JSON)</span>
+&nbsp;&nbsp;&nbsp; public HistogramData getHistogram() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return new HistogramData();
+&nbsp;&nbsp;&nbsp; }
+}</pre>
+<p>
+	Die erste Annotation @Path(&quot;/histogram&quot;) besagt, dass der Service unter der URL</p>
+<pre style="margin-left: 40px;">
+http://localhost:8080/Ch6_Service/service/<span style="color:#0000ff;">histogram</span>
+</pre>
+<p>
+	aufgerufen werden kann.&nbsp; Die @GET Annotation besagt, dass diese Methode aufgerufen werden soll wenn ein HTTP GET Request anfragt.&nbsp; Und schließlich die @Produces Annotation ist der Hauptgrund warum wir Jersey verwenden: denn die sorgt dafür, dass aus dem Objekt &quot;new HistogramData()&quot; automatisch JSON generiert wird.&nbsp; Falls wir möchten, dass XML generiert wird, müssen wir lediglich MediaType.APPLICATION_JSON durch MediaType.APPLICATION_XML ersetzen (und noch die Annotation @XmlRootElement vor die Klasse HistogramData schreiben).</p>
+<p>
+	Die histogram.jsp Datei zeigt, wie man dann mittels JavaScript und diesen JSON Daten einen sehr hübschen Barchart erzeugen kann.&nbsp; Der JavaScript Code ist praktisch unverändert von Scott Murray&#39;s &quot;Making a bar chart&quot; Tutorial übernommen. [3]</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="http://127.0.0.1:8000../images/IPBlockingJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />IPBlocking</h2>
+<p>
+	Kommen wir zum nächsten wichtigen Konzept in diesem Kapitel, den Filtern.&nbsp; Nehmen wir an wir möchten den Zugriff auf unseren Server einschränken.&nbsp; Z.B. haben wir festgestellt, dass von den IP Adressen die mit &quot;127.0.&quot; beginnen ein Denial-of-Service Attacke auf unseren Server gefahren wurde, und wir daher diese Adressen nicht auf unseren Server lassen wollen.&nbsp; Oder umgekehrt, wir möchten nur Zugriff aus dem lokalen Netzwerk erlauben.&nbsp; Beides kann man sehr einfach mit Filtern erledigen.&nbsp;</p>
+<p>
+	Dazu muss man zunächst in der <em>web.xml</em> Datei den Filter anmelden:</p>
+<pre style="margin-left: 40px;">
+&lt;web-app version=&quot;3.1&quot; ...&gt;&nbsp;&nbsp; &nbsp;
+    ...
+&nbsp;&nbsp;&nbsp; &lt;filter&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;filter-name&gt;IPBlockingFilter&lt;/filter-name&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;filter-class&gt;de.variationenzumthema.internet.ipblockingfilter.IPBlockingFilter&lt;/filter-class&gt;
+&nbsp;&nbsp;&nbsp; &lt;/filter&gt;
+&nbsp;&nbsp;&nbsp; &lt;filter-mapping&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;filter-name&gt;IPBlockingFilter&lt;/filter-name&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">&lt;url-pattern&gt;/ipblocking/*&lt;/url-pattern&gt;</span>
+&nbsp;&nbsp;&nbsp; &lt;/filter-mapping&gt;
+
+&lt;/web-app&gt;</pre>
+<p>
+	Jetzt wird also der gesammte Verkehr der an die URL /ipblocking/ gerichtet ist, erst einmal an den <em>IPBlockingFilter</em> weitergeleitet.&nbsp; Dieser entscheidet dann was mit den Anfragen passieren soll:</p>
+<pre style="margin-left: 40px;">
+public class IPBlockingFilter implements Filter {
+
+&nbsp;&nbsp;&nbsp; private FilterConfig config;
+
+&nbsp;&nbsp;&nbsp; @Override
+&nbsp;&nbsp;&nbsp; public void init(FilterConfig filterConfig) throws ServletException {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; this.config = filterConfig;
+&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; @Override
+&nbsp;&nbsp;&nbsp; public void <span style="color:#0000ff;">doFilter</span>(ServletRequest request, ServletResponse response, FilterChain chain) 
+           throws IOException, ServletException {
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String ip = request.getRemoteAddr();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (!ip.startsWith(&quot;127.0.&quot;)) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; chain.doFilter(request, response);
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (response instanceof HttpServletResponse) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ((HttpServletResponse) response).sendError(
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HttpServletResponse.SC_FORBIDDEN,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &quot;Your IP has been blocked!&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; @Override
+&nbsp;&nbsp;&nbsp; public void destroy() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // does nothing
+&nbsp;&nbsp;&nbsp; }
+}
+</pre>
+<p>
+	Die ganze Magie passiert in der <em>doFilter()</em> Methode, hier entscheiden wir ob wir den weiteren Zugriff zulassen wollen, das geht dann mit <em>chain.doFilter()</em>, oder ob dem Browser einfach ein freche Antwort schicken, dass der Zugriff verboten ist.&nbsp; Natürlich sehen wir sofort, dass Filter super-praktisch für unser Sicherheitsmanagement sind.&nbsp; Dazu später mehr.</p>
+<p>
+	.</p>
+<hr />
+<h1>
+	Review</h1>
+<p>
+	In diesem Kapitel haben drei wichtige Konzepte kennengelernt:</p>
+<ul>
+	<li>
+		Servlets</li>
+	<li>
+		Filter und</li>
+	<li>
+		RESTful Webservices und JSON.</li>
+</ul>
+<p>
+	Wobei wir die RESTful Webservices nur angedeutet haben.&nbsp; Gleich kommt aber mehr dazu.</p>
+<p>
+	.</p>
+<hr />
+<h1>
+	Projekte</h1>
+<p>
+	Die Projekte in diesem Kapitel vertiefen Webservices an zwei Beispielen, und zeigen wie Filter für die Sicherung unserer Webseiten verwendet werden können.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/WorldMapJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />WorldMap</h2>
+<p>
+	Natürlich glaubt mir immer keiner, dass JSON wirklich cool ist, deswegen machen wir gleich ein Beispiel.&nbsp; Auch wieder in unserem ersten Semester haben wir ja eine WorldMap gemalt.&nbsp; Damals mit der ACM Graphics Library.&nbsp; Für Webgeschichten stellt sich heraus, dass die D3JS JavaScript Library fast genauso cool ist.&nbsp; Wir haben sie ja schon zweimal weiter oben in Aktion gesehen.</p>
+<p>
+	Zunächst schreiben wir ein Servlet, dass unsere Geo-Daten für Städte in einem JSON Format ausgibt.&nbsp; Der Code ist fast identische zu dem aus dem ersten Semester.&nbsp;</p>
+<pre style="margin-left: 40px;">
+public class WorldMapServlet extends HttpServlet {
+
+&nbsp;&nbsp;&nbsp; private final int WIDTH = 350;
+&nbsp;&nbsp;&nbsp; private final int HEIGHT = 200;
+&nbsp;&nbsp;&nbsp; private String json = &quot;&quot;;
+
+&nbsp;&nbsp;&nbsp; @Override
+&nbsp;&nbsp;&nbsp; public void init() throws ServletException {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; super.init();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String path = getServletContext().getRealPath(&quot;/&quot;) + &quot;Cities.txt&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; json = loadAndDisplayData(path);
+&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; private String loadAndDisplayData(String fileName) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String json = &quot;{\&quot;data\&quot;: [&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //json += &quot;[ [5, 20], [480, 90], [250, 50], [100, 33], [220, 88]]&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; try {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BufferedReader br = new BufferedReader(new FileReader(fileName));
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; while (true) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String line = br.readLine();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (line == null) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; break;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (!line.startsWith(&quot;#&quot;)) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Germany, Berlin, 52&quot;, 32&#39;, N, 13&quot;, 25&#39;, E
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String[] data = line.split(&quot;,&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String country = data[0].trim();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String name = data[1].trim();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String lat1 = data[2].trim();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String lat2 = data[3].trim();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String lat3 = data[4].trim();
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int lat = Integer.parseInt(lat1);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (lat3.endsWith(&quot;S&quot;)) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; lat = -lat;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String lon1 = data[5].trim();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String lon2 = data[6].trim();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String lon3 = data[7].trim();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int lon = Integer.parseInt(lon1);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (lon3.endsWith(&quot;E&quot;)) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; lon = -lon;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int x = (int)((0.5 - lon / 360.0) * WIDTH);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int y = (int)((0.5 - lat / 180.0) * HEIGHT);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; json += &quot;[&quot;+x+&quot;, &quot;+y+&quot;],&quot;;&nbsp;&nbsp;&nbsp; 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; br.close();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } catch (Exception e) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; e.printStackTrace();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; json = json.substring(0,json.length()-1);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; json += &quot;]}&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return json;
+&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; /**
+&nbsp;&nbsp;&nbsp;&nbsp; * Simply return the JSON object: {&quot;data&quot;: [[235, 62],[242, 62],...]}
+&nbsp;&nbsp;&nbsp;&nbsp; */
+&nbsp;&nbsp;&nbsp; @Override
+&nbsp;&nbsp;&nbsp; protected void doGet(HttpServletRequest request, HttpServletResponse response)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; throws ServletException, IOException {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PrintWriter out = response.getWriter();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(json);
+&nbsp;&nbsp;&nbsp; }
+}</pre>
+<p>
+	<img alt="" src="images/WorldMapJSON.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Wir laden die Datei &quot;Cities.txt&quot; und speichern die Werte als JSON in einer Instanzvariable.&nbsp; Das machen wir in der <em>init()</em> Methode.&nbsp; Die doGet() Methode gibt dann einfach die Instanzvariable zurück.&nbsp; Was wir hier auch sehen, dass Servlet Programmierung eigentlich viel ähnlicher zu unserer normalen Art und Weise zu programmieren, als es etwas JSP Programmierung ist.&nbsp;</p>
+<p>
+	Wenn wir jetzt im Browser folgende URL aufrufen</p>
+<pre style="margin-left: 40px;">
+http://localhost:8080/Pr6_Service/worldmap</pre>
+<p>
+	erhalten wir die Geo-Daten im JSON Format.&nbsp;</p>
+<p>
+	Die Datei <em>worldMap.jsp</em> enthält das notwendige D3JS JavaScript, dass die Daten als Scatterplot anzeigt.&nbsp; Der JavaScript Code ist praktisch unverändert von Scott Murray&#39;s &quot;Making a scatterplot&quot; Tutorial. [4]</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/HighScoreREST.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />HighScore Webservice</h2>
+<p>
+	Wir wollen aus unserer HighScore Anwendung einen RESTful Webservice machen.&nbsp; Dazu fassen wir kurz die Anforderungen zusammen, die wir von unserem Webservice erwarten:</p>
+<ul>
+	<li>
+		die HighScores aller Spieler sortiert nach höchsten Score auflisten</li>
+	<li>
+		einen neuen HighScore für einen Spieler anlegen</li>
+	<li>
+		den HighScore eines Spielers ausgeben</li>
+	<li>
+		den HighScore eines Spielers verändern</li>
+	<li>
+		den HighScore eines Spielers löschen</li>
+</ul>
+<p>
+	Wenn wir einen RESTful Webservice kreiiren, durchlaufen wir immer die gleichen Schritte.&nbsp; Wir identifizieren nacheinander</p>
+<ol>
+	<li>
+		die <em>Resourcen</em>, also URLs,</li>
+	<li>
+		die HTTP <em>Methoden</em>, also GET, PUT, POST und/oder DELETE,</li>
+	<li>
+		die <em>Repräsentationen</em>, z.B. JSON oder XML,</li>
+	<li>
+		und die HTTP <em>Status Codes</em> die zurückgegeben werden.</li>
+</ol>
+<p>
+	Gehen wir die Punkte im Einzelnen durch.</p>
+<p>
+	.</p>
+<h3>
+	1. Resourcen</h3>
+<p>
+	Resourcen sind immer URLs.&nbsp; In der Regel werden aus den POJOs Resourcen.&nbsp; Da es in unserem Beispiel nur das HighScore POJO gibt, gibt es auch nur eine Resource:</p>
+<pre style="margin-left: 40px;">
+/service/highscores/</pre>
+<p>
+	In der Regel wählt man die Pluralform des POJOs.</p>
+<p>
+	.</p>
+<h3>
+	2. Methoden</h3>
+<p>
+	Was die Methoden angeht, da ist die Auswahl beschränkt: es gibt GET, PUT, POST und DELETE.&nbsp; Die entsprechen den CRUD Operationen die es in einer Datenbank gibt, also Create, Read, Update und Delete, und genügen in der Regel.&nbsp;</p>
+<p>
+	GET wird zum Lesen einer Resource verwendet und ist unschädlich, da sie nichts verändert.&nbsp; PUT wird verwendet um eine exitierende Resource zu verändern.&nbsp; Manchmal wird PUT auch verwendet um eine neue Resource anzulegen, aber normalerweise wird dafür POST verwendet.&nbsp; Und DELETE macht genau das, es löscht eine exitierende Resource.&nbsp; PUT, POST und DELETE sind gefährlich, da sie Änderungen vornehmen.</p>
+<p>
+	Meist nimmt man seine Anforderungen und fasst diese in eine Tabelle mit den Resourcen und den Methoden zusammen.&nbsp; Für unser HighScore Beispiel sieht das dann so aus, und gibt uns eine schöne Übersicht über den Webservice:</p>
+<table border="1" cellpadding="1" cellspacing="1" style="width: 800px;">
+	<tbody>
+		<tr>
+			<td style="text-align: center;">
+				<strong>URL</strong></td>
+			<td style="text-align: center;">
+				<strong>GET</strong></td>
+			<td style="text-align: center;">
+				<strong>PUT</strong></td>
+			<td style="text-align: center;">
+				<strong>POST</strong></td>
+			<td style="text-align: center;">
+				<strong>DELETE</strong></td>
+		</tr>
+		<tr>
+			<td>
+				highscores/</td>
+			<td>
+				HighScores aller Spieler listen</td>
+			<td>
+				(HighScores aller Spieler ersetzen)</td>
+			<td>
+				HighScore für einen Spieler neu anlegen</td>
+			<td>
+				(HighScores aller Spieler löschen)</td>
+		</tr>
+		<tr>
+			<td>
+				highscores/ralph</td>
+			<td>
+				HighScore eines Spielers ausgeben</td>
+			<td>
+				HighScore für einen Spieler verändern</td>
+			<td>
+				&nbsp;</td>
+			<td>
+				HighScore eines Spielers löschen</td>
+		</tr>
+	</tbody>
+</table>
+<p>
+	.</p>
+<h3>
+	3. Repräsentationen</h3>
+<p>
+	Unter Repräsentation versteht man das Datenformat das ein Webservice versteht.&nbsp; In der Regel sollte es immer ein existierender Webstandard sein, muss es aber nicht.&nbsp; Häufig verwendete Formate sind z.B. Text, JSON, HTML, XML, aber auch GIF und andere MIME Formate sind möglich.</p>
+<p>
+	Nehmen wir an, wir möchten den Highscore des Nutzers &quot;ralph&quot;.&nbsp; Wir würden dann einen GET Request an die Resouce &quot;/service/highscores/ralph&quot; schicken, und als Antwort das folgende JSON erhalten:</p>
+<pre style="margin-left: 40px;">
+<span id="responseGET">{&quot;score&quot;:42,&quot;userId&quot;:&quot;ralph&quot;}</span></pre>
+<p>
+	Umgekehrt wenn wir einen neuen Highscore für den neuen Nutzer &quot;fish&quot; anlegen wollen, würden wir einen POST Request an die Resouce &quot;/service/highscores/&quot; schicken, und im Body des POST Requests wäre folgendes JSON erhalten:</p>
+<pre style="margin-left: 40px;">
+<span id="responseGET">{&quot;userId&quot;:&quot;fish&quot;,&quot;score&quot;:222}</span></pre>
+<p>
+	Auch hier kann man alle verwendeten Repräsentationen in einer schönen Tabelle zusammenfassen:</p>
+<table border="1" cellpadding="1" cellspacing="1" style="width: 800px;">
+	<tbody>
+		<tr>
+			<td style="text-align: center;">
+				<strong>URL</strong></td>
+			<td style="text-align: center;">
+				<strong>GET</strong></td>
+			<td style="text-align: center;">
+				<strong>PUT</strong></td>
+			<td style="text-align: center;">
+				<strong>POST</strong></td>
+			<td style="text-align: center;">
+				<strong>DELETE</strong></td>
+		</tr>
+		<tr>
+			<td>
+				highscores/</td>
+			<td>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			<td>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			<td style="text-align: center;">
+				JSON</td>
+			<td>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+		</tr>
+		<tr>
+			<td>
+				highscores/ralph</td>
+			<td style="text-align: center;">
+				JSON</td>
+			<td style="text-align: center;">
+				JSON</td>
+			<td>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			<td>
+				&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+<p>
+	.</p>
+<h3>
+	4. Status Codes</h3>
+<p>
+	Bei den Status Codes geht es darum dem Client mitzuteilen ob alles funktioniert hat, oder ob etwas schief gelaufen ist.&nbsp; Hierzu verwendet REST die genz normalen HTTP Status Codes [5].&nbsp; Wenn alles in Ordnung ist, dann werden die 200er verwendet, z.B.</p>
+<ul>
+	<li>
+		200 OK</li>
+	<li>
+		201 Created</li>
+	<li>
+		204 No Content (also wie 200, aber im HTTP Body ist nix)</li>
+</ul>
+<p>
+	Wenn etwas schief gelaufen ist, gibt es die 400er:</p>
+<ul>
+	<li>
+		400 Bad Request</li>
+	<li>
+		404 Not Found</li>
+	<li>
+		405 Method Not Allowed</li>
+	<li>
+		409 Conflict (resource already exists)</li>
+</ul>
+<p>
+	Wenn etwas total schief gelaufen ist, also am Server, z.B. Datenbank kaputt oder Meteoriteneinschlag, dann gibt es die 500er:</p>
+<ul>
+	<li>
+		500 Internal Server Error</li>
+</ul>
+<p>
+	Am besten schauen wir uns mal an wie wir die Status Codes in unserem Beispiel verwenden würden:</p>
+<table border="1" cellpadding="1" cellspacing="1" style="width: 800px;">
+	<tbody>
+		<tr>
+			<td style="text-align: center;">
+				<strong>URL</strong></td>
+			<td style="text-align: center;">
+				<strong>GET</strong></td>
+			<td style="text-align: center;">
+				<strong>PUT</strong></td>
+			<td style="text-align: center;">
+				<strong>POST</strong></td>
+			<td style="text-align: center;">
+				<strong>DELETE</strong></td>
+		</tr>
+		<tr>
+			<td>
+				highscores/</td>
+			<td>
+				200 OK<br />
+				404 Not Found</td>
+			<td>
+				405 Method Not Allowed</td>
+			<td>
+				201 Created<br />
+				409 Conflict (resource already exists)</td>
+			<td>
+				405 Method Not Allowed</td>
+		</tr>
+		<tr>
+			<td>
+				highscores/ralph</td>
+			<td>
+				200 OK<br />
+				404 Not Found</td>
+			<td>
+				204 No Content<br />
+				404 Not Found</td>
+			<td>
+				405 Method Not Allowed</td>
+			<td>
+				204 No Content<br />
+				404 Not Found</td>
+		</tr>
+	</tbody>
+</table>
+<p>
+	.</p>
+<h3>
+	Jersey</h3>
+<p>
+	Nachdem wir ja die Datenbank schon im letzten Kapitel aufgesetzt haben, ist die Implementierung des Webservices eigentlich ganz einfach, wenn man das Jersey Framework verwendet.</p>
+<pre style="margin-left: 40px;">
+<span id="responseGET">@Path(&quot;/highscores&quot;)
+public class HighScoresResource {
+
+&nbsp;&nbsp;&nbsp; @Context
+&nbsp;&nbsp;&nbsp; UriInfo uriInfo;
+
+&nbsp;&nbsp;&nbsp; @Context
+&nbsp;&nbsp;&nbsp; Request request;
+
+&nbsp;&nbsp;&nbsp; public HighScoresResource() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; super();
+&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; @GET
+&nbsp;&nbsp;&nbsp; @Produces({MediaType.APPLICATION_JSON})
+&nbsp;&nbsp;&nbsp; public List&lt;HighScore&gt; getHighScores() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return HighScoreDao.getInstance().findAll();
+&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; @GET
+&nbsp;&nbsp;&nbsp; @Path(&quot;/{param}&quot;)
+&nbsp;&nbsp;&nbsp; @Produces(MediaType.APPLICATION_JSON)
+&nbsp;&nbsp;&nbsp; public Response getHighScore(@PathParam(&quot;param&quot;) String userId) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HighScore hs = HighScoreDao.getInstance().findById(userId);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (hs != null) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return Response.status(200).entity(hs).build();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return Response.status(404).entity(&quot;Unknown userId.&quot;).build();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; @PUT
+&nbsp;&nbsp;&nbsp; @Path(&quot;/{param}&quot;)
+&nbsp;&nbsp;&nbsp; @Consumes(MediaType.APPLICATION_JSON)
+&nbsp;&nbsp;&nbsp; public Response putHighScore(@PathParam(&quot;param&quot;) String userId, HighScore hs) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ((userId != null) &amp;&amp; (hs != null)) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (userId.equals(hs.getUserId())) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (HighScoreDao.getInstance().findById(userId) != null) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HighScoreDao.getInstance().merge(hs);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String result = &quot;HighScore updated: &quot; + hs.getUserId();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return Response.status(204).entity(result).build();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return Response.status(404).entity(&quot;Not Found&quot;).build();
+&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; @POST
+&nbsp;&nbsp;&nbsp; @Consumes(MediaType.APPLICATION_JSON)
+&nbsp;&nbsp;&nbsp; public Response postHighScore(HighScore hs) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (HighScoreDao.getInstance().findById(hs.getUserId()) == null) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HighScoreDao.getInstance().save(hs);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String result = &quot;HighScore created: &quot; + hs.getUserId();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return Response.status(201).entity(result).build();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return Response.status(409).entity(&quot;Conflict (resource already exists)&quot;).build();
+&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; @DELETE
+&nbsp;&nbsp;&nbsp; @Path(&quot;/{param}&quot;)
+&nbsp;&nbsp;&nbsp; public Response deleteHighScore(@PathParam(&quot;param&quot;) String userId) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (HighScoreDao.getInstance().findById(userId) != null) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HighScore hs = HighScoreDao.getInstance().findById(userId);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HighScoreDao.getInstance().delete(hs);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String result = &quot;HighScore deleted: &quot; + hs.getUserId();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return Response.status(204).entity(result).build();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return Response.status(404).entity(&quot;Not Found&quot;).build();
+
+&nbsp;&nbsp;&nbsp; }
+}</span></pre>
+<p>
+	.</p>
+<h3>
+	<img alt="" src="images/HTTP_GET_Request.png" style="width: 200px; height: 190px; float: right; margin-right: 10px; margin-left: 10px;" />Testen</h3>
+<p>
+	Das Testen des Webservice gestaltet sich etwas schwieriger, aber kann entweder mit der Firefox Webconsole erfolgen, wie z.B. rechts zu sehen, oder mittels JavaScript.&nbsp;</p>
+<p>
+	Das JavaScript ist in der Datei <em>webservice.js</em>, die im Header der <em>highScore.jsp</em> Datei geladen wird.&nbsp; Wenn man etwas JavaScript versteht, ist sie gar nicht so schwer.&nbsp; Wir zeigen nur die beiden Teile für einen GET Request.&nbsp; In der <em>highScore.jsp</em> Datei steht dort:</p>
+<pre style="margin-left: 40px;">
+...
+&lt;a href=&quot;#&quot; onclick=&quot;<span style="color:#0000ff;">sendGetRequest(&#39;service/highscores/&#39;)</span>;return false;&quot;&gt;
+&nbsp;&nbsp;&nbsp; GET&lt;/a&gt; highscores/
+&lt;input type=&quot;text&quot; size=&quot;5&quot; id=&quot;<span style="color:#0000ff;">urnGET</span>&quot; value=&quot;ralph&quot;&gt;&lt;br/&gt;&lt;br/&gt;
+&lt;span id=&quot;<span style="color:#0000ff;">responseGET</span>&quot;&gt;&amp;nbsp;&lt;/span&gt;&lt;br/&gt;
+&lt;span id=&quot;<span style="color:#0000ff;">statusCodeGET</span>&quot;&gt;&amp;nbsp;&lt;/span&gt;
+...</pre>
+<p>
+	d.h. bei einem Klick auf den Link, wir die JavaScrpt Methode <em>sendGetRequest()</em> aufgerufen.&nbsp; Die ist wiederum in der Datei <em>webservice.js</em> definiert:</p>
+<pre style="margin-left: 40px;">
+function sendGetRequest(url) {
+&nbsp;&nbsp;&nbsp; var urn = document.getElementById(&quot;<span style="color:#0000ff;">urnGET</span>&quot;).value;
+&nbsp;&nbsp;&nbsp; url = url + urn;
+&nbsp;&nbsp;&nbsp; var xmlhttp = new XMLHttpRequest();
+&nbsp;&nbsp;&nbsp; xmlhttp.onreadystatechange = function() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (xmlhttp.readyState == XMLHttpRequest.DONE) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; document.getElementById(&quot;<span style="color:#0000ff;">responseGET</span>&quot;).innerHTML = xmlhttp.responseText;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; document.getElementById(&quot;<span style="color:#0000ff;">statusCodeGET</span>&quot;).innerHTML = xmlhttp.status;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp; xmlhttp.open(&quot;<span style="color:#0000ff;">GET</span>&quot;, url, true);
+&nbsp;&nbsp;&nbsp; xmlhttp.send();
+}</pre>
+<p>
+	Das Ganze ist eigentlich nur zum Testen gedacht, ansonsten ist es eher nutzlos.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="http://127.0.0.1:8000../images/SecureJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Secure</h2>
+<p>
+	Bei der Secure Anwendung verwenden wir einen Filter, um den Zugriff auf das /secure/ Verzeichnis unserer Webanwendung zu schützen.&nbsp; Nur Anwender die sich eingeloggt haben, dürfen auf Mona_Lisa.jpg oder secret.jsp zugreifen.&nbsp; Um das einloggen etwas einfacher zu machen, genügt es auf den Link klicken, dann wird secureLogic.jsp aufgerufen,</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp;&nbsp; session.setAttribute(&quot;User&quot;, &quot;blahblah&quot;);
+&nbsp;&nbsp;&nbsp; response.sendRedirect(&quot;secure.jsp&quot;);
+&nbsp;&nbsp;&nbsp; return;
+%&gt;</pre>
+<p>
+	die nichts anderes macht als uns &quot;einzuloggen&quot;, als das Attribut &quot;User&quot; im <em>session</em> Objekt zu setzen.&nbsp;</p>
+<p>
+	<img alt="" src="http://127.0.0.1:8000../images/Secure2JSP.png" style="width: 200px; float: right; margin-right: 10px; margin-left: 10px; height: 139px;" />Der Filter ist wieder überraschend einfach:</p>
+<pre style="margin-left: 40px;">
+public class SecurityFilter implements Filter {
+
+&nbsp;&nbsp;&nbsp; private FilterConfig config;
+
+&nbsp;&nbsp;&nbsp; @Override
+&nbsp;&nbsp;&nbsp; public void init(FilterConfig filterConfig) throws ServletException {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; this.config = filterConfig;
+&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; @Override
+&nbsp;&nbsp;&nbsp; public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) 
+        throws IOException, ServletException {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HttpServletRequest httpReq = (HttpServletRequest) request;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HttpServletResponse httpResp = (HttpServletResponse) response;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HttpSession session = httpReq.getSession();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String user = (String)session.getAttribute(&quot;User&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ( user != null&nbsp; ) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; chain.doFilter(request, response);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; httpResp.sendRedirect(&quot;../index.jsp&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; @Override
+&nbsp;&nbsp;&nbsp; public void destroy() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // does nothing
+&nbsp;&nbsp;&nbsp; }
+}</pre>
+<p>
+	Wenn wir den SecurityFilter mit unserer Login Anwendung aus dem letzten Kapitel verbinden, dann sehen wir, dass es jetzt auf einmal viel einfacher geworden ist eine Anwendung sicher zu machen, denn es ist nicht mehr nötig jede Seite individuell mit den Zeilen</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp;&nbsp; User usr = (User)session.getAttribute(&quot;Login.User&quot;);
+&nbsp;&nbsp;&nbsp; if ( usr == null ) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; response.sendRedirect(&quot;login.jsp&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return;
+&nbsp;&nbsp;&nbsp; }
+%&gt;
+...
+</pre>
+<p>
+	zu beginnen, sondern es genügt alle zu schützenden Seiten und Dateien in das Verzeichnis /secure/ zu stecken.</p>
+<p>
+	.</p>
+<hr />
+<h1>
+	Fragen</h1>
+<ol>
+	<li>
+		Vergleichen Sie die Technologien Java Servlets und Java Server Pages (JSP).&nbsp; Geben Sie je ein Beispiel wofür sich die eine besser eignet als die andere.<br />
+		&nbsp;</li>
+	<li>
+		Bei der Gestaltung eines RESTful Web-Services folgt man in der Regel mehreren Schritten: Zunächst ermittelt man, welche Ressourcen benötigt werden (URI), dann muss man feststellen, welche der HTTP Methoden umgesetzt werden sollen, und schließlich muss man angeben, welche Representation für jede Ressource und Methods verwendet wird (z.B. JSON). Anhand einer einfachen Version von Yahoo Finance definieren Sie bitte die Ressourcen, Methoden und Repräsentation die nötig sind, um die folgenden Anforderungen abzubilden. Ein authenifizierter Benutzer sollte<br />
+		a) alle Aktien die man kaufen oder verkaufen kann auflisten<br />
+		b) das Depot des Benutzers auflisten, also eine Liste aller Aktien die der Benutzer besitzt<br />
+		c) den momentanen Preis einer Aktie abfragen können<br />
+		d) eine bestimmte Anzahl einer Aktie kaufen können<br />
+		e) eine bestimmte Anzahl einer Aktie verkaufen können<br />
+		&nbsp;</li>
+	<li>
+		Bei der Gestaltung eines RESTful Web-Service, folgt man in der Regel mehreren Schritten: Zunächst ermittelt man, welche Ressourcen benötigt werden (URI), dann muss man feststellen, welche der HTTP Methoden umgesetzt werden sollen, und schließlich muss man angeben, welche Representation für jede Ressource und Methods verwendet wird (z.B.JSON). Anhand einer einfachern Version von Facebook definieren Sie bitte die Ressourcen, Methoden und Repräsentation die nötig sind, um die folgenden Anforderungen abzubilden:<br />
+		a) es können neue User angelegt und gelöscht werden<br />
+		b) jeder User hat einen Status, der gelesen und geändert werden kann<br />
+		c) jeder User hat eine List von Freunden, zu der neue Freunde hinzugefügt werden können und Freunde entfernt werden können.<br />
+		&nbsp;</li>
+	<li>
+		Wofür ist die Firefox Web Console gut?<br />
+		&nbsp;</li>
+	<li>
+		Das HTTP Protokoll verwendet Status-Codes. Bitte erläutern Sie die fünf verschiedene Arten von Status-Codes (wie z.B. einen 404) und geben Sie für jeden je ein Beispiel, dh, in welchem ​​Zusammenhang ein solcher Code auftreten könnte.</li>
+</ol>
+<p>
+	.</p>
+<hr />
+<h1>
+	Referenzen</h1>
+<p>
+	Anbei sind die Referenzen zu diesem Kapitel.&nbsp; Eine sehr schöne Zusammenfassung von RESTful Webservices ist Referenz [6].</p>
+<p>
+	[1] Introducing JSON, <a href="http://www.json.org">www.json.org</a></p>
+<p>
+	[2] Jersey, RESTful Web Services in Java, <a href="https://jersey.java.net/">https://jersey.java.net/</a></p>
+<p>
+	[3] Scott Murray, Making a bar chart, <a href="http://alignedleft.com/tutorials/d3/making-a-bar-chart">http://alignedleft.com/tutorials/d3/making-a-bar-chart</a></p>
+<p>
+	[4] Scott Murray, D3 Tutorials, <a href="http://alignedleft.com/tutorials/d3/">alignedleft.com/tutorials/d3/</a></p>
+<p>
+	[5] List of HTTP status codes, <a href="https://en.wikipedia.org/wiki/List_of_HTTP_status_codes">https://en.wikipedia.org/wiki/List_of_HTTP_status_codes</a></p>
+<p>
+	[6] Roger L. Costello, Building Web Services the REST Way, <a href="http://www.xfront.com/REST-Web-Services.html">www.xfront.com/REST-Web-Services.html</a></p>
+<p>
+	.</p>
+<p class="footer">
+Copyright &copy; 2016-2021 <a href="http://www.lano.de">Ralph P. Lano</a>.  All rights reserved.
+</p>
+</div>
+</center>
+</div>
+</body>
+</html>

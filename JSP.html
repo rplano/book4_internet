@@ -1,0 +1,651 @@
+<!DOCTYPE html><html lang="de"><head>
+  <title>Variationen zum Thema: Internet</title>
+  <meta name="title" content="Variationen zum Thema: Internet">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta charset="UTF-8">
+  <meta name="description" content="Eine Einführung in Java Enterprise">
+  <meta name="keywords" content="Java Enterprise,Internet,Einführung">
+  <meta name="author" content="Ralph P. Lano">
+  <meta name="robots" content="index,follow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="book.css">
+</head>
+<body><center>
+<div id="wrap">
+	<ul class="sidenav">
+	  <p><a href="index.html">Variationen zum Thema</a><a href="index.html">Internet</a></p>
+	  <li><a href="Basics.html">Basics</a></li>
+	  <li><a href="JSP.html" class="active">JSP</a></li>
+	  <li><a href="Request.html">Request</a></li>
+	  <li><a href="Session.html">Session</a></li>
+	  <li><a href="Database.html">Database</a></li>
+	  <li><a href="Services.html">Services</a></li>
+	  <li><a href="Projects.html">Projects</a></li>
+	  <li><a href="NetBeans.html">NetBeans</a></li>
+	  <li><a href="JavaScript.html">JavaScript</a></li>
+	</ul>
+<div class="content"><p>
+	<img alt="" src="images/JspToServlet.png" style="display: block; margin-left: auto; margin-right: auto; width: 376px; height: 239px;" /></p>
+<h1>
+	First Steps</h1>
+<p>
+	Ursprünglich war das Web sehr statisch: es gab Text und Hypertext Dokumente (also Textdokumente mit Links), mit und ohne Bildern.&nbsp; Dynamisch waren die Webseiten aber noch nicht.&nbsp; Das änderte sich erst mit den ersten CGI-Skripten, die noch in C und Pearl geschrieben wurden, später kamen dann PHP, ASP und JSP hinzu.&nbsp; In letzter Zeit sind auch Python und JavaScript sehr populär geworden.&nbsp; JSP steht für Java Server Pages, und es ist eine Möglichkeit mit Java dynamische Webseiten zu schreiben.&nbsp; In diesem Kapitel geht es vor allem darum erste Schritte mit JSP zu unternehmen und das an zahlreichen Beispielen zu üben.</p>
+<p>
+	.</p>
+<h2>
+	Dynamische Webseiten</h2>
+<p>
+	Um dynamische Webseiten erstellen zu können gibt es zwei Möglichkeiten:</p>
+<ul>
+	<li>
+		clientseitig: z.B. mittels JavaScript</li>
+	<li>
+		serverseitig: z.B. mittels JSP oder PHP</li>
+</ul>
+<p>
+	Der Vorteil clientseitiger Webanwendungen ist, dass sie wenig Resourcen auf dem Server benötigen.&nbsp; Die Seite wird einmal heruntergeladen und danach erfolgen fast alle Berechnungen im Browser.&nbsp; Bei serverseitigen Webanwendungen hingegen werden alle Berechnungen auf dem Server ausgeführt, was in der Regel dazu führt, dass man je nach Anwendung sehr viele Server benötigt.&nbsp;</p>
+<p>
+	Aus Kostengründen würde man also clientseitige Webanwendungen wohl bevorzugen.&nbsp; Allerdings gibt es eben sehr viele Anwendungen die sich nicht clientseitig realisieren lassen: z.B. hat Google Maps ca 20 Petabyte an Daten.&nbsp; Die passen weder auf die Festplatte eines normalen Laptops, noch in ein normales Handy.&nbsp; Auch Websites wie Amazon oder Facebook würden nie als clientseitige Webanwendungen funktionieren.&nbsp; Da aber beide Arten ihre jeweiligen Stärken haben, werden diese häufig kombiniert.&nbsp; Deswegen wollen wir hier nicht in schwarz und weiß denken.</p>
+<p>
+	.</p>
+<h2>
+	Client-Server</h2>
+<p>
+	Microsoft&#39;s Word oder Adobe&#39;s Photoshop sind Beispiele für Anwendungen die als Desktop Applikationen sehr gut funktionieren.&nbsp; Google Maps oder Amazon hingegen sind Beispiele die nur mit einer Internetanbindung sinnvoll funktionieren.&nbsp; Diese Art von Anwendungen bestehen aus einem Server, der bei Google oder Amazon steht, wo die Daten sind und die Geschäftslogik ausgeführt wird, und einen Client, meist einem Webbrowser, der es dem Benutzer erlaubt auf die Daten zuzugreifen.&nbsp; Die grundlegende Idee hinter jeder Webanwendung ist die einer Client-Server Anwendung.&nbsp; Haben wir das erst einmal verinnerlicht, wird alles ganz einfach.&nbsp;</p>
+<p style="margin-left: 40px;">
+	<img alt="" src="images/ClientServer.png" style="margin-left: 10px; margin-right: 10px; width: 248px; height: 131px;" /></p>
+<p>
+	Der Client muss nicht notwendigerweise ein Browser sein: Google Maps auf mobilen Endgeräten ist ein schönes Beispiel für eine Client-Server Anwendung bei der der Client eine App ist.</p>
+<p>
+	.</p>
+<h2>
+	Web Server</h2>
+<p>
+	Wenn wir von Server reden meinen wir immer einen Webserver.&nbsp; Da gibt es viele verschiedene, wir werden Tomcat [2] und GlassFish [3] verwenden.&nbsp; Beide kommen automatisch mit der Entwicklungsumgebung NetBeans [4], werden aber auch im professionellen Umfeld verwendet.&nbsp; Eine kurze Einführung zu NetBeans und Webserver findet sich im Anhang.&nbsp;</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/HelloJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Hello JSP</h2>
+<p>
+	Nachdem wir jetzt die Grundlagen erläutert haben, können wir endlich anfangen unsere erste JSP Seite zu schreiben.&nbsp; JSP Seiten sind meist Text oder HTML Dateien, die aber in &quot;.jsp&quot; enden.&nbsp; Ein einfaches &quot;Hello JSP&quot; Beispiel soll den Anfang machen:</p>
+<pre style="margin-left: 40px;">
+<span style="color:#0000ff;">&lt;%</span>
+&nbsp;&nbsp;&nbsp; out.println(&quot;Hello JSP!&quot;);
+<span style="color:#0000ff;">%&gt;</span></pre>
+<p>
+	So wie es bei Java Anwendungen das &quot;System.out.println()&quot; gibt, so gibt es bei JSP Seiten das &quot;out.println()&quot;.&nbsp; Ansonsten schreibt man innerhalb der sogenannten Scriptlet Tags &quot;&lt;%&quot; und &quot;%&gt;&quot; ganz normales Java.</p>
+<p>
+	<img alt="" src="images/Loop.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Man kann auch HTML und Java mischen:</p>
+<pre style="margin-left: 40px;">
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;body&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h1&gt;Loop&lt;/h1&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;p&gt;Run Java code inside scriptlet tags: &lt;br /&gt;
+<span style="color:#0000ff;">&lt;%
+&nbsp;&nbsp;&nbsp; for (int i = 0; i &lt; 5; i++) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.print(&quot;&quot; + i + &quot;&lt;br /&gt;&quot;);
+&nbsp;&nbsp;&nbsp; }
+%&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/p&gt;
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>
+	<strong>SEP: JSP Dateinamen sollten der Camel-Case Konvention folgen, und immer mit einem Kleinbuchstaben beginnen [1].</strong></p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/ViewSource.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Was passiert mit dem Java?</h2>
+<p>
+	Interessant ist allerdings, und das ist ganz wichtig, was beim Browser ankommt.&nbsp; Wenn wir mit der rechten Maustaste &quot;Seitenquelltext anzeigen&quot; (View Source) auswählen, dann sehen wir was wirklich beim Browser ankommt:</p>
+<pre style="margin-left: 40px;">
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;body&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h1&gt;Loop&lt;/h1&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;p&gt;Run Java code inside scriptlet tags: &lt;br /&gt;
+<span style="color:#0000ff;">0&lt;br /&gt;1&lt;br /&gt;2&lt;br /&gt;3&lt;br /&gt;4&lt;br /&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/p&gt;
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>
+	Wir sehen also, dass der Teil innerhalb der Scriptlet Tags ersetzt wird durch die Ausgabe des <em>out.println(...)</em>.&nbsp; Java Code erreicht den Browser nie.&nbsp;</p>
+<p>
+	Was passiert aber mit dem Java Code?&nbsp; Der wird im sogenannten &quot;Servlet Engine&quot; übersetzt und ausgeführt, also Tomcat in unserem Fall.&nbsp; Das passiert auf der Serverseite.&nbsp;</p>
+<p>
+	<img alt="" src="images/JspToServlet.png" style="margin-left: 10px; margin-right: 10px; width: 376px; height: 239px;" /></p>
+<p>
+	Schauen wir uns das mal ganz konkret am Beispiel von &quot;loop,jsp&quot; an.&nbsp; Das erste Mal wenn wir die Seite aufrufen, wird auf Serverseite vom Servlet Engine aus der JSP Seite die Java Servlet Klasse <em>loop_jsp</em> dynamisch generiert.&nbsp; Die kann man im Verzeichnis &quot;/glassfish-4.0/glassfish/domains/domain1/generated/jsp/Pr2_JSP/org/apache/jsp/&quot; finden:</p>
+<pre style="margin-left: 40px;">
+public final class loop_jsp extends HttpJspBase ... {
+&nbsp; ...
+
+&nbsp; public void _jspService(HttpServletRequest request, HttpServletResponse response)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; throws java.io.IOException, ServletException {
+&nbsp;&nbsp;&nbsp; ...
+&nbsp;&nbsp;&nbsp; out.write(&quot;&lt;html&gt;\n&quot;);
+&nbsp;&nbsp;&nbsp; out.write(&quot;&nbsp;&nbsp;&nbsp; &lt;body&gt;\n&quot;);
+&nbsp;&nbsp;&nbsp; out.write(&quot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h1&gt;Loop&lt;/h1&gt;\n&quot;);
+&nbsp;&nbsp;&nbsp; out.write(&quot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;p&gt;Run Java code inside scriptlet tags: &lt;br /&gt;\n&quot;);
+
+&nbsp;&nbsp;&nbsp; for (int i = 0; i &lt; 5; i++) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.print(&quot;&quot; + i + &quot;&lt;br /&gt;&quot;);
+&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; out.write(&quot;\n&quot;);
+&nbsp;&nbsp;&nbsp; out.write(&quot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/p&gt;\n&quot;);
+&nbsp;&nbsp;&nbsp; out.write(&quot;&nbsp;&nbsp;&nbsp; &lt;/body&gt;\n&quot;);
+&nbsp;&nbsp;&nbsp; out.write(&quot;&lt;/html&gt;&quot;);
+&nbsp;&nbsp;&nbsp; ...
+&nbsp; }
+}
+</pre>
+<p>
+	Und wenn wir den Java Code mit dem ursprünglichen JSP vergleichen, sehen wir was da passiert: alle HTML Elemente werden einfach mittels <em>out.println(...)</em> eingebettet, während der Java Code einfach eins-zu-eins in die Methode <em>_jspService()</em> an die entsprechende Stelle kopiert wird.&nbsp; Diese <em>loop_jsp</em> Klasse wird dann auf dem Server kompiliert, von der JVM in den RAM geladen und anschließend auf dem Server ausgeführt.&nbsp; An den Browser wird dann lediglich das Resultat geschickt.</p>
+<p>
+	Die dynamische Java Code Generierung und das anschließende Kompilieren kostet natürlich Zeit, deswegen dauert der erste Aufruf einer JSP Seite immer ein bischen länger.&nbsp; Da dieser Schritt aber nur beim erstmaligen Aufrufen stattfinden muss, sind die nachfolgenden Aufrufe sehr viel schneller, auch im Vergleich zu anderen ähnlichen Technologien.&nbsp; Dieser kleine Nachteil ist leicht in Kauf zu nehmen, wenn man dies der Einfachheit der Erstellung von JSP Seiten und den damit verbunden Ersparnissen bei der Entwicklungszeit gegenüberstellt.&nbsp;</p>
+<p>
+	Ein anderer wichtiger Vorteil dieser serverseitgen Technologien, also JSP und Servlets, ist der Schutz des eigenen geistigen Eigentums (Intelectual Property).&nbsp; Denn im Gegensatz zu clientseitigen Technologien, wie z.B. JavaScript oder Java Applets, wird kein Sourcecode zum Browser geschickt.&nbsp; Der Quellcode wird am Server übersetzt und ausgeführt, der Client bekommt nur die Resultate des ausgeführten Codes zu sehen.&nbsp; JSP und Servlets sind auch die Ursache für den grossen Erfolg Java&#39;s.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/TimeJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Time</h2>
+<p>
+	Wenn wir im Hinterkopf behalten, dass JSP Seiten immer in Java Klassen übersetzt werden, dann werden uns die nächsten Schritte viel einleuchtender erscheinen.&nbsp; Beginnen wir mit dem Benutzen von standard Java Klassen.&nbsp; Das folgende Beispiel zeigt, wie wir Java&#39;s <em>Date</em> Klasse in einer JSP Seite verwenden können:</p>
+<pre style="margin-left: 40px;">
+&lt;%@page import=&quot;java.util.Date&quot;%&gt;
+&lt;%
+&nbsp;&nbsp;&nbsp; out.println( <span style="color:#0000ff;">new Date()</span> );
+%&gt;</pre>
+<p>
+	Das geht auch mit fast jeder anderen Java Klasse so.&nbsp; Der Syntax für den Import ist etwas gewöhnungsbedürftig, erinnert aber an den normaler Java Klassen.</p>
+<p>
+	Die Frage die sich vielleicht stellt, ist welche Klassen kann man nicht verwenden?&nbsp; Es sind die Klassen die mit Graphik zu tun haben, also z.B. alle AWT und Swing Klassen.&nbsp; Macht Sinn.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/RandomJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Random / Lottery</h2>
+<p>
+	Auch eigene Methoden können wir schreiben.&nbsp; Dazu gibt es ein spezielles JSP Tag, das sogenannte Declaration Tag: &lt;%! ... %&gt;.&nbsp; Im Gegensatz zu normalen Scriptlet Tags, muss das Declaration Tag am Anfang einer JSP Seite stehen.</p>
+<pre style="margin-left: 40px;">
+<span style="color:#0000ff;">&lt;%!</span>
+&nbsp;&nbsp;&nbsp; private int nextInt(int max) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return (int) (Math.random() * max);
+&nbsp;&nbsp;&nbsp; }
+<span style="color:#0000ff;">%&gt;</span>
+&lt;%
+&nbsp;&nbsp;&nbsp; out.println(nextInt(6) + 1);
+%&gt;</pre>
+<p>
+	Es gelten die normalen Java Regeln für Methoden.&nbsp; Im Beispiel oben sehen wir wie die Methode <em>nextInt()</em> deklariert und anschliessend benutzt wird.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/CountDownJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />CountDown</h2>
+<p>
+	Da aus einer JSP Seite ja eine Klasse generiert wird, stellt sich die Frage ob man auch Instanzvariablen und Konstanten deklarieren kann?&nbsp; Das CountDown Beispiel zeigt, dass das wie bei Methoden auch, im Declaration Tag gemacht werden kann:</p>
+<pre style="margin-left: 40px;">
+&lt;%!
+&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">private int counter = 30;</span>
+%&gt;
+&lt;%
+&nbsp;&nbsp;&nbsp; out.println(counter--);
+%&gt;</pre>
+<p>
+	Damit der Countdown funktioniert, müssen wir die Seite neu laden.&nbsp; Es gibt mehrere Möglichkeiten eine Seite neu zu laden, bei Firefox geht das z.B. mittels:</p>
+<ul>
+	<li>
+		Klicken auf den Reload Button</li>
+	<li>
+		des Tastenkürzel <em>Strg-R</em></li>
+	<li>
+		der Funktionstaste <em>F5</em></li>
+</ul>
+<p>
+	Eine kleine Anmerkung am Rande: obwohl es den Anschein hat, dass alle drei &quot;Reloads&quot; genau das gleich tun, ist das nicht der Fall.&nbsp; Später werden wir sehen was der subtile Unterschied ist.</p>
+<p>
+	.</p>
+<h2>
+	Zwei Browser</h2>
+<p>
+	Eigentlich schreibt man ja Webapplikationen, damit sie von mehreren Benutzern genutzt werden können.&nbsp; Das führt zu sehr interessanten Effekten, und den ersten sehen wir in unserem <em>CountDown</em> Beispiel:&nbsp; Wenn wir auf die Seite mit einem Browser zugreifen, dann funktioniert das total super.&nbsp; Was passiert aber wenn wir einen zweiten Browser aufmachen, und einmal in dem einen Browser einen Reload machen, und dann in dem anderen?</p>
+<p>
+	Naiv würden wir hoffen, dass jeder Browser seinen eigenen Zähler hat, also bei 30 beginnt, und dann bei jedem Reload nur seinen Zähler herunterzählt.&nbsp; Das ist aber nicht so.&nbsp; Anscheinend gibt es nur einen Zähler, auf den beide Browser zugreifen.&nbsp; Wenn wir aber kurz nachdenken, ist da eigentlich total logisch:&nbsp; Der Code wird ja auf dem Server ausgeführt, und dort gibt es nur ein Objekt, auf das zufälliger Weise von zwei (oder mehr) Browsern zugegriffen wird.&nbsp; Die Internetprogrammierung hat viele interessante Fallstricke, und in unserem CountDown Beispiel treffen wir den ersten.</p>
+<p>
+	Eine kleine Anmerkung: die Aussage, dass es nur ein Objekt von jeder JSP Seite gibt ist nicht immer richtig.&nbsp; Normalerweise ist das zwar der Fall, allerdings kann man das in den Server Einstellungen beeinflussen: man kann dem Server z.B. sagen, dass er bei hoher Last mehr als ein Objekt für eine gegebene JSP Seite instanziieren soll.</p>
+<p>
+	<strong>SEP: Man sollte seine Webapplikationen immer mit mehreren Browsern gleichzeitig testen.</strong></p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/PasswordCreator.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Eigene Klassen</h2>
+<p>
+	Wir haben gesehen, dass JSP Seiten eigentlich nur Java Klassen sind, und als solche können wir alle Java Klassen verwenden, wir können Instanzvariablen und Konstanten definieren, und wir können auch Methoden definieren.&nbsp; Bleibt die Frage, können wir auch lokale und anonmyme Klassen definieren, oder sogar andere selbstgeschriebene Klassen verwenden.&nbsp; Und die Antwort ist: &quot;jo, das können wir&quot;.</p>
+<p>
+	Das Beispiel <em>PasswordCreator</em> zeigt wie das geht.&nbsp; Ein eigene Klasse zu verwenden geht genauso wie eine der Java Klassen:</p>
+<pre style="margin-left: 40px;">
+&lt;%@page import=&quot;de.variationenzumthema.internet.PasswordCreator&quot;%&gt;
+&lt;%
+&nbsp;&nbsp;&nbsp; out.println(PasswordCreator.generatePassword());
+%&gt;</pre>
+<p>
+	<img alt="" src="images/PasswordCreatorProject.png" style="width: 200px; height: 200px; float: right; margin-right: 10px; margin-left: 10px;" />Wir müssen unsere Klasse <em>PasswordCreator</em> natürlich irgendwo definieren.&nbsp; In Netbeans befinden diese sich in Verzeichnis &quot;/src/java/&quot; unseres Projektes.&nbsp; Die Klasse selbst ist eine ganz normale Java Klasse:</p>
+<pre style="margin-left: 40px;">
+package de.variationenzumthema.internet;
+
+public class PasswordCreator {
+&nbsp;&nbsp;&nbsp; private static final String small = &quot;abcdefghijklmnopqrstuvwxyz&quot;;
+&nbsp;&nbsp;&nbsp; private static final String big = &quot;ABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;;
+&nbsp;&nbsp;&nbsp; private static final String numbers = &quot;0123456789&quot;;
+&nbsp;&nbsp;&nbsp; private static final String symbols = &quot;!#$%&amp;&#39;()*+,-./:;&lt;=&gt;?@[]^_{|}&quot;;
+
+&nbsp;&nbsp;&nbsp; public static String generatePassword() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String password = &quot;&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; password += small.charAt(nextInt(small.length()));
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; password += big.charAt(nextInt(big.length()));
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; password += numbers.charAt(nextInt(numbers.length()));
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; password += symbols.charAt(nextInt(symbols.length()));
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; password += small.charAt(nextInt(small.length()));
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; password += big.charAt(nextInt(big.length()));
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; password += numbers.charAt(nextInt(numbers.length()));
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; password += symbols.charAt(nextInt(symbols.length()));
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return password;
+&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; private static int nextInt(int max) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return (int)(Math.random()*max);
+&nbsp;&nbsp;&nbsp; }
+}
+</pre>
+<p>
+	.</p>
+<p>
+	<strong>SEP: Wenn wir eigene Klassen in JSP Seiten verwenden, sollten diese niemals im <em>default</em> Paket sein.</strong></p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/Logging.png" style="width: 200px; height: 111px; float: right; margin-right: 10px; margin-left: 10px;" />Logging</h2>
+<p>
+	Als wir noch normales Java geschrieben haben, also J2SE, gab es immer die Konsole.&nbsp; Man konnte mit &quot;System.out.println()&quot; etwas auf der Konsole ausgeben.&nbsp; Die &quot;Konsole&quot; als solche gibt es auf einem Server nicht.&nbsp; Dafür gibt es aber Logdateien.&nbsp; Meist nur eine, manchmal aber auch mehrere.&nbsp; Wenn wir also auf einen Server etwas mit ausgeben wollen, dann landet das in der Logdatei.&nbsp; In GlassFish kann man alles was in die Logdatei geschrieben wird im &quot;Output&quot; Fenster unter GlassFish Server sehen. Man kann aber auch direkt zur Logdatei gehen, die findet man unter Services-&gt;Server-&gt;GlassFish, dann Rechtsklick und &rsquo;View Server Log&rsquo; auswählen.</p>
+<p>
+	Jetzt ist es aber so, dass System.out.println() nicht gerade die feine englische ist wenn man auf dem Server lebt.&nbsp; Da gibt es nämlich die Klasse <em>Logger</em>, die für alles was mit Logdateiein zu tun hat viel besser geeignet ist.&nbsp; Verwendet wird die Klasse wie folgt:</p>
+<pre style="margin-left: 40px;">
+&lt;%@page import=&quot;java.util.logging.*&quot;%&gt;
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;body&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h1&gt;Logging&lt;/h1&gt;
+&lt;%
+&nbsp;&nbsp;&nbsp; // one way to log to the servers log files is via
+&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">System.out.println(&quot;First log message.&quot;);</span>
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; // another more professional way is via
+&nbsp;&nbsp;&nbsp; Logger logger = Logger.getLogger(this.getClass().getName());
+&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">logger.severe(&quot;Second log message.&quot;);</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+%&gt;
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+<p>
+	Der Vorteil von Logger ist, dass er viel spezifischer ist, was die Log-Message angeht.&nbsp; So gibt es verschiedene Levels für Log-Messages:</p>
+<ul>
+	<li>
+		<strong>info:</strong> einfach nur so mal sehen ob der Code ausgeführt wird</li>
+	<li>
+		<strong>warning:</strong> etwas ist ungewöhnlich, aber wahrscheinlich kein Problem</li>
+	<li>
+		<strong>severe:</strong> etwas ist wirklich nicht in Ordnung</li>
+</ul>
+<p>
+	Es gibt noch ein paar andere Log-Levels, aber die drei sind die wichtigsten.&nbsp; Der Vorteil des Loggers ist nun, dass man ihn unterschiedlich konfigurieren kann: auf der Maschine eines Entwicklers würde man alle Log-Messages sehen wollen, aber auf der Production-Machine, möchte man eigentlich nur diejenigen geloggt haben, die wirklich schwerwiegende Fehler darstellen.&nbsp; Denn zu viel loggen kann die Performance eines Servers negativ beeinflussen.&nbsp; Und es ist schon häufiger passiert, dass ein Server abgestürtzt ist, weil er keinen Plattenplatz mehr frei hatte.&nbsp; Der Grund dafür: richtig, Riesen-Log-Files.</p>
+<p>
+	.</p>
+<hr />
+<h1>
+	Review</h1>
+<p>
+	Wir haben unsere ersten Schritte in Richtung dynamischer Webprogrammierung unternommen.&nbsp; Dabei haben wir</p>
+<ul>
+	<li>
+		von Clients und Servern gehört</li>
+	<li>
+		das Scriplet Tags&nbsp; und das Declaration Tag kennen gelernt</li>
+	<li>
+		gesehen wie wir Instanzvariablen, Methoden und Klassen in JSP Seiten verwenden können</li>
+	<li>
+		und wie das mit dem Logging funktioniert.</li>
+</ul>
+<p>
+	Die Projekte die folgen zeigen einige einfache Anwendungen die mit JSP erstellt werden können und vermitteln aber auch noch einige andere hilfreiche Konzepte in diesem Zusammenhang.</p>
+<p>
+	.</p>
+<hr />
+<h1>
+	Projekte</h1>
+<p>
+	Die Projekte die folgen zeigen, dass sich das bischen JSP das wir bisher gelernt haben schon zu was gebrauchen lässt.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/ClockJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Clock</h2>
+<p>
+	Das Beispiel <em>Time</em> das wir oben gesehen haben war sehr statisch, d.h. die Uhrzeit hat sich nicht verändert.&nbsp; Das ist generell ein Problem mit Webanwendungen.&nbsp; Mithilfe des Meta Refresh Tags können wir etwas Dynamik in unsere Webanwendungen bringen.&nbsp; Wir veranlassen den Browser einfach einmal pro Sekunde die Seite neu zu laden.&nbsp; Wenn wir dann noch die Klasse SimpleDateFormat zum Formatieren der Uhrzeit verwenden, kann sich das Resultat schon sehen lassen.</p>
+<pre style="margin-left: 40px;">
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;head&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">&lt;meta http-equiv=&quot;refresh&quot; content=&quot;1&quot; /&gt;</span>
+&nbsp;&nbsp;&nbsp; &lt;/head&gt;
+&nbsp;&nbsp;&nbsp; &lt;body&gt;&lt;h1&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;%
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SimpleDateFormat formater =
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; new <span style="color:#0000ff;">SimpleDateFormat(&quot;HH:mm:ss&quot;)</span>;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date now = new Date();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(formater.format(now));
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; %&gt;
+&nbsp;&nbsp;&nbsp; &lt;/h1&gt;&lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>
+	Ein kleiner Nachteil dieser Anwendung ist, dass sie eine relativ hohe Last auf unserem Server erzeugt.&nbsp; Wenn nämlich viele Leute unsere Seite aufrufen, und jeder die Seite einmal in der Sekunde läd, dann kommt da einiges an Datenvolumen und Last auf unseren Server zu.&nbsp; Eine Anwendung wie Clock würde wahrscheinlich besser mittels JavaScript implementiert.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/VisitorJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Visitor*</h2>
+<p>
+	Basierend auf dem CountDown Beispiel können wir auch einen Visitor Counter implementiern.&nbsp;</p>
+<pre style="margin-left: 40px;">
+&lt;%!
+&nbsp;&nbsp;&nbsp; private int visitorCounter = 0;
+%&gt;
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;body&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h2&gt;Welcome, Visitor Nr. &lt;%= ++visitorCounter %&gt;&lt;/h2&gt;
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>
+	&nbsp;</p>
+<p>
+	Wenn wir die Seite von verschiedenen BrowserTabs oder anderen Browsern besuchen, werden wir sehen, dass jedesmal wenn die Seite von irgendjemandem geladen wird, der Zähler um eins hoch gezählt wird.</p>
+<p>
+	Obwohl es so aussieht, wie wenn die Anwendung tadellos funktionieren würde, ist etwas Vorsicht geboten.&nbsp; Bei geringer Serverlast und wenig Nutzern funktioniert die Anwendung auch einwandfrei.&nbsp; Überlegen wir kurz was schiefgehen kann:&nbsp; Wir haben ja gelernt, dass aus einer JSP Seite eine Java Klasse generiert wird.&nbsp; Diese wird dann kompiliert, und der Webserver, genauer der Servletcontainer, instanziiert dann <em>ein</em> Objekt von dieser Klasse.&nbsp; Das ist wenigstens was wir hoffen.&nbsp; Meistens ist das auch so.&nbsp; Allerdings unter sehr hoher Last, oder wenn der Servletcontainer entsprechend konfiguriert ist, können es auch mal zwei oder noch mehr Objekte sein.&nbsp; Würde dann unser Visitor Counter noch funktionieren?&nbsp; Was auch passieren kann, wenn andere Seiten unter hoher Last sind, dass unser Objekt vom Garbage Collector eingesammelt wird, weil es gerade nicht gebraucht wird.&nbsp; Dann würde unser Zähler beim nächsten Aufruf wieder von null anfangen.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/GlassFish_JSP_Init.png" style="width: 200px; height: 100px; float: right; margin-right: 10px; margin-left: 10px;" />Init and Destroy*</h2>
+<p>
+	Manchmal möchten wir, dass etwas beim ersten Ausführen einer JSP Seite passiert, z.B. irgendeine Initialisierung.&nbsp; Oder wir möchten kurz bevor der Server runtergefahren wird noch etwas in einer Datei oder Datenbank sichern.&nbsp; Das können wir mit den zwei vordefinierten Methoden <em>jspInit()</em> und <em>jspDestroy()</em> lösen.&nbsp; Beide müssen im Deklarationsteil des JSP stehen, sind ja Methoden:</p>
+<pre style="margin-left: 40px;">
+<span style="color:#0000ff;">&lt;%!</span>
+&nbsp;&nbsp;&nbsp; public void jspInit() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.out.println(&quot;jspInit() was called.&quot;);
+&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; public void jspDestroy() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.out.println(&quot;jspDestroy() was called.&quot;);
+&nbsp;&nbsp;&nbsp; }
+<span style="color:#0000ff;">%&gt;</span></pre>
+<p>
+	Die Methode <em>jspInit()</em> wird nur einmal aufgerufen, und zwar wenn unsere Seite das erst Mal geladen wird.&nbsp; Umgekehrt wird die Methode&nbsp;<em>jspDestroy()</em> aufgerufen wenn die Anwendung &quot;undeployed&quot; wird, oder der Server runtergefahren wird.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/ExceptionJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Exceptions</h2>
+<p>
+	Wie mit jedem Java Code kann es auch bei JSP Seiten zu Exceptions kommen.&nbsp; Und wie wir das bereits im ersten Semester gelernt haben, sollten wir Exceptions immer behandeln.&nbsp; Bei Webanwendungen kommt noch hinzu, dass unbehandelte Exceptions u.U. dazu führen können, dass Hacker oder andere Bösewichte an kritische Informationen gelangen können.&nbsp; Deswegen sollten wir extra vorsichtig sein, und wenn möglich es zu keinen unbehandelten Exceptions kommen lassen.</p>
+<p>
+	Wenn eine Exception auftritt, macht es Sinn diese zu loggen:</p>
+<pre style="margin-left: 40px;">
+&lt;%@page import=&quot;java.util.logging.*&quot;%&gt;
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;body&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h1&gt;Exceptions&lt;/h1&gt;
+&lt;%
+&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">try {</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int x = 5 / 0;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">} catch (Exception ex) {</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Logger logger = Logger.getLogger(this.getClass().getName());
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; logger.severe(&quot;Exception occured: &quot;+ex);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">}</span>
+&nbsp;&nbsp;&nbsp; out.println(&quot;Exception was caught, life is good.&quot;);
+%&gt;
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+<p>
+	Und natürlich sollte man regelmässig seine Logfiles durchgehen um nach Unerwartetem zu suchen.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/ErrorPermGenSpace.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />ErrorPermGenSpace</h2>
+<p>
+	Weil wir gerade bei Fehlern sind: an manchen Fehlern sind wir Schuld und an manchen Fehlern sind die bösen Nutzer Schuld.&nbsp; Dafür gibt es Exception Handling.&nbsp; Aber es gibt auch Fehler für die weder die Entwickler noch die Nutzer etwas können.&nbsp; Im Prinzip gibt es da drei Hauptverdächtige:</p>
+<ul>
+	<li>
+		der Webserver / Servlet Engine: z.B. der Fehler rechts ist so einer, scheint ein Memory Leak zu sein</li>
+	<li>
+		die Datenbank: manchmal werden Datenbank Verbindungen nicht geschlossen, oder es gibt offene Locks, etc.</li>
+	<li>
+		das Betriebssystem: z.B. Festplatte ist voll.</li>
+</ul>
+<p>
+	Manchmal ist es auch die Hardware, aber das ist sehr selten.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/Index_JSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />index.jsp</h2>
+<p>
+	Für jede unserer zwölf Netbeans Projekte benötigen wir eine &quot;index.jsp&quot; Seite.&nbsp; Die unterscheiden sich lediglich im Inhalt, aber der Aufbau dieser Seiten ist eigentlich identisch.&nbsp; Wie üblich, wollen wir eigentlich so wenig Code wie möglich ändern müssen, wir schreiben REUSE ganz gross.&nbsp;</p>
+<p>
+	Eine Möglichkeit das zu tun, ist den Inhalt der Seite über ein Array treiben zu lassen:</p>
+<pre style="margin-left: 40px;">
+    ...
+&nbsp;&nbsp;&nbsp; String[] jspPages = {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &quot;clock&quot;, &quot;visitor&quot;, &quot;exceptions&quot;,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &quot;guestBook&quot;, &quot;editor&quot;, &quot;file&quot;, &quot;pizzaMenu&quot;
+&nbsp;&nbsp;&nbsp; };
+&nbsp;&nbsp;&nbsp; ...</pre>
+<p>
+	Damit sollte es möglich sein die Seite rechts dynamisch zu generieren.&nbsp; Lediglich die Überschrift müssen wir noch anpassen.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/Shopping1_JSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Shopping</h2>
+<p>
+	Der Klassiker unter den Internetanwendungen ist die Shopping Anwendung.&nbsp; Hier in unserem ersten Versuch, wollen wir nur den Inhalt des Warenkorbs (einfach ein Vector) ausgeben.&nbsp; Dazu definieren wir erst mal den Warenkorb:</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp;&nbsp; Vector&lt;String&gt; cart = new Vector&lt;String&gt;();
+&nbsp;&nbsp;&nbsp; cart.add(&quot;Butter&quot;);
+&nbsp;&nbsp;&nbsp; cart.add(&quot;Milk&quot;);
+&nbsp;&nbsp;&nbsp; cart.add(&quot;Honey&quot;);
+&nbsp;&nbsp; &nbsp;...
+%&gt;</pre>
+<p>
+	und daraus generieren wir dann das HTML rechts.</p>
+<p>
+	.</p>
+<h2>
+	Vector vs List</h2>
+<p>
+	Es mag etwas ungewöhnlich erscheinen warum wir im letzten Beispiel die Klasse <em>Vector</em> verwendet haben und nicht die Klasse <em>ArrayList</em>, die wir bisher immer verwendet haben.&nbsp; Der Grund liegt darin, dass Webanwendungen nicht notwendigerweise <em>threadsafe</em> sind.&nbsp; Wir werden später mehr dazu hören, aber im Moment wollen wir lediglich anmerken, dass die Klassen Vector und Hashtable threadsafe sind, die Klassen ArrayList, LinkedList, HashMap und TreeMap dagegen nicht.&nbsp; Aber wie gesagt später mehr dazu.&nbsp;</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/EditorJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Editor</h2>
+<p>
+	Im nächsten Kapitel möchten wir einen kleinen Texteditor schreiben.&nbsp; Dazu brauchen wir einmal eine HTML Seite mit einem Formular und einer TextArea sowie einem Submit Knopf.&nbsp; Der Inhalt des Formulars soll an die Seite <em>editorLogic.jsp</em> geschickt werden, die wir im nächsten Kapitel schreiben werden.&nbsp; Was wir hier allerdings schon machen wollen, ist den Inhalt einer Datei innerhalb der TextArea anzuzeigen:</p>
+<pre style="margin-left: 40px;">
+&lt;textarea name=&quot;text&quot; rows=&quot;4&quot; cols=&quot;40&quot;&gt;
+&lt;%
+&nbsp;&nbsp;&nbsp; try {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">BufferedReader</span> br =
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; new BufferedReader(new <span style="color:#0000ff;">FileReader</span>(&quot;editor.txt&quot;));
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; StringBuffer sb = new StringBuffer();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; while (true) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String line = br.readLine();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (line == null) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; break;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sb.append(line);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(sb);
+&nbsp;&nbsp;&nbsp; } catch (Exception e) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(&quot;Type something here and save it!&quot;);
+&nbsp;&nbsp;&nbsp; }
+%&gt;&lt;/textarea&gt;</pre>
+<p>
+	Natürlich muss die Datei <em>editor.txt</em> existieren, sonst kommt es zu einer Exception.&nbsp; Wenn wir die Seite das erste Mal ausführen, dann gibt es diese Datei aber noch nicht und es kommt zu einer Exception.&nbsp; Deswegen geben wir dort einen kleinen Hinweis für den Nutzer.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/Files_JSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Files</h2>
+<p>
+	Ganz ungefährlich ist das Arbeiten mit Dateien nicht.&nbsp; Wenn wir z.B. irgendwo dem Nutzer erlauben einen Dateinamen einzugeben, dann könnte ein Schlaumeier auf die Idee kommen &quot;../../../../../../../&quot; als Dateiname einzugeben:</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp;&nbsp; try {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; File f = new File(&quot;../../../../../../../&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //out.println(f.getCanonicalPath() + &quot;&lt;br/&gt;&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String[] files = f.list();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Arrays.sort(files);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for (String fl : files) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(fl + &quot;&lt;br/&gt;&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; } catch (Exception e) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(e);
+&nbsp;&nbsp;&nbsp; }
+%&gt;</pre>
+<p>
+	Die Problematik sollte offensichtlich sein.&nbsp; Falls nicht, dann freuen sich die Hacker auf unsere Webanwendungen...</p>
+<p>
+	<strong>SI: Wir solllten niemals dynamische Dateinamen zulassen.</strong></p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/BestPizza_JSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />PizzaMenu</h2>
+<p>
+	Das eine oder andere Restaurant hat inzwischen sein Menü digitalisiert.&nbsp; Manche habe es im Internet, manche aber auch auf einem Monitor im Restaurant.&nbsp; In dem ersten Teil wollen wir aus dem folgenden String,</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp;&nbsp; String menu = &quot;Best Pizza\n&quot;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; + &quot;Margherita: tomato sauce, mozzarella\n&quot;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; + &quot;Funghi: tomato sauce, mozzarella, mushrooms\n&quot;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; + &quot;Capricciosa: tomato sauce, mozzarella, mushrooms, ham,&quot;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; + &quot;eggs, artichoke, cocktail sausages, green olives\n&quot;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; + &quot;Quattro Stagioni: tomato sauce, mozzarella, ham, black &quot;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; + &quot;olives, mushrooms, artichoke, peas, salami, eggs\n&quot;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; + &quot;Vegetariana: tomato sauce, mozzarella, mushrooms, onion, &quot;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; + &quot;(artichoke), sweet corn, green peppers\n&quot;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; + &quot;Quattro Formaggi: tomato sauce, and 4 assorted cheeses, &quot;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; + &quot;generally mozzarella, parmesan cheese, blue cheese, and goat cheese\n&quot;;
+%&gt;&nbsp;&nbsp; 
+</pre>
+<p>
+	eine hübsche HTML Seite wie rechts generieren.&nbsp; Dabei sind evtl. die folgenden beiden Zeilen hilfreich:</p>
+<pre style="margin-left: 40px;">
+&nbsp;&nbsp;&nbsp; BufferedReader br = new BufferedReader(new StringReader(menu));
+&nbsp;&nbsp;&nbsp; ...
+&nbsp;&nbsp;&nbsp; String[] pizz = line.split(&quot;:&quot;);
+    ...
+</pre>
+<p>
+	Wir gehen also davon aus, dass die erste Zeile die der Nutzer eingibt der Name des Restaurants ist, in unserem Beispiel &quot;Best Pizza&quot;.&nbsp; Die nächsten Zeilen listen die verschiedenen Pizzen, jeweils mit dem Namen der Pizza beginnend, einem Doppelpunkt, gefolgt von den Zutaten.&nbsp; Im nächsten Kapitel sehen wir dann wie wir damit eine Webanwendung machen können mit der man dann das Menü öfter mal ändern kann.</p>
+<p>
+	Vielleicht noch erwähnenswert:&nbsp; All die Seiten die wir jetzt schon geschrieben haben, können wir nicht nur auf unserem Computer ansehen, sondern auch auf anderen Computern.&nbsp; Wir müssen dazu lediglich die IP Adresse des Rechners wissen auf dem unser Server läuft (bei mir ist das gerade die &quot;192.168.178.43&quot;), und tippen dann folgendes in die Adresszeile des Browsers auf dem anderen Computer:</p>
+<pre style="margin-left: 40px;">
+http://<span style="color:#0000ff;">192.168.178.43</span>:8080/Pr2_JSP/pizzaMenu.jsp</pre>
+<p>
+	Ziemlich cool, oder?&nbsp; Wenn wir eine externe IP Adresse haben (eher unwahrscheinlich) dann könnte sogar die ganze Welt jetzt schon unsere Webseiten ansehen!</p>
+<p>
+	.</p>
+<hr />
+<h1>
+	Research</h1>
+<p>
+	Auch in diesem Kapitel gibt es einige Themen die man noch durch Eigenrecherche vertiefen kann.</p>
+<p>
+	.</p>
+<h2>
+	Servlet Engines und Webserver</h2>
+<p>
+	Wir wollen im Internet nach den Begriffen &quot;Servlet Engines&quot;, manchmal auch &quot;Servlet Container&quot; genannt und Webservern suchen.&nbsp; Dabei sollten wir mindestens fünf oder sechs verschiedene finden.&nbsp; Uns sollte klar werden was der Unterschied zwischen Servlet Engines und Webservern ist, und welcher wohl für unsere Zwecke am besten geeignet ist.&nbsp; Wir sollten uns aber auch Kriterien überlegen, nach denen wir einen Servlet Engines und einen Webservern für eine Produktionsserver unserer zukünftgen Firma auswählen würden.</p>
+<p>
+	.</p>
+<h2>
+	JSP, PHP und ASP</h2>
+<p>
+	Neben JSP gibt es auch noch andere Webtechnologien, wie z.B. PHP, ASP, aber evtl. auch JavaScript oder Python.&nbsp; Wir sollten uns auch die Konkurrenz mal ansehen und darüber etwas in Erfahrung bringen.&nbsp; Schliesslich sollten wir auch eine kleine Tabelle machen, in der wir diese nach verschiedenen Kriterien gegenüber stellen, wie z.B.</p>
+<ul>
+	<li>
+		Performance</li>
+	<li>
+		Popularität</li>
+	<li>
+		Einfachheit, auch zu Lernen</li>
+	<li>
+		Sicherheit</li>
+	<li>
+		Unterstützung eines Testing-Frameworks wie JUnit</li>
+	<li>
+		Unterstützung von Reflection und Generics</li>
+</ul>
+<p>
+	.</p>
+<h2>
+	CGI</h2>
+<p>
+	Das Common Gateway Interface (CGI) ist ein uralt Standard für den Datenaustausch zwischen Servern und Clients, und Basis von dynamischen Webanwendungen.&nbsp; Es macht Sinn sich in die Thematik einmal einzulesen, vor allem wenn man ein bischen ein Interesse für die Geschichte des Internets hat.</p>
+<p>
+	.</p>
+<hr />
+<h1>
+	Fragen</h1>
+<ol>
+	<li>
+		Wir wollen das Datenvolumen abschätzen, das eine Anwendung wie Clock auf unserem Server verursacht.&nbsp; Gehen Sie davon aus, dass die Seite 1 kByte groß ist, dass die Seite sich einmal pro Sekunde neu lädt, und dass wir im Durchschnitt 1000 Nutzer haben, die diese Seite im Browser offen haben.&nbsp; Schätzen Sie das Datenvolumen im Monat ab, denn dafür bezahlen Sie Ihrem Serviceprovider.<br />
+		&nbsp;</li>
+	<li>
+		In JSP gibt es Deklarationen (&lt;%!...%&gt;) und Code-Fragmente (&lt;%...%&gt;). Wann und wofür würden Sie welches verwenden?<br />
+		&nbsp;</li>
+	<li>
+		Erklären Sie wann die beiden Methoden jspInit() und jspDestroy() aufgerufen werden, und wofür man sie verwenden könnte.<br />
+		&nbsp;</li>
+	<li>
+		Schreiben Sie eine JSP Seite, lotto.jsp, die sechs Zufallszahlen zwischen 1 und 49 erzeugt und diese sortiert ausgibt. Ein Bonus wäre, wenn es keine Duplikate gibt.&nbsp; Hinweis, die folgenden Zeile könnten hilfreich sein:<br />
+		&lt;%@page import=&quot;java.util.TreeSet&quot;%&gt;<br />
+		&nbsp;</li>
+	<li>
+		Schreiben Sie eine JSP Anwendung, die aus drei JSP Seiten besteht:<br />
+		login.jsp: Auf dieser Seite kann der Benutzer seinen Namen und sein Passwort eingeben. Die Aktion des Form Tags sollte auf die Seite &#39;check.jsp&#39; weiterleiten.<br />
+		check.jsp: Diese Seite sollte den eingegebenen Namen und das Passwort auf Richtigkeit überprüfen (dabei dürfen Sie in Ihrem Code feste Werte für den korrekten Namen und das korrekte Passwort verwenden). Sind die Eingaben des Benutzers richtig, so sollte der Benutzer auf die Seite &#39;welcome.jsp&#39; weitergeleitet werden, andernfalls sollte er auf die &#39;login.jsp&#39; Seite zurückgeschickt werden.<br />
+		welcome.jsp: Diese Seite sollte einen Text anzeigen, dass sich der Benutzer erfolgreich angemeldet hat. Beachten Sie bitte, dass nach einer erfolgreichen Anmeldung im session Objekt irgendwie kenntlich gemacht werden sollte, dass der Benutzer sich erfolgreich angemeldet hat.<br />
+		&nbsp;</li>
+	<li>
+		Wann wird eine JSP Seite kompiliert?<br />
+		O&nbsp;&nbsp; Beim Hochladen auf den Server<br />
+		O&nbsp;&nbsp; Jedes Mal wenn ein User darauf zugreift<br />
+		O&nbsp;&nbsp; Das erste Mal wenn&nbsp; ein User darauf zugreift</li>
+</ol>
+<p>
+	.</p>
+<hr />
+<h1>
+	Referenzen</h1>
+<p>
+	Hier gibt&#39;s nur eine Referenz.&nbsp; Aber natürlich kann man in der Wikipedia nachschauen, wenn man mehr wissen will.&nbsp; Immer ein guter Anfang.&nbsp; Man sollte da halt nur nicht aufhören.</p>
+<p>
+	[1] Guidelines, Patterns, and code for end-to-end Java applications, http://www.oracle.com/technetwork/java/namingconventions-139351.html</p>
+<p>
+	[2] Tomcat, http://tomcat.apache.org/</p>
+<p>
+	[3] GlassFish, https://glassfish.java.net/</p>
+<p>
+	[4] NetBeans, https://netbeans.org/</p>
+<p>
+	.</p>
+<p class="footer">
+Copyright &copy; 2016-2021 <a href="http://www.lano.de">Ralph P. Lano</a>.  All rights reserved.
+</p>
+</div>
+</center>
+</div>
+</body>
+</html>

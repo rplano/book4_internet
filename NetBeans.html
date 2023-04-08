@@ -1,0 +1,130 @@
+<!DOCTYPE html><html lang="de"><head>
+  <title>Variationen zum Thema: Internet</title>
+  <meta name="title" content="Variationen zum Thema: Internet">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta charset="UTF-8">
+  <meta name="description" content="Eine Einführung in Java Enterprise">
+  <meta name="keywords" content="Java Enterprise,Internet,Einführung">
+  <meta name="author" content="Ralph P. Lano">
+  <meta name="robots" content="index,follow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="book.css">
+</head>
+<body><center>
+<div id="wrap">
+	<ul class="sidenav">
+	  <p><a href="index.html">Variationen zum Thema</a><a href="index.html">Internet</a></p>
+	  <li><a href="Basics.html">Basics</a></li>
+	  <li><a href="JSP.html">JSP</a></li>
+	  <li><a href="Request.html">Request</a></li>
+	  <li><a href="Session.html">Session</a></li>
+	  <li><a href="Database.html">Database</a></li>
+	  <li><a href="Services.html">Services</a></li>
+	  <li><a href="Projects.html">Projects</a></li>
+	  <li><a href="NetBeans.html" class="active">NetBeans</a></li>
+	  <li><a href="JavaScript.html">JavaScript</a></li>
+	</ul>
+<div class="content"><h1>
+	NetBeans</h1>
+<p>
+	Sobald man sich auf eine Entwicklungsumgebung (IDE) festlegt, und womöglich sogar noch eine Versionsnummer nennt, ist ein Buch automatisch datiert, und zwei Wochen später eigentlich nur noch zum Heizen nützlich.&nbsp; Aber wir wollen es trotzdem wagen.</p>
+<p>
+	.</p>
+<h2>
+	Download and Installation</h2>
+<p>
+	Der erste Schritt ist NetBeans vom Internet zu laden [1], und auf dem eigenen Rechner zu installieren. Es gibt da mehrere verschiedene Versionen, einmal für verschiedene Betriebssysteme, da sollten wir die Version die für unsereren Rechner geeignet ist nehmen.&nbsp; Aber es gibt auch verschiedene NetBeans IDE Download Bundles und wir wollen das &quot;Java EE&quot; Bündel.&nbsp; NetBeans benötigt die Java JDK Version 7 oder später, falls wir die noch nicht auf unserem Rechner haben, müssen wir die vorher noch installieren.&nbsp; Ansonsten ist NetBeans ganz ähnlich wie Eclipse:</p>
+<p style="margin-left: 40px;">
+	<img alt="" src="images/NetbeansIDE.png" style="width: 500px; height: 250px;" /></p>
+<p>
+	Noch zwei kleine Anmerkungen: immer die englischen Versionen von Software installieren.&nbsp; Die funktionieren wenigstens.&nbsp; Und folgendes zu Updates: da ich nur für mich selbst programmiere und nicht in einer Firma, vermeide ich Updates.&nbsp; Denn solange alles funktioniert gibt es keinen Grund das zu ändern, und ein Update könnte das.&nbsp; Nun in einer Firma ist das etwas anderes, man sollte aber damit rechnen, dass nach einem Update erstmal ein bis zwei Tage gar nichts mehr geht.&nbsp; In der Firma ist das o.k., da wird man ja bezahlt.</p>
+<p>
+	.</p>
+<h2>
+	Get to Know NetBeans</h2>
+<p>
+	Bevor man mit den Websachen anfängt sollte man mal ein kleines Konsolenprogramm schreiben oder eine kleine Swing Anwendung.&nbsp; Neue Projekte legt man mit &quot;File -&gt; New Project&quot; an, und Java Projekte dann über &quot;Java -&gt; Java Application&quot;.&nbsp; Wir können dann mal eine einfache Java Klasse wie oben anlegen.&nbsp; Ausführen kann man die über das große grüne Dreieck oder per &quot;Run -&gt; Run Project&quot;.</p>
+<p>
+	Etwas gewöhnungsbedürftig sind die NetBeans Shortcuts.&nbsp; Die gehen auch über &quot;Ctrl-Space&quot;, aber &quot;System.out.println()&quot; ist jetzt &quot;sout&quot; und &quot;public static void main()&quot; ist jetzt &quot;psvm&quot;.&nbsp; Aber die Shortcuts gibts als pdf zum Download [2].</p>
+<p>
+	NetBeans hat auch ganz viele Tutorials.&nbsp; Die meisten taugen nichts, aber besser als Eclipse alle mal, denn da gibt&#39;s gar keine.&nbsp; Das Swing Tutorial [3] ist ganz o.k. wenn man in der U-Bahn sitzt.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/Dienstag.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Web Project</h2>
+<p>
+	Um unser erstes Webprojekt anzulegen, gehen wir wieder über &quot;File -&gt; New Project&quot; dieses mal wählen wir aber unter &quot;Java Web&quot; die &quot;Web Application&quot; aus und klicken auf Next.&nbsp; Dann geben wir dem Projekt einen Namen, z.B., &quot;Dienstag&quot; und klicken wieder auf Next.&nbsp; Bei der Serverauswahl würde ich &quot;GlassFish Server 4&quot; verwendet.&nbsp; Ganz selten macht der aber Ärger, dann kann man auch den Tomcat nehmen, geht auch.&nbsp; Dann dürfen wir auf &quot;Finish&quot; klicken, auch wenn wir kein Finisch können.&nbsp; Es wird ein Projekt angelegt und eine HTML Seite namens &quot;index.html&quot;.&nbsp; Gestartet wird das Projekt wie oben auch über &quot;Run -&gt; Run Project&quot; oder das grüne Dreieck.&nbsp; Es dauert dann ein bischen, aber früher oder später müsste sich ein Webbrowser, meist Firefox, öffnen und die Seite &quot;index.html&quot; anzeigen.</p>
+<p>
+	Warum &quot;dauert&quot; es ein bischen?&nbsp; Das hat damit zu tun, dass mehrere Schritte durchlaufen werden bis man das Resultat im Browser bewundern kann:</p>
+<ol>
+	<li>
+		der Server, GlashFish oder Tomcat, wird gestartet, es sei denn er läuft bereits</li>
+	<li>
+		das Projekt wird verpackt, auf den Server hochgeladen (in der Regel einfach kopiert) und deployed [6]</li>
+	<li>
+		der Browser wird gestartet, falls er noch nicht läuft</li>
+	<li>
+		der Browser muss die Seite vom Server laden.</li>
+</ol>
+<p>
+	.</p>
+<h2>
+	Debugger</h2>
+<p>
+	NetBeans hat auch einen sehr mächtigen Debugger, der auch für Webseiten funktioniert.&nbsp; Dazu muss man zunächst einen Breakpoint in seinem JSP oder Servlet Code setzen (geht nicht mit HTML).&nbsp; Und danach startet man das Projekt im Debug-Modus entweder über &quot;Debug -&gt; Debug Project&quot; oder dem Knopf rechts neben dem grünen Dreieck.</p>
+<p>
+	Um den Debugger einmal zu testen, schreiben wir ein paar einfache Zeilen JSP Code.&nbsp; Zum Anlegen einer neuen JSP Datei, klicken wir mit der rechten Maustaste auf das Verzeichnis &quot;Web Pages&quot; in unserem &quot;Dienstag&quot; Projekt, wählen dann &quot;New -&gt; JSP&quot; aus, und nennen die neue Seite &quot;hello&quot;.&nbsp; Das &quot;.jsp&quot; wird automatisch angehängt.&nbsp; Dann löschen wir alles was in der Datei evtl. schon steht und fügen die folgenden fünf Zeilen ein:</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp;&nbsp; out.println(&quot;Hello &quot;);
+&nbsp;&nbsp;&nbsp; out.flush();
+&nbsp;&nbsp;&nbsp; out.println(&quot;JSP!&quot;);&nbsp;&nbsp; &nbsp;
+%&gt;</pre>
+<p>
+	Dann setzen wir einen Breakpoint in der Zeile zwei (out.println()) indem wir einfach einmal mit der linken Maustaste auf die &quot;2&quot; der Zeilennummer klicken.&nbsp; Wir starten dann das Projekt im Debug-Modus und es sollte ein Browser sich öffnen.&nbsp; Der Browser lädt zunächst die &quot;index.html&quot; Seite, wir müssen ihm erst sagen dass er zur</p>
+<pre style="margin-left: 40px;">
+http://localhost:8080/Dienstag/hello.jsp</pre>
+<p>
+	Seite gehen soll.&nbsp; Sobald wir das tun, sehen wir dass in NetBeans die zweite Zeile grün markiert ist, und wir jetzt auf alle möglichen Knöpfe drücken können.&nbsp; Der Browser allerdings zeigt erst mal gar nichts an, denn der wartet geduldig auf sein Antwort.&nbsp; Wenn wir jetzt mit &quot;Step over (Shift-F8)&quot; zwei Schritte weitergehen, dann erscheint im Browser das &quot;Hello&quot; aber noch nicht das &quot;JSP&quot;.</p>
+<p>
+	Lustig wird es wenn wir jetzt einen zweiten Browser öffnen, und dort auch zu besagter Seite gehen.&nbsp; Auch die bleibt erst mal im Debugger hängen und wir sehen beide Threads im linken Fenster &quot;Debugging&quot;:</p>
+<p style="margin-left: 40px;">
+	<img alt="" src="images/Netbeans_Debug.png" style="width: 500px; height: 250px;" /></p>
+<p>
+	Wir können hier zwischen den zwei Threads hin und herspringen, und mal den einen ein paar Schritte laufen lassen und dann den anderen wieder.&nbsp; Man kommt sich ein bischen wie ein Marionettenspieler vor.&nbsp; Obwohl das wie eine Spielerei anmutet, wird das extrem wichtig werden wenn mal &quot;lustige&quot; Sachen passieren, deren Ursache mit Threading zu tun hat.</p>
+<p>
+	.</p>
+<h2>
+	Load Generation</h2>
+<p>
+	NetBeans hat alle möglichen coolen Sachen, wie z.B. einen Profiler den man mit dem Knopf neben dem Debugger Knopf startet.&nbsp; Der hat dann noch mehr Knöpfe die man drücken kann, und da gibt es dann ganz viele Graphiken mit denen man seine Manager beeindrucken kann.&nbsp;</p>
+<p>
+	Was aber viel nützlicher ist, das ist der eingebaute Load Generator, mit dem man Last auf seinem Server verursachen kann.&nbsp; Ein Tutorial das zeigt wie das geht findet sich auf dem NetBeans Website [4].&nbsp; Es sei allerdings angemerkt, dass das Tutorial ohne ein jMeter Script nutzlos ist, deswegen vielleicht erst mal hier [5] nachsehen wie man ein jMeter Script erzeugt.</p>
+<p>
+	.</p>
+<h1>
+	Referenzen</h1>
+<p>
+	Zu NetBeans gibt es ganz viele Tutorials, die man ganz einfach über Google findet.&nbsp; Die meisten sind auf dem NetBeans eigenen Website.&nbsp; Anbei noch ein, zwei nützliche Links.</p>
+<p>
+	[1] NetBeans IDE, <a href="https://netbeans.org/">https://netbeans.org/</a></p>
+<p>
+	[2] Highlights of NetBeans IDE 8.0 Keyboard Shortcuts &amp; Code Templates, <a href="https://netbeans.org/project_downloads/usersguide/shortcuts-80.pdf">https://netbeans.org/project_downloads/usersguide/shortcuts-80.pdf</a></p>
+<p>
+	[3] Learning Swing with the NetBeans IDE, <a href="http://java.sun.com/docs/books/tutorial/uiswing/learn/index.html">http://java.sun.com/docs/books/tutorial/uiswing/learn/index.html</a></p>
+<p>
+	[4] Using a Load Generator in NetBeans IDE <a href="http://netbeans.org/kb/docs/java/profile-loadgenerator.html">netbeans.org/kb/docs/java/profile-loadgenerator.html</a></p>
+<p>
+	[5] Apache JMeter HTTP(S) Test Script Recorder, <a href="http://jmeter.apache.org/usermanual/jmeter_proxy_step_by_step.pdf">jmeter.apache.org/usermanual/jmeter_proxy_step_by_step.pdf</a></p>
+<p>
+	[6] Tomcat Web Application Deployment, <a href="https://tomcat.apache.org/tomcat-7.0-doc/deployer-howto.html">https://tomcat.apache.org/tomcat-7.0-doc/deployer-howto.html</a></p>
+<p>
+	.</p>
+<p class="footer">
+Copyright &copy; 2016-2021 <a href="http://www.lano.de">Ralph P. Lano</a>.  All rights reserved.
+</p>
+</div>
+</center>
+</div>
+</body>
+</html>

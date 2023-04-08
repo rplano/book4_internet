@@ -1,0 +1,1139 @@
+<!DOCTYPE html><html lang="de"><head>
+  <title>Variationen zum Thema: Internet</title>
+  <meta name="title" content="Variationen zum Thema: Internet">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta charset="UTF-8">
+  <meta name="description" content="Eine Einführung in Java Enterprise">
+  <meta name="keywords" content="Java Enterprise,Internet,Einführung">
+  <meta name="author" content="Ralph P. Lano">
+  <meta name="robots" content="index,follow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="book.css">
+</head>
+<body><center>
+<div id="wrap">
+	<ul class="sidenav">
+	  <p><a href="index.html">Variationen zum Thema</a><a href="index.html">Internet</a></p>
+	  <li><a href="Basics.html">Basics</a></li>
+	  <li><a href="JSP.html">JSP</a></li>
+	  <li><a href="Request.html" class="active">Request</a></li>
+	  <li><a href="Session.html">Session</a></li>
+	  <li><a href="Database.html">Database</a></li>
+	  <li><a href="Services.html">Services</a></li>
+	  <li><a href="Projects.html">Projects</a></li>
+	  <li><a href="NetBeans.html">NetBeans</a></li>
+	  <li><a href="JavaScript.html">JavaScript</a></li>
+	</ul>
+<div class="content"><p>
+	<img alt="" src="images/BestPizza.png" style="display: block; margin-left: auto; margin-right: auto; width: 209px; height: 183px;" /></p>
+<h1>
+	Request and Response</h1>
+<p>
+	Nach den bisherigen Einführungen, beginnnen wir in diesem Kapitel die wichtigsten Grundsteine zu legen.&nbsp; Wir beschäftigen uns mit dem Request und Response Objekten.&nbsp; Damit können wir auf User Input reagieren.&nbsp; Und wenn wir uns ans erste Semester erinnern, dann heißt das: jetzt fängt es an cool zu werden!</p>
+<p>
+	.</p>
+<h2>
+	Request</h2>
+<p>
+	Wenn der Browser einen HTTP Request an den Server sendet, dann übermittelt er dabei einiges an Informationen.&nbsp; In JSP werden diese Informationen in dem JSP-Objekt <em>request</em> gebündelt und können dann sehr einfach verwendet werden, wie wir gleich sehen werden.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/ReverseText.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Reverse Text</h2>
+<p>
+	Im ersten Kapitel haben wir einfache HTML Formulare erstellt.&nbsp; Allerdings, was wir im ersten Kapitel noch nicht konnten war irgend etwas mit den eingegebenen Daten anzufangen.&nbsp; Dazu kommen wir jetzt.&nbsp; Nehmen wir an wir haben folgendes Formular:</p>
+<pre style="margin-left: 40px;">
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;body&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h1&gt;Reverse Text&lt;/h1&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;p&gt;Enter text to reverse:&lt;/p&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;form <span style="color:#0000ff;">action=&quot;reverseTextLogic.jsp&quot;</span> method=&quot;GET&quot; &gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;input type=&quot;text&quot; name=&quot;<span style="color:#ff0000;">textToReverse</span>&quot; /&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;input type=&quot;submit&quot; value=&quot;Reverse&quot; /&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/form&gt;
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>
+	<img alt="" src="images/reverseTextLogic.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Das Action-Attribut des Form Tags besagt wohin die vom Benutzer eingegebenen Daten geschickt werden sollen.&nbsp; In diesem Beispiel an die Seite <em>reverseTextLogic.jsp</em>:</p>
+<pre style="margin-left: 40px;">
+&lt;%!
+&nbsp;&nbsp;&nbsp; private String reverseText(String s) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String ret = &quot;&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for (int i = s.length() - 1; i &gt;= 0; i--) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ret += s.charAt(i);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return ret;
+&nbsp;&nbsp;&nbsp; }
+%&gt;
+&lt;%
+&nbsp;&nbsp;&nbsp; String text = <span style="color:#0000ff;">request.getParameter(&quot;</span><span style="color:#ff0000;">textToReverse</span><span style="color:#0000ff;">&quot;);</span>
+&nbsp;&nbsp;&nbsp; out.println(&quot;The reverse text is: &quot; + reverseText(text));
+%&gt;</pre>
+<p>
+	Das ist eine ganz normale JSP Seite.&nbsp; Neu ist hier die Verwendung des <em>request</em> Objekts.&nbsp; Wir bitten das <em>Request</em> Objekt uns den Parameter namens &quot;<em>textToReverse</em>&quot; zu geben.&nbsp; Dieser war vorher als HTML Input Tag definiert worden.&nbsp; Dann rufen wird die Methode reverseText() auf, und senden das Resultat zurück an den Browser mittels out.println().</p>
+<p>
+	.</p>
+<h2>
+	Wie werden die Daten geschickt?</h2>
+<p>
+	Nun stellt sich die Frage, wie werden denn die Daten vom Browser zum Server geschickt?&nbsp; Wenn wir uns im letzten Beispiel die Adresszeile im Browser genau ansehen, sehen wir, dass dort folgendes steht:</p>
+<pre style="margin-left: 40px;">
+.../reverseTextLogic.jsp<span style="color:#ff0000;">?</span><span style="color:#0000ff;">textToReverse</span><span style="color:#ff0000;">=</span><span style="color:#0000ff;">racecar</span></pre>
+<p>
+	D.h., am Ende des Dateinamens <em>reverseTextLogic.jsp</em> wurde einfach ein Fragezeichen, dann der Name des Input-Tags gefolgt von einem Gleichheitszeichen, und schließlich dem Wert den der Benutzer eingegeben hat.&nbsp; Also die Daten werden einfach über die Adresszeile, die URI geschickt!</p>
+<p>
+	Man nennt das Ganze einen Uniform Resource Identifier, kurz URI (ähnlich zu URL) [1], und die Details dazu sind in der RFC 3986 spezifiziert [4].&nbsp; Dort findet man auch die allgemeine Form einer URI:</p>
+<pre style="margin-left: 40px;">
+scheme:[//[user:password@]host[:port]][/]path[?query][#fragment]</pre>
+<p>
+	Alles was in eckigen Klammern ist, ist optional.&nbsp; Ein Beispiel wäre also:</p>
+<pre style="margin-left: 40px;">
+http://localhost:8080/Ch3_JSP2/reverseTextLogic.jsp?textToReverse=racecar</pre>
+<p>
+	Hat man mehrere Input-Tags, dann werden die einzelnen Key-Value Paare, auch Parameter genannt, noch durch ein Und-Zeichen (Kaufmanns-Und: &amp;) getrennt.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/LoginJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Login</h2>
+<p>
+	Betrachten wir als zweites Beispiel ein Login Formular, im Prinzip identisch mit dem aus Kapitel eins:</p>
+<pre style="margin-left: 40px;">
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;body&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h1&gt;Login&lt;/h1&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;form action=&quot;<span style="color:#0000ff;">loginLogic.jsp</span>&quot; method=&quot;GET&quot;&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; UserID:&nbsp; &lt;input type=&quot;text&quot; name=&quot;userId&quot;/&gt;&lt;br/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Password:&lt;input type=&quot;password&quot; name=&quot;password&quot;/&gt;&lt;br/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;input type=&quot;submit&quot; value=&quot;Login&quot;/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/form&gt;
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>
+	<img alt="" src="images/LoginLogicJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Die Daten werden an <em>loginLogic.jsp</em> Seite geschickt, wo diese dann auf Korrektheit geprüft werden:</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp;&nbsp; String id = request.getParameter(&quot;userId&quot;);
+&nbsp;&nbsp;&nbsp; String passwd = request.getParameter(&quot;password&quot;);
+&nbsp;&nbsp;&nbsp; if ((id != null) &amp;&amp; (passwd != null)) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ((id.equals(&quot;ralph&quot;)) &amp;&amp; (passwd.equals(&quot;123456&quot;))) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(&quot;Welcome!&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(&quot;Please, try again!&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp; }
+%&gt;</pre>
+<p>
+	Interessant ist auch hier wieder die Adresszeile,</p>
+<pre style="margin-left: 40px;">
+.../loginLogic.jsp<span style="color:#ff0000;">?</span><span style="color:#0000ff;">userId</span><span style="color:#ff0000;">=</span><span style="color:#0000ff;">ralph</span><span style="color:#ff0000;">&amp;</span><span style="color:#0000ff;">passowrd</span><span style="color:#ff0000;">=</span><span style="color:#0000ff;">123456</span></pre>
+<p>
+	die beinhaltet nämlich Benutzername und Passwort im KLARTEXT!&nbsp; Und beide werden sogar im Browserverlauf gespeichert!&nbsp; Offensichtlich keine so gute Sache.</p>
+<p>
+	.</p>
+<h2>
+	GET vs POST</h2>
+<p>
+	Kann man da was machen?&nbsp; Die Lösung ist überraschend einfach: man muss lediglich in der Zeile</p>
+<pre style="margin-left: 40px;">
+&lt;form action=&quot;loginLogic.jsp&quot; method=&quot;<span style="color:#0000ff;">GET</span>&quot;&gt;</pre>
+<p>
+	das Wort <em>GET</em> durch das Wort <em>POST</em> ersetzen:</p>
+<pre style="margin-left: 40px;">
+&lt;form action=&quot;loginLogic.jsp&quot; method=&quot;<span style="color:#0000ff;">POST</span>&quot;&gt;</pre>
+<p>
+	Im ersten Fall spricht man von einem HTTP <em>GET</em> Request, im zweiten von einem HTTP <em>POST</em> Request. Vergleichen wir die beiden kurz:</p>
+<ul>
+	<li>
+		Ein <em>GET</em> Request kann durch einen Link oder ein Formular ausgelöst werden, ein <em>POST</em> Request nur durch ein Formular.</li>
+	<li>
+		Die Daten (Parameter) werden bei einem <em>GET</em> Request über die Adresszeile gesendet, sind also im Klartext zu lesen, und werden im Browserverlauf gespeichert.&nbsp;&nbsp; Bei einem <em>POST</em> Request werden die Parameter als Teil des HTTP Headers geschickt, sind also nicht so einfach zu sehen, und werden nicht im Browserverlauf gespeichert.&nbsp; Besonders sicher sind die Daten aber auch beim <em>POST</em> Request nicht.</li>
+	<li>
+		Die Menge der Daten ist bei einem <em>GET</em> Request auf ein bis zwei Kilobyte begrenzt, bei einem <em>POST</em> Request kann sie aber mehrere Gigabyte betragen.</li>
+</ul>
+<p>
+	Am besten wir prüfen das selbst mal nach, idealerweise sollten wir aber vorher den Browserverlauf löschen, oder einen anderen Browser verwenden.</p>
+<p>
+	<strong>SEP: Wenn möglich sollte man immer den <em>POST</em> Request bevorzugen.</strong></p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/BrowserInfo.png" style="width: 200px; height: 200px; float: right; margin-right: 10px; margin-left: 10px;" />BrowserInfo</h2>
+<p>
+	Über das <em>Request</em> Objekt erhalten wir Zugriff auf die Parameter, aber das <em>request</em> Objekt enthält zusätzlche Informationen über den Browser der gerade auf unseren Server zugreift.&nbsp; Dazu gehört das Protokoll das der Browser versteht, seine IP Adresse und sein Port, aber auch andere interessante Informationen:</p>
+<ul>
+	<li>
+		user-agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:47.0) Gecko/20100101 Firefox/47.0</li>
+	<li>
+		accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</li>
+	<li>
+		accept-language: en-US,en;de</li>
+	<li>
+		accept-encoding: gzip, deflate</li>
+	<li>
+		referer: http://localhost:8080/Ch3_JSP2/</li>
+	<li>
+		cookie: cook=ie; JSESSIONID=c819f064abc3432b265c0bbf3a20</li>
+	<li>
+		connection: keep-alive</li>
+</ul>
+<p>
+	Wir können u.a. feststellen, dass der Nutzer den Mozilla Browser verwendet und dass auf seinem Rechner ein 64-bit Ubuntu läuft.&nbsp; Außerdem scheint der Nutzer amerikanisches Englisch und Deutsch zu sprechen.&nbsp; Wir sehen auch, von woher (Referer) der Nutzer auf unsere Seite gekommen ist.&nbsp; Und wir können vermuten, dass er gerne Weihnachts-Plätzchen (Cookies) mag.</p>
+<p>
+	.</p>
+<h2>
+	Response</h2>
+<p>
+	Kommen wir zum zweiten großen Thema dieses Kapitels, dem <em>response</em> Objekt.&nbsp; Es entspricht der HTTP Response, ist also die Antwort des Servers an den Browser.&nbsp; Der Server sendet alle seine Daten als HTTP Response an den Browser.&nbsp; Auch hier wird die Information mit einem JSP Objekt, dem <em>response</em> Objekt gesammelt, bevor sie abgeschickt werden.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/Redirect.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Redirect</h2>
+<p>
+	Aus JSP Sicht ist das <em>response</em> Objekt einfach wieder ein vordefiniertes Objektt.&nbsp; Sehr häufig wird das <em>response</em> Objekt für Redirects verwendet:</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp;&nbsp; String redirect = request.getParameter(&quot;redirect&quot;);
+&nbsp;&nbsp;&nbsp; if ( (redirect != null) &amp;&amp; (redirect.equalsIgnoreCase(&quot;true&quot;)) ) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">response.sendRedirect(&quot;index.jsp&quot;);</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#ff0000;">return</span>;  // <span style="color:#ff0000;">this is very important!</span>
+&nbsp;&nbsp;&nbsp; } else {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(&quot;Hi there!&quot;);
+&nbsp;&nbsp;&nbsp; }
+%&gt;</pre>
+<p>
+	Wir überprüfen also ob der Parameter redirect auf true gesetzt wurde, und falls ja schicken wir den Nutzer einfach zur <em>index.jsp</em> Seite.&nbsp; Andernfalls senden wir ihm ein &quot;Hi there!&quot;.&nbsp; So etwas ist ganz nützlich für Logins z.B..</p>
+<p>
+	Weder vor noch nach dem Redirekt dürfen wir irgendwelche Daten an den Browser schicken, also z.B. out.println() oder ähnliches.&nbsp; Denn der Redirekt funktioniert nicht serverseitig sondern clientseitig.&nbsp; Was ein Redirekt tut, er schickt dem Browser einen 302er Status Code im HTTP Header:</p>
+<pre style="margin-left: 40px;">
+response.setStatus(response.SC_MOVED_TEMPORARILY);  // HTTP status code 302
+response.setHeader(&quot;Location&quot;, &quot;index.jsp&quot;);
+</pre>
+<p>
+	Das veranlasst den Browser dann dazu die neue Seite anstelle der alten zu laden.&nbsp; Der Server sagt also dem Browser, dass er noch mal einen HTTP Request schicken soll, dieses mal aber an die neue Seite.&nbsp; Wenn wir nicht diesen Umweg über den Browser gehen wollen, gibt es den RequestDispatcher.&nbsp; Den verwendet man allerdings eher selten, wir werden ihn im Datenbank Kapitel kennen lernen.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/Error.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Error</h2>
+<p>
+	Manchmal geht etwas schief.&nbsp; Dann können wir dem Browser einen Fehlercode schicken.&nbsp; Der bekannteste ist der &#39;404&#39; oder auch &quot;file not found&quot;:</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp;&nbsp; response.sendError(response.SC_NOT_FOUND, &quot;Hi there!&quot;);
+%&gt;</pre>
+<p>
+	Wir tun das auch über das <em>response</em> Objekt.&nbsp; Effektiv wird dadurch im HTTP Header ein 404 Status Code gesendet.&nbsp; Es gibt noch ganz viele andere Fehler, Details findet man in der RFC 2616 zum HTTP Protokoll.&nbsp;</p>
+<p>
+	Es sei noch angemerkt, dass nicht alle Browser die genaue Fehlermeldung weitergeben, der Internet Explorer hatte die Angewohnheit, einfach zu sagen, dass ein Fehler aufgetreten ist, welcher Fehler genau, hat er allerdings verschwiegen.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/ExcelJSP.png" style="width: 200px; height: 160px; float: right; margin-right: 10px; margin-left: 10px;" />Excel</h2>
+<p>
+	Eine anderer interessante Anwendung für das <em>response</em> Objekt, ist der Content Type.&nbsp; Darüber können wir dem Browser mitteilen, was für Daten im Anhang stecken.&nbsp; Normalerweise ist das &quot;text/html&quot;.&nbsp; Wir können das aber ändern:</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp;&nbsp; response.setContentType(&quot;application/vnd.ms-excel&quot;);
+&nbsp;&nbsp;&nbsp; for (int i = 0; i &lt; 10; i++) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.print(&quot;&quot; + i + &quot;,&quot;);
+&nbsp;&nbsp;&nbsp; }
+%&gt;</pre>
+<p>
+	In dem Beispiel erklären wir dem Browser was jetzt kommt ist ein Excel Spreadsheet.&nbsp; Der Browser fragt den Benutzer dann was dieser mit den Daten zu tun wünscht.&nbsp; Eine Option wäre die Daten direkt mit OpenOffice Calc oder Microsoft Excel zu öffnen.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/ImageJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Image</h2>
+<p>
+	Genauso können wir auch Bild Dateien im &quot;Rohformat&quot; an den Browser schicken.&nbsp; Wir sagen dem Browser, was jetzt kommt is ein &quot;image/jpeg&quot;:</p>
+<pre style="margin-left: 40px;">
+&lt;%@page import=&quot;java.io.*&quot; %&gt;
+&lt;%@page import=&quot;java.net.*&quot; %&gt;
+&lt;%
+&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">response.setContentType(&quot;image/jpeg&quot;);</span>
+&nbsp;&nbsp;&nbsp; OutputStream os = response.getOutputStream();
+&nbsp;&nbsp;&nbsp; String filePath = getServletContext().getRealPath(&quot;/&quot;);
+&nbsp;&nbsp;&nbsp; String imagePath = filePath + &quot;Mona_Lisa.jpg&quot;;
+&nbsp;&nbsp;&nbsp; InputStream is = new FileInputStream(imagePath);
+&nbsp;&nbsp;&nbsp; byte[] buffer = new byte[32 * 1024]; // 32k buffer
+&nbsp;&nbsp;&nbsp; int bytesRead = 0;
+&nbsp;&nbsp;&nbsp; while ((bytesRead = is.read(buffer)) != -1) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; os.write(buffer, 0, bytesRead);
+&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp; os.flush();
+&nbsp;&nbsp;&nbsp; os.close();
+%&gt;</pre>
+<p>
+	Der Browser erwartet dann ein Bild im Rohformat.&nbsp; Wir sollten uns über den Unterschied im Klaren sein: es handelt sich hier nicht um HTML oder einen Link.&nbsp; Im Allgemeinen, ist dieser Ansatz nicht zu empfehlen, da er relativ langsam ist.&nbsp; Manchmal macht er aber durchaus Sinn: z.B. wenn die Bilder dynamisch generiert werden, oder wenn die Bilder geschützt werden sollen, also nicht für jeden zugänglich sein sollen.</p>
+<p>
+	.</p>
+<hr />
+<h1>
+	Review</h1>
+<p>
+	In diesem Kapitel haben wir das Request und das Response Objekt kennen gelernt.&nbsp; Sie sind Abbildungen der unterliegenden HTTP Requests und Responses.&nbsp; Mit ihnen können wir z.B.</p>
+<ul>
+	<li>
+		auf Formular Daten zugreifen</li>
+	<li>
+		Informationen über den Browser erfahren</li>
+	<li>
+		den Nutzer woanders hinschicken und</li>
+	<li>
+		den Content-Type ändern.</li>
+</ul>
+<p>
+	Wir werden gleich noch viel mehr praktische Beispiele sehen wofür die beiden gut sein können.</p>
+<p>
+	.</p>
+<hr />
+<h1>
+	Projekte</h1>
+<p>
+	Nachdem wir gesehen haben wie die Request und Response Objekte funktionieren, wollen wir uns jetzt ein paar interessante Beispiele ansehen.&nbsp;</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/CalculatorJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Calculator</h2>
+<p>
+	Im zweiten Semester (Algorithmen) haben wir gelernt wie man mittels der Stack Klasse mathematische Ausdrücke berechnen kann.&nbsp; Den Code von damals können wir ganz einfach in eine Webanwendung überführen.</p>
+<p>
+	Die Anwendung soll ähnlich wie bei unserer Login Applikation aus zwei Teilen bestehen: dem ersten, <em>calculator.jsp</em>, in dem der Nutzer den mathematischen Ausdruck eingibt, also einfach ein Formular mit einem Textfeld.&nbsp; Im zweiten Teil, <em>calculatorLogic.jsp</em>, deklarieren wir dann die beiden Methoden <em>convertFromInfixToPostfix()</em> und <em>evaluate()</em> im Deklarationsteil: &lt;%! ... %&gt; (Die beiden Methoden sollten noch irgendwo in dem Ordner vom zweiten Semester rumliegen).&nbsp; Der Rest ist dann trivial:</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp;&nbsp; String infix = request.getParameter(&quot;mathExpression&quot;);
+&nbsp;&nbsp;&nbsp; String postfix = <span style="color:#0000ff;">convertFromInfixToPostfix(infix)</span>;
+&nbsp;&nbsp;&nbsp; int result = <span style="color:#0000ff;">evaluate(postfix)</span>;
+&nbsp;&nbsp;&nbsp; out.println(&quot;The result is: &quot; + result);
+%&gt;</pre>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/CaptchaJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Captcha</h2>
+<p>
+	Captcha&#39;s werden benutzt um Bots von Menschen zu unterscheiden.&nbsp; Man findet diese häufig wenn man sich neu irgendwo anmeldet.&nbsp; Das ist deswegen notwendig, weil es überraschend viele böse Buben im Internet gibt, die versuchen mittels Bots (in der Regel irgendwelche Skripten) sich so viele Accounts zu ergaunern wie möglich, um damit dann wieder irgendwelchen Unsinn zu treiben (Spam verschicken z.B.).</p>
+<p>
+	Unsere Catpcha&#39;s sind etwas trivial, und verdienen eigentlich den Namen gar nicht, aber die echten funtionieren nach dem gleichen Prinzip.&nbsp; Die Anwendung besteht wieder aus zwei Teilen, <em>captcha.jsp</em> und <em>captchaLogic.jsp</em>.&nbsp; Im ersten Teil stellen wir dem Kandidaten (Roboter oder Mensch) eine Frage.&nbsp; Die muss natürlich zufällig sein, und sich jedesmal ändern, sonst könnte der Roboter ja die Antwort erraten.</p>
+<pre style="margin-left: 40px;">
+<span style="color:#0000ff;">&lt;%
+&nbsp;&nbsp;&nbsp; int a = (int) (Math.random() * 9) + 1;
+&nbsp;&nbsp;&nbsp; int b = (int) (Math.random() * 9) + 1;
+%&gt;</span>
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;body&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h1&gt;Captcha&lt;/h1&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;p&gt;Please verify that you are a not a robot: &lt;br /&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; What is the sum of <span style="color:#0000ff;">&lt;%= a%&gt;</span> + <span style="color:#0000ff;">&lt;%= b%&gt;</span>?&lt;/p&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;form action=&quot;captchaLogic.jsp&quot; method=&quot;GET&quot;&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;input type=&quot;number&quot; name=&quot;sum&quot;/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">&lt;input type=&quot;hidden&quot; name=&quot;result&quot; value=&quot;&lt;%= a + b%&gt;&quot;/&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;input type=&quot;submit&quot; value=&quot;Verify&quot;/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/form&gt;
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>
+	Im zweiten Teil müssen wir dann lediglich feststellen, ob der Kandidat richtig gerechnet hat.&nbsp; Dazu müssen wir allerdings wissen, was die richtige Lösung ist.&nbsp; Dafür können wir das &quot;hidden&quot; Tag verwenden.</p>
+<p>
+	Besonders gut ist unsere Captcha App nicht gerade, denn wenn wir via &quot;View Sourcecode&quot; uns das generierte HTML ansehen, dann steht da die Antwort, und ein paar schlaue Script-Kiddies haben unser Captcha dann auch sofort geknackt.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/CookiesJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Cookies</h2>
+<p>
+	Hier handelt es sich nicht um Chocolate Chip Cookies, oder um Vanillekipferl.&nbsp; Bei den Cookies die wir verwenden handelt es sich um kleine Stücke Text (max. 4096 Zeichen) die wir dem Browser schicken können.&nbsp; Der Browser zeigt diesen Text aber nicht an, sondern speichert ihn.&nbsp; Das folgende Beispiel zeigt wie wir Cookies setzen, und wie wir alle Cookies ausgeben können:</p>
+<pre style="margin-left: 40px;">
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;body&gt;
+&lt;%
+&nbsp;&nbsp;&nbsp; // first add the new cookie:
+&nbsp;&nbsp;&nbsp; String name = request.getParameter(&quot;name&quot;);
+&nbsp;&nbsp;&nbsp; String value = request.getParameter(&quot;value&quot;);
+&nbsp;&nbsp;&nbsp; if ((name != null) &amp;&amp; (name.length() &gt; 0)) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">Cookie cookie = new Cookie(name, value);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cookie.setMaxAge(365 * 24 * 60 * 60);&nbsp;&nbsp; // one year
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; response.addCookie(cookie);</span>
+&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; // then list all cookies:
+&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">Cookie[] cookies = request.getCookies();</span>
+&nbsp;&nbsp;&nbsp; out.println( &quot;&lt;ul&gt;&quot;);
+&nbsp;&nbsp;&nbsp; if (cookies != null) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for (int i = 0; i &lt; cookies.length; i++) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(&quot;&lt;li&gt;&quot; + cookies[i].getName() + &quot; = &quot; + cookies[i].getValue() + &quot;&lt;/li&gt;&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp; out.println( &quot;&lt;/ul&gt;&quot;);
+%&gt;
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>
+	Bei jedem Request schickt der Browser alle Cookies die er von uns bekommen hat mit.&nbsp; Das können bis zu 50 Cookies sein.&nbsp; Er schickt aber keine Cookies von anderen Websites, normalerweise.&nbsp;</p>
+<p>
+	<img alt="" src="images/CookiesFirefox.png" style="width: 200px; height: 200px; float: right; margin-right: 10px; margin-left: 10px;" />Erst einmal scheinen Cookies relativ nutzlos, es stellt sich aber heraus, dass sie eine der nützlichsten Erfindungen im Zusammenhang mit dem Internet sind.&nbsp; Die Browser verstecken die Cookies gerne, aber wenn man lange genug sucht, findet man sie immer.&nbsp; Rechts ist ein Beispiel von Cookies die der Website &quot;blogspot.de&quot; auf meinem Rechner gespeichert hat.&nbsp; Die Cookies &#39;umta&#39;, &#39;umtb&#39; usw. sind recht bekannt, da sie von Google Analytics kommen.&nbsp; Generell werden diese Art von Cookies verwendet um Leute zu tracken.&nbsp; Man kann aber alles mögliche in den Cookies speichern, so lange es weniger als 4 Kilobyte ist.</p>
+<p>
+	Cookies sind nicht besonders sicher.&nbsp; Obwohl eigentlich nur der Website der die Cookies gesetzt hat, diese auch auslesen können sollte, finden sich immer wieder Tricks das zu umgehen.&nbsp; Deswegen ist es nicht besonders schlau Passwörter in Cookies zu speichern.&nbsp;</p>
+<p>
+	<strong>SI: Man sollte nie Passwörter oder andere sensitive Informationen in Cookies speichern.</strong></p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/EditorJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Editor</h2>
+<p>
+	Als nächstes möchten wir einen kleinen Texteditor schreiben.&nbsp; Auch dieses Beispiel besteht wieder aus zwei Teilen, einer editor.jsp und einer editorLogic.jsp Seite.&nbsp; Die Seite <em>editor.jsp</em> haben wir schon im letzten Kapitel erstellt.&nbsp; Deswegen kommen wir gleich zur <em>editorLogic.jsp</em> Seite:</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp;&nbsp; String text = request.getParameter(&quot;text&quot;);
+&nbsp;&nbsp;&nbsp; if (text != null) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; try {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FileWriter fw = new FileWriter(<span style="color:#0000ff;">&quot;editor.txt&quot;</span>);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fw.write(text);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fw.close();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } catch (Exception e) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.out.println(e);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">response.sendRedirect(&quot;editor.jsp&quot;)</span>;
+%&gt;</pre>
+<p>
+	Wir versuchen also den Text den der User eingegeben hat in der Datei &quot;editor.txt&quot; zu speichern, und danach schicken wir den Nutzer einfach zur <em>editor.jsp</em> Seite zurück.&nbsp; Sollte allerdings etwas schief gehen, dann schreiben wir eine Fehlermeldung in den &quot;System.out&quot; Stream, besser wäre aber den Logger zu verwenden.&nbsp;</p>
+<p>
+	Es stellen sich hier die interessante Frage: wohin wird die Datei &quot;editor.txt&quot; geschrieben?&nbsp; Was passiert mit der Datei wenn der Server neu gestartet wird?&nbsp; Und was wenn die Applikation neu deployed wird?</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/UploadJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Upload</h2>
+<p>
+	Wenn wir es unseren Nutzern ermöglichen wollen Daten auf unseren Server hochzuladen, z.B. ein Profilbild, dann ist der erste Schritt relativ einfach:</p>
+<pre style="margin-left: 40px;">
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;body&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h1&gt;Upload&lt;/h1&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;p&gt;Select a file to upload:&lt;/p&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;form action=&quot;uploadLogic.jsp&quot; 
+              method=&quot;POST&quot; 
+              <span style="color:#0000ff;">enctype=&quot;multipart/form-data&quot;</span>&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">&lt;input type=&quot;file&quot; name=&quot;file&quot;/&gt;</span>&lt;br/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;input type=&quot;submit&quot; value=&quot;Upload Image&quot;/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/form&gt;
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>
+	Wir benutzen zum einen das &quot;file&quot; Inputfeld.&nbsp; Zum anderen müssen wir im &quot;form&quot; Tag noch mitteilen, dass die Daten vom Typ &quot;multipart/form-data&quot; sind.</p>
+<p>
+	Der zweite Schritt ist allerdings etwas komplizierter.&nbsp; Das hat damit zu tun, dass u.U. nicht nur eine Datei hochgeladen wird, sondern mehrere.&nbsp; Die muss man dann auseinanderfieseln.&nbsp; Da wir nicht die ersten sind die dieses Problem haben, gibt es in der Apache Commons Bibliothek [2] drei Klassen die uns dabei unterstützen:</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp;&nbsp; int maxFileSize = 5000 * 1024;&nbsp; // 5 MB
+&nbsp;&nbsp;&nbsp; int maxMemSize = 1000 * 1024;&nbsp;&nbsp; // 1 MB
+
+&nbsp;&nbsp;&nbsp; boolean isMultipart = ServletFileUpload.isMultipartContent(request);
+&nbsp;&nbsp;&nbsp; if (isMultipart) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ServletContext servletContext = this.getServletConfig().getServletContext();
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Create a factory for disk-based file items
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">DiskFileItemFactory factory = new DiskFileItemFactory();</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; factory.setSizeThreshold(maxMemSize);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; File repository = (File) servletContext.getAttribute(&quot;javax.servlet.context.tempdir&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; factory.setRepository(repository);
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Create a new file upload handler
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">ServletFileUpload upload = new ServletFileUpload(factory);</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; upload.setSizeMax(maxFileSize);
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Parse the request
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; List&lt;FileItem&gt; items = upload.parseRequest(request);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Iterator&lt;FileItem&gt; iter = items.iterator();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; while (iter.hasNext()) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">FileItem item = iter.next();</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (!item.isFormField()) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String filePath = servletContext.getRealPath(&quot;/&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; File uploadedFile = new File(filePath + item.getName());
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; item.write(uploadedFile);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(&quot;Upload successful!&quot;);
+
+&nbsp;&nbsp;&nbsp; } else {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(&quot;No file uploaded&quot;);
+&nbsp;&nbsp;&nbsp; }
+%&gt;</pre>
+<p>
+	Die Variable <em>filePath</em> enthält den Pfad wo unsere hochgeladenen Dateien gespeichert werden.&nbsp; Dateien auf unseren Server hochzuladen ist nicht ganz unproblematisch, deswegen haben wir einige Schranken eingebaut, was die Grösse der Dateien angeht die wir akzeptieren.&nbsp; Unvorsichtige Nutzer oder Hacker können unseren Website in echte Schwierigkeiten bringen, wenn zu viele oder zu große Dateien hochgeladen werden.</p>
+<p>
+	<strong>SI: Hacker nutzen gerne Buffer Overflows um Zugriff auf unseren Server zu erlangen.&nbsp; Dies gelingt Ihnen manchmal durch das Hochladen sehr grosser Dateien.</strong></p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/StateURLJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />StateURL</h2>
+<p>
+	Sehr häufig möchten wir Nutzer unseres Websites unterscheiden können, z.B. wenn die bei uns was kaufen wollen.&nbsp; Man könnte es mit der IP Adresse versuchen.&nbsp; Die taugt aber nicht, weil z.B. bei Firmen es so aussieht wie wenn alle Mitarbeiter der Firma die gleiche IP Adresse haben.&nbsp; Also brauchen wir einen andere Lösung.</p>
+<p>
+	Eine ganz einfache Lösung für das Problem ist das sogenannte &quot;URL-Rewrite&quot;:&nbsp; dazu hängen wir an jede URL unseres Websites einen Zusatz, z.B.</p>
+<pre style="margin-left: 40px;">
+...stateURL.jsp?<span style="color:#0000ff;">sessionId=227</span></pre>
+<p>
+	Wenn jetzt alle URLs die von Nutzer &quot;227&quot; kommen diesen Zusatz haben, können wir Nutzer &quot;227&quot; wiedererkennen.&nbsp; Im Code sieht das so aus:</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp;&nbsp; String sessionId = request.getParameter(&quot;sessionId&quot;);
+&nbsp;&nbsp;&nbsp; if ( sessionId == null ) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sessionId = &quot;&quot; + (int)(Math.random()*1000);
+&nbsp;&nbsp;&nbsp; }
+%&gt;
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;body&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h1&gt;State with URL-Rewrite&lt;/h1&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;p&gt;Your sessionId is &lt;%= sessionId %&gt;&lt;/p&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;p&gt;&lt;a href=&quot;stateURL.jsp?sessionId=&lt;%= sessionId %&gt;&quot;&gt;some link&lt;/a&gt;&lt;/p&gt;
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>
+	Wir stellen also zunächst fest, ob der Nutzer bereits eine <em>sessionId</em> hat.&nbsp; Falls nein, generieren wir eine neue.&nbsp; Danach fügen wir zu allen Links die wir in unserem Website verwenden den Zusatz &quot;?sessionId=227&quot;.&nbsp; Das kann man auch automatisch machen, aber uns geht es ja darum das Prinzip zu verstehen.</p>
+<p>
+	Wir können testen ob unser Beispiel auch wirklich funktioniert, in dem wir zwei verschieden Browser öffnen und unsere Seite besuchen.&nbsp; Die verschiedenen Browser sollten verschiedene <em>sessionIds</em> haben.</p>
+<p>
+	Ein paar Dinge die wir noch checken sollten:</p>
+<ul>
+	<li>
+		Was passiert wenn wir die gleiche Seite in verschiedenen Browsertabs öffnen?</li>
+	<li>
+		Könnte es passieren, dass zufällig zwei Nutzer die gleiche <em>sessionId</em> bekommen (collision)?</li>
+	<li>
+		Könnte sich ein Nutzer einfach als ein anderer ausgeben, indem er die <em>sessionId</em> des anderen übernimmt (session hijacking)?</li>
+</ul>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/StateCookieJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />StateCookie</h2>
+<p>
+	Eine etwas einfachere Methode Nutzer eindeutig zu identifizieren ist mit Hilfe von Cookies.&nbsp; Das erste Mal wenn ein Nutzer auf unsere Seite kommt, kreiiren wir ein Cookie mit dem Name &quot;sessionId&quot; und initialisieren es mit einem Zufallswert.&nbsp; Danach, können wir den Nutzer über sein Cookie eindeutig identifizieren.</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp;&nbsp; String sessionId = null;
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; // first check if cookie was set already
+&nbsp;&nbsp;&nbsp; Cookie[] cookies = request.getCookies();
+&nbsp;&nbsp;&nbsp; if (cookies != null) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for (int i=0; i&lt;cookies.length; i++) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (cookies[i].getName().equals(&quot;sessionId&quot;)) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sessionId = cookies[i].getValue();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; // if no cookie was found create one
+&nbsp;&nbsp;&nbsp; if ( sessionId == null ) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sessionId = &quot;&quot; + (int)(Math.random()*1000);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Cookie cookie = new Cookie(&quot;sessionId&quot;, sessionId);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cookie.setMaxAge(1 * 60);&nbsp;&nbsp; // expire in 1 min
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; response.addCookie(cookie);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; response.sendRedirect(&quot;stateCookie.jsp&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return;
+&nbsp;&nbsp;&nbsp; }
+%&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;body&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h1&gt;State with Cookie&lt;/h1&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;p&gt;Your sessionId is &lt;%= sessionId %&gt;&lt;/p&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;p&gt;&lt;a href=&quot;stateCookie.jsp&quot;&gt;some link&lt;/a&gt;&lt;/p&gt;
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>
+	Obwohl der JSP Code etwas komplizierter aussieht, ist dieser Ansatz einfacher, denn wir müssen nicht an jede URL etwas anhängen.&nbsp; D.h. unser HTML wird einfacher.&nbsp; Auch hier sollten wir erst mal wieder testen ob unser Beispiel auch wirklich funktioniert, in dem wir zwei verschieden Browser öffnen und unsere Seite besuchen.</p>
+<p>
+	Ein paar Dinge die wir noch checken sollten:</p>
+<ul>
+	<li>
+		Was passiert wenn wir die gleiche Seite in verschiedenen Browsertabs öffnen?</li>
+	<li>
+		Könnte es passieren, dass zufällig zwei Nutzer die gleiche <em>sessionId</em> bekommen (collision)?</li>
+	<li>
+		Könnte sich ein Nutzer einfach als ein anderer ausgeben (session hijacking)?</li>
+	<li>
+		Was passiert wenn der Nutzer keine Cookies zulässt?</li>
+</ul>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/NumberGuessJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />NumberGuess</h2>
+<p>
+	NumberGuess sollte aus dem ersten Semester noch bekannt sein.&nbsp; In dem Spiel &quot;denkt&quot; sich der Computer eine Zahl zwischen 0 und 99, und wir müssen diese erraten.&nbsp; Falls wir falsch raten, sagt uns der Computer ob seine Zahl höher oder niedriger als unsere geratene war.&nbsp;</p>
+<p>
+	Der Hauptunterschied zum ersten Semester ist, dass wir im Web nicht alleine sind.&nbsp; Soll heißen, es könnten ja mehr als nur eine Person auf unser Spiel zugreifen.&nbsp; Sollen die anderen dann die gleiche Zahl erraten, oder bekommt jede Person ihre eigene Zahl?&nbsp; Ersteres wäre ganz einfach, deswegen beschäftigen wir uns mit Zweiterem.</p>
+<p>
+	Mit unserem momentanen Kenntnisstand, gibt es zwei Möglichkeiten dies zu tun: mit Cookies oder mit dem Hidden-Tag.&nbsp; Da unsere Nutzer sicherheitsbewusst sind und keine Cookies zulassen, verwenden wir das Hidden-Tag.</p>
+<pre style="margin-left: 40px;">
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;body&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h1&gt;NumberGuess&lt;/h1&gt;
+&lt;%
+&nbsp;&nbsp;&nbsp; ...
+%&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;p&gt;Enter your guess:&lt;/p&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;form action=&quot;numberGuess.jsp&quot; method=&quot;POST&quot; &gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;input type=&quot;number&quot; name=&quot;number&quot; <span style="color:#0000ff;">required=&quot;true&quot;</span>/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">&lt;input type=&quot;hidden&quot; name=&quot;numberToGuess&quot; value=&quot;&lt;%= numberToGuess %&gt;&quot; /&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;input type=&quot;submit&quot; value=&quot;Guess&quot; /&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/form&gt;
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>
+	Als erstes müssen wir feststellen, ob unsere Seite das erste Mal aufgerufen wurde.&nbsp; Das können wir feststellen indem wir checken ob der Parameter &quot;number&quot; schon gesetzt wurde.&nbsp; Falls nicht, dann generieren wir einfach eine Zufallszahl zwischen 0 und 99:</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp;&nbsp; int numberToGuess = 0;
+&nbsp;&nbsp;&nbsp; if ( <span style="color:#0000ff;">request.getParameter(&quot;number&quot;) == null</span> ) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // we are here the first time
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Random rand = new Random();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; numberToGuess = rand.nextInt(99);
+</pre>
+<p>
+	Falls ja, dann müssen wir die Zahl des Nutzers mit der Zahl des Computers vergleichen.</p>
+<pre style="margin-left: 40px;">
+&nbsp;&nbsp;&nbsp; } else {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // we have been here before
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; numberToGuess = Integer.parseInt( request.getParameter(&quot;numberToGuess&quot;) );
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int guess = Integer.parseInt( request.getParameter(&quot;number&quot;) );
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ( numberToGuess == guess ) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(&quot;You are the greatest!&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else if ( guess &lt; numberToGuess ){
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(&quot;Your guess is less than the number.&quot;);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(&quot;Your guess is higher than the number.&quot;);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp; }
+%&gt;</pre>
+<p>
+	Was noch fehlt ist ein Zähler, der mitzählt wie häufig die Person raten musste bis sie die richtige Antwort hatte.&nbsp; Das könnte man über ein zusätzliches Hidden-Tag lösen.&nbsp; Wollen wir aber nicht, weil wir im nächsten Kapitel eine bessere Lösung sehen werden (Session).</p>
+<p>
+	Bevor zum nächsten Projekt gehen, gibt es noch einige Dinge über die wir uns kurz Gedanken machen sollten:</p>
+<ul>
+	<li>
+		Wie kann man das Spiel abbrechen und neu starten?</li>
+	<li>
+		Was müsste man machen, damit das Formular am Ende, also wenn der Nutzer richtig geraten hat, nicht mehr gezeigt wird?</li>
+	<li>
+		Was passiert wenn der Nutzer gar nichts, oder Unsinn eingibt?</li>
+	<li>
+		Was würde passieren wenn der Nutzer &quot;View Source&quot; kennt, also sich den HTML Quelltext anzeigen lässt?</li>
+</ul>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/GuestBookJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />GuestBook</h2>
+<p>
+	Bei der GuestBook Anwendung geht es darum, dass Besucher unserer Website Kommentare hinterlassen können.&nbsp; Die Anwendung besteht aus zwei Teilen, dem ersten, <em>guestBook.jsp</em>, in dem die Nutzer ihre Kommentare schreiben können, das ist einfach ein Formular mit einer Textarea.&nbsp;</p>
+<p>
+	Im zweiten Teil, <em>guestBookLogic.jsp</em>, schreiben wir den Kommentar erst Mal in eine Textdatei.&nbsp;</p>
+<pre style="margin-left: 40px;">
+&lt;%@page import=&quot;java.io.*&quot;%&gt;
+&lt;%
+&nbsp;&nbsp;&nbsp; // write comment to file:
+&nbsp;&nbsp;&nbsp; String text = request.getParameter(&quot;comment&quot;);
+&nbsp;&nbsp;&nbsp; if (text != null) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; try {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FileWriter fw = new FileWriter(&quot;guestBook.txt&quot;, <span style="color:#0000ff;">true</span>);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fw.write(&quot;&lt;li&gt;&quot; + text + &quot;&lt;/li&gt;&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fw.close();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } catch (Exception e) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // should log error to log file
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; // show guest book:
+%&gt;</pre>
+<p>
+	Anschliessend zeigen wir den Inhalt dieser Textdatei an, damit wir alle Kommentare lesen können.</p>
+<pre style="margin-left: 40px;">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;body&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h1&gt;GuestBook&lt;/h1&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;ul&gt;
+&lt;%
+&nbsp;&nbsp;&nbsp; try {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BufferedReader br = new BufferedReader(
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; new FileReader(&quot;guestBook.txt&quot;) );
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; while (true) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String line = br.readLine();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ( line == null ) break;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println( line );
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; br.close();
+&nbsp;&nbsp;&nbsp; } catch (Exception e) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // should log error to log file
+&nbsp;&nbsp;&nbsp; }
+%&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/ul&gt;
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>
+	Wichtig ist, dass wir beim FileWriter das &quot;true&quot; Flag setzen, das bedeutet, dass er eine existierende Datei nicht löscht, sondern die neuen Einträge anhängt.</p>
+<p>
+	Auch in dieser einfachen Anwendung gibt es wieder einiges zu bedenken:</p>
+<ul>
+	<li>
+		Was passiert wenn der Nutzer so Unsinn wie &quot;&lt;script&gt;alert(&#39;hi&#39;);&lt;/script&gt;&quot; eingibt (XSS)?</li>
+	<li>
+		Manche Nutzer lieben Schimpfwörter und haben nichts besseres zu tun, als den ganzen Tag Webformulare mit selbigen zu befüllen.&nbsp; Wie könnte man das verhindern (Stopwords)?</li>
+	<li>
+		Wo wird die Datei &quot;guestBook.txt&quot; eigentlich gespeichert?</li>
+	<li>
+		Was würde passieren wenn ein Nutzer sehr viel Text (Gigabytes oder Terrabytes) eingibt? &nbsp;</li>
+</ul>
+<p>
+	.</p>
+<p>
+	<strong>SI: Wir sollten niemals Daten trauen die vom Nutzer kommen und immer mit dem Schlimmsten rechnen.</strong></p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/HighScoreJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />HighScore</h2>
+<p>
+	Für viele Spiele benötigt man eine Highscore Liste.&nbsp; Die sollte natürlich idealerweise sortiert sein, und zwar derart, dass der Spieler mit dem höchsten Score als erstes gelistet wird.&nbsp; Wenn wir uns an unser zweites Semester erinnern, dann sollte eigentlich die TreeMap die Datenstruktur unserer Wahl sein:</p>
+<pre style="margin-left: 40px;">
+TreeMap&lt;Integer,String&gt; map =
+&nbsp;&nbsp;&nbsp; new TreeMap&lt;Integer,String&gt;(Collections.reverseOrder());</pre>
+<p>
+	Der Key ist der Score und der Value ist die UserId des Nutzers.&nbsp;</p>
+<p>
+	Auch hier benötigen wir wieder zwei Seiten: über die <em>highScore.jsp</em> fügen wir einen neuen Score hinzu.&nbsp; Die <em>highScoreLogic.jsp</em> Seite liest zunächst die alten Scores von einer Datei namens &quot;highScores.txt&quot;, fügt den neuen Wert hinzu, speichert die Scores, und abschliessend werden sie angezeigt.&nbsp; Unsere Seite besteht aus drei Teilen:&nbsp; der Definition der Methoden,</p>
+<pre style="margin-left: 40px;">
+&lt;%!&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; private static final String HIGH_SCORE_FILE_NAME = &quot;highScores2.txt&quot;;
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; private TreeMap&lt;Integer, String&gt; <span style="color:#0000ff;">readScoresFromFile()</span> {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TreeMap&lt;Integer, String&gt; map = null;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (!(new File(HIGH_SCORE_FILE_NAME)).exists()) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; map = new TreeMap&lt;Integer, String&gt;(Collections.reverseOrder());
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; try {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ObjectInputStream ois = new ObjectInputStream(
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; new FileInputStream(HIGH_SCORE_FILE_NAME));
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; map = (TreeMap&lt;Integer, String&gt;) ois.readObject();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ois.close();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } catch (Exception e) {}
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return map;
+&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; private void <span style="color:#0000ff;">writeScoresToFile(TreeMap&lt;Integer, String&gt; map)</span> {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; try {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ObjectOutputStream oos = new ObjectOutputStream(
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; new FileOutputStream(HIGH_SCORE_FILE_NAME));
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; oos.writeObject(map);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; oos.close();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } catch (Exception e) {}
+&nbsp;&nbsp;&nbsp; }
+%&gt;</pre>
+<p>
+	dem JSP das die Parameter einliest,</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp;&nbsp; // save score to file:
+&nbsp;&nbsp;&nbsp; String userId = request.getParameter(&quot;userId&quot;);
+&nbsp;&nbsp;&nbsp; String score = request.getParameter(&quot;score&quot;);
+&nbsp;&nbsp;&nbsp; TreeMap&lt;Integer, String&gt; sortedScoreMap = readScoresFromFile();
+&nbsp;&nbsp;&nbsp; if ((userId != null) &amp;&amp; (score != null)) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sortedScoreMap.put(Integer.parseInt(score), userId);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; writeScoresToFile(sortedScoreMap);
+&nbsp;&nbsp;&nbsp; }
+%&gt;</pre>
+<p>
+	und dem HTML, dass die HighScores anzeigt:</p>
+<pre style="margin-left: 40px;">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;body&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h1&gt;HighScore&lt;/h1&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;ol&gt;
+&lt;%&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; for (Integer scr : sortedScoreMap.keySet()) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(&quot;&lt;li&gt;&quot; +scr+&quot;: &quot;+sortedScoreMap.get(scr) + &quot;&lt;/li&gt;&quot;);
+&nbsp;&nbsp;&nbsp; }
+%&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/ol&gt;
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/PizzaMenuJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />PizzaMenu</h2>
+<p>
+	Im letzten Kapitel haben wir uns schon darum gekümmert, dass das Menü unseres Pizza Restaurants gut aussieht.&nbsp; Was wir jetzt noch machen wollen ist, dass das Menü einfach zu ändern ist, was ja in guten Restaurants häufiger vorkommen soll.&nbsp;</p>
+<p>
+	Die Anwendung besteht wieder aus zwei Seiten, einer <em>pizzaMenu.jsp</em> und einer <em>pizzaMenuLogic.jsp</em>.&nbsp; Erstere besteht einfach aus einer Textarea und einem Submit Knopf.&nbsp; Und Zweitere haben wir eigentlich fast schon geschrieben, wir müssen eigentlich nur noch den String <em>menu</em> aus dem Parameter holen:</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp;&nbsp; String menu = request.getParameter(&quot;menu&quot;);
+&nbsp;&nbsp;&nbsp; if (text != null) {
+        ...
+    }
+</pre>
+<p>
+	Wir wollen aber noch einen Schritt weitergehen:&nbsp; anstelle wie wir es im letzten Kapitel getan haben, das generierte Menu einfach an den Browser zu schicken, wollen wir es in eine Datei namens <em>pizzaMenu.html</em> generieren:</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp;&nbsp; ...
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; try {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String path = request.getServletContext().getRealPath(&quot;/&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FileWriter fw = new FileWriter(path+&quot;pizzaMenu.html&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fw.write(&quot;&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;body&gt;&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fw.write(&quot;&lt;h1&gt;&quot; + br.readLine() + &quot;&lt;/h1&gt;&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fw.write(&quot;&lt;ul&gt;&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; while (true) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String line = br.readLine();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (line == null) break;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String[] pizz = line.split(&quot;:&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fw.write(&quot;&lt;li&gt;&lt;strong&gt;&quot; + pizz[0] +&quot;:&lt;/strong&gt; &quot;+ pizz[1] + &quot;&lt;/li&gt;&quot;);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fw.write(&quot;&lt;/ul&gt;&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fw.write(&quot;&lt;/body&gt;&lt;/html&gt;&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fw.close();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } catch (Exception e) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // should log error to log file
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; response.sendRedirect(&quot;pizzaMenu.html&quot;);
+%&gt;</pre>
+<p>
+	Anschliessend machen wir einen Redirect auf die <em>dynamisch generierte</em> HTML Seite.</p>
+<p>
+	Dies ist unser erstes Beispiel für &quot;dynamic code generation&quot;, in diesem Fall HTML.&nbsp; Es ist eine beliebte Technik für High-Volume Websites bei denen sich die Daten nicht zu häufig ändern.&nbsp; Craigslist [3] verwendet diesen Trick.</p>
+<p>
+	Im Allgemeinen gilt allerdings, dass man es vermeiden sollte in Webanwendung Dateien zu benutzen.&nbsp; Alternativen sind das <em>session</em> oder <em>application</em> Objekt oder eine Datenbank.&nbsp; Beides werden wir in den kommenden Kapiteln sehen.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/i18n.png" style="width: 200px; height: 123px; float: right; margin-right: 10px; margin-left: 10px;" />i18n</h2>
+<p>
+	Das &quot;Inter&quot; in Internet steht ja für international.&nbsp; Es gibt jetzt manche Leute (zu denen ich gehöre) die sagen, dann machen wir halt alles auf Englisch.&nbsp; Es gibt aber viel mehr Leute die ihre Webseiten aber lieber in ihrer eigenen Sprache lesen.&nbsp; Das ist das Problem das man &quot;Internationalization&quot; nennt, kurz i18n.&nbsp;</p>
+<p>
+	Wie wir ja vor kurzem gelernt haben, sagt uns der Browser welche Sprache er spricht.&nbsp; Und wir können diese Information verwenden um Besucher unserer Website je nach Sprache umzuleiten:</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp; String userLocale = request.getHeader(&quot;Accept-Language&quot;);
+&nbsp;&nbsp; Locale locale = request.getLocale();
+&nbsp;&nbsp; String userlanguage = locale.getDisplayLanguage();
+
+&nbsp;&nbsp; if ( &quot;de&quot;.equals(locale.getLanguage())) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; response.sendRedirect(&quot;de/&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return;
+&nbsp;&nbsp; }
+&nbsp;&nbsp; response.sendRedirect(&quot;en/&quot;);
+&nbsp;&nbsp; return;&nbsp; &nbsp;
+%&gt;</pre>
+<p>
+	In unserem Beispiel haben wir also eine zentrale <em>index.jsp</em> Seite, die den Code oben enthält.&nbsp; Zusätzlich gibt es aber für jede Sprache die wir unterstützen wollen ein Unterverzeichnis, idealerweise mit dem Landeskürzel als Namen, und darin befinden sich dann die sprachspezifischen Seiten.&nbsp; Wenn wir die Anwendung testen wollen, dann müssen wir die Spracheinstellungen in unserem Browser ändern, das ist manchmal ganz einfach (bei Opera) und manchmal nicht.</p>
+<p>
+	Der Nachteil dieses Verfahrens ist, dass wir quasi für jede Sprache die wir unterstützen wollen eine komplette Kopie unseres Websites anlegen müssen.&nbsp; Das sorgt für einen gewaltigen Wartungsaufwand.&nbsp; Es gibt hier auch andere Lösungen, in der Regel sind das Frameworks wie Struts [5], JSF [6] oder Spring [7].</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/EscapeXML.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />EscapeXml</h2>
+<p>
+	Kommen wir zu einem Problem mit dem wir es immer wieder zu tun haben werden: trauen wir dem Input unserer Nutzer?&nbsp; Die Antwort ist ganz klar: Nein!&nbsp; Allerdings&nbsp; sollten wir zwischen zwei Nutzertypen unterscheiden: denen die unabsichtlich etwas falsch machen, also den Trotteln, und denen die absichtlch versuchen unserem Website Schaden zuzufügen, den Hackern.</p>
+<p>
+	Zwei Standardverfahren die Hacker gerne anwenden sind Cross-Site Scripting (XSS) und SQL Injection.&nbsp; Wir wollen ersteres demonstrieren und dann zeigen wie man sich dagegen schützt.&nbsp; Als erstes schreiben wir eine Seite <em>escapeXML.jsp</em> die aus einem Formular mit einer Textarea einer Checkbox und einem Submit Knopf besteht.&nbsp; In der Textarea soll folgendes JavaScript stehen, dass hypothetisch ein böser Hacker da reingeschrieben hat:</p>
+<pre style="margin-left: 40px;">
+&lt;script type=&quot;text/javascript&quot;&gt;
+alert(&quot;Hi from JavaScript!&quot;);
+&lt;/script&gt;</pre>
+<p>
+	Das Ziel dieses Formulars ist die Seite <em>escapeXmlLogic.jsp</em>:</p>
+<pre style="margin-left: 40px;">
+&lt;%@page import=&quot;de.variationenzumthema.internet.Utility&quot;%&gt;
+&lt;%
+&nbsp;&nbsp;&nbsp; String text = request.getParameter(&quot;text&quot;);
+&nbsp;&nbsp;&nbsp; if (request.getParameter(&quot;escape&quot;) != null) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println( <span style="color:#0000ff;">Utility.escapeXml(text)</span> );
+&nbsp;&nbsp;&nbsp; } else {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(text);
+&nbsp;&nbsp;&nbsp; }
+%&gt;</pre>
+<p>
+	Je nachdem, ob wir die Checkbox markiert haben oder nicht, wird einmal der Userinput einfach ausgegeben mittels <em>out.println(),</em> und das andere Mal wird der Userinput noch durch folgende Methode gejagt:</p>
+<pre style="margin-left: 40px;">
+&nbsp;&nbsp;&nbsp; public static String escapeXml(String in) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; in = in.replace(&quot;&amp;&quot;, &quot;&amp;amp;&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; in = in.replace(&quot;\&quot;&quot;, &quot;&amp;#034&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; in = in.replace(&quot;&#39;&quot;, &quot;&amp;#039&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; in = in.replace(&quot;&lt;&quot;, &quot;&amp;lt;&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; in = in.replace(&quot;&gt;&quot;, &quot;&amp;gt;&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return in;
+&nbsp;&nbsp;&nbsp; }</pre>
+<p>
+	Das Resultat ist, dass im einen Fall der Browser JavaScript ausführt (kann gefährlich sein), im anderen Fall aber nicht.&nbsp; Ganz ähnlich funktioniert auch die <em>esacpeSQL()</em> Mehode.&nbsp; Da wir diese Methoden so häufig brauchen werden (und auch die weiter unten), haben wir diese in der <em>Utility</em> Klasse zusammengefasst.</p>
+<p>
+	<strong>SI: Wir sollten dem Input unserer Nutzer niemals trauen.</strong></p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/RegisterJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Register**</h2>
+<p>
+	Wir werden es immer wieder mit längeren Formularen zu tun haben, aus denen wir dann ein Java Objekt (POJO) befüllen sollen.&nbsp; Ein Möglichkeit ist dies von Hand zu tun, so wie wir das bisher gemacht haben.&nbsp; Eine andere ist aber sich eine Konvention zu überlegen und dann die Magie von Reflection zu verwenden.</p>
+<p>
+	Die Konvention ist folgende: nehmen wir an wir haben ein Formular mit folgenden Input Feldern:</p>
+<pre style="margin-left: 40px;">
+&lt;form action=&quot;registerLogic.jsp&quot; method=&quot;POST&quot;&gt;
+&nbsp;&nbsp;&nbsp; &lt;p&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;label&gt;Email:&lt;/label&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;input type=&quot;text&quot; name=&quot;<span style="color:#0000ff;">emailId</span>&quot;/&gt;
+&nbsp;&nbsp;&nbsp; &lt;/p&gt;
+&nbsp;&nbsp;&nbsp; &lt;p&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;label&gt;Password:&lt;/label&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;input type=&quot;password&quot; name=&quot;<span style="color:#0000ff;">password</span>&quot;/&gt;
+&nbsp;&nbsp;&nbsp; &lt;/p&gt;
+    ...
+&lt;/form&gt;
+</pre>
+<p>
+	Dann deklarieren wir eine entsprechende Klasse, die für jedes der Input Felder ein Attribut mit gleichem Namen hat:</p>
+<pre style="margin-left: 40px;">
+public class User {
+&nbsp;&nbsp;&nbsp; private String <span style="color:#0000ff;">emailId</span>;
+&nbsp;&nbsp;&nbsp; private String <span style="color:#0000ff;">password</span>;
+    ...
+}
+</pre>
+<p>
+	Das ist unsere Konvention.</p>
+<p>
+	Und jetzt möchten wir, dass es eine Methode namens <em>extractObjectFromRequest()</em> gibt, der wir einfach das <em>request</em> Objekt übergeben, und die uns dann ein fertiges <em>User</em> Objekt zurückgibt:</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp;&nbsp; User usr = 
+        (User)Utility.extractObjectFromRequest(User.class, request);
+%&gt;</pre>
+<p>
+	und natürlich soll die Methode das für jede mögliche Klasse tun.&nbsp; Und überraschenderweise geht das mit eine paar Zeilen Java Code und Reflection Magic:</p>
+<pre style="margin-left: 40px;">
+&nbsp;&nbsp;&nbsp; public static Object extractObjectFromRequest(Class c, 
+        HttpServletRequest request) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Object o = null;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; try {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; o = c.newInstance();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Field[] flds = c.getDeclaredFields();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for (Field f : flds) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String param = request.getParameter(f.getName());
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ((param != null) &amp;&amp; (param.length() &gt; 0)) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; f.setAccessible(true);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Object par = null;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (f.getType().getName().equals(&quot;java.lang.String&quot;)) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; par = param;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else if ...
+                        ...
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.err.println(&quot;Unknown type: &quot; + f.getType().getName());
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (par != null) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; f.set(o, par);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } catch (Exception e) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.err.println(e);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return o;
+&nbsp;&nbsp;&nbsp; }</pre>
+<p>
+	Cool, oder?</p>
+<p>
+	Nun wenn wir das auch noch mit der <em>escapeXML()</em> und <em>ascapeSQL()</em> Methode kombinieren, sind wir schon auf der ziemlich sicheren Seite.</p>
+<p>
+	<strong>SEP: Wir sollten bei der Wahl einer Programmiersprache darauf achten, dass diese Reflection unterstützt.&nbsp; Es sei denn wir schreiben Software für Autos, Flugzeuge oder medizinische Geräte.</strong></p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/FeedbakJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Feedback</h2>
+<p>
+	Manchmal brauchen unsere Nutzer Feedback wenn sie etwas falsch eingegeben haben.&nbsp; Das kann man sehr einfach lösen wenn man das Feedback einfach beim Redirekt an die URL anhängt:</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp;&nbsp; response.sendRedirect(
+         &quot;register.jsp<span style="color:#0000ff;">?error=Error: You must enter Email!</span>&quot;);
+&nbsp;&nbsp;&nbsp; return;&nbsp; &nbsp;
+%&gt;</pre>
+<p>
+	und dann an passender Stelle im Formular ausgibt, evtl sogar in roter Farbe:</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp;&nbsp; if ( request.getParameter(&quot;error&quot;) != null ) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(&quot;&lt;p&gt;&lt;strong&gt;&quot;+
+            <span style="color:#0000ff;">request.getParameter(&quot;error&quot;)</span>+
+            &quot;&lt;/strong&gt;&lt;/p&gt;&lt;br/&gt;&quot;);
+&nbsp;&nbsp;&nbsp; }
+%&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+</pre>
+<p>
+	Man kann das auch über den RequestDispatcher machen, wenn man nicht möchte das die Fehlermeldung Teil der URI ist.&nbsp; Später dazu mehr zum RequestDispatcher.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/Pre-FillJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Pre-Fill**</h2>
+<p>
+	Was wirklich ätzend ist, wenn man ein langes Formular ausgefüllt hat, einen klitze-kleinen Fehler gemacht hat, eine komische Fehlermeldung bekommt (wie oben) und dann das ganze Formular noch einmal ausfüllen muss.&nbsp; Das kann doch nicht sein.</p>
+<p>
+	Hier gibt es zwei Möglichkeiten: man könnte das serverseitig machen.&nbsp; Das ist aber überraschend unschön.&nbsp; Die andere Möglichkeit ist das clientseitig mit JavaScipt zu tun.&nbsp; Der Trick ist JavaScript dynamisch zu generieren und diese dann in die Seite einzufügen:</p>
+<pre style="margin-left: 40px;">
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;head&gt;
+&lt;%
+<span style="color:#0000ff;">&nbsp;&nbsp;&nbsp; User usr = new User(&quot;ralph@lano.de&quot;, Color.GREEN, true, 42, 1.73, new Date());
+&nbsp;&nbsp;&nbsp; String javaScript = Utility.createJavaScriptFromObject(usr);
+&nbsp;&nbsp;&nbsp; out.println(javaScript);</span>
+%&gt;
+&nbsp;&nbsp;&nbsp; &lt;/head&gt;
+&nbsp;&nbsp;&nbsp; &lt;body <span style="color:#0000ff;">onload=&quot;fillFormFromJS()</span>&quot;&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h1&gt;Pre-Fill&lt;/h1&gt;
+        ...
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>
+	Wir gehen davon aus, dass die generierte JavaScript Methode <em>fillFormFromJS()</em><em> </em>heißt.&nbsp; Nach dem Laden der Seite, wird diese aufgrund des <em>onload</em> Events im &lt;body&gt; Tag ausgeführt.&nbsp;</p>
+<p>
+	Die Methode <em>fillFormFromJS()</em> generieren wir dynamisch aus dem POJO, in diesem Fall der Klasse User.&nbsp; Wir definieren also einen String <em>js</em> in dem wir das JavaScript generiern:</p>
+<pre style="margin-left: 40px;">
+&nbsp;&nbsp;&nbsp; public static String createJavaScriptFromObject(Object o) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String js = &quot;&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; js += &quot;&lt;script&gt;&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; js += &quot;function <span style="color:#0000ff;">fillFormFromJS()</span> {&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; js += &quot;var map = {&quot;;
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; try {
+<span style="color:#ff0000;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Field[] flds = o.getClass().getDeclaredFields();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for (Field f : flds) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; f.setAccessible(true);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String key = f.getName();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Object value = f.get(o);</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (value instanceof String) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; js += &quot;&#39;&quot; + key + &quot;&#39;: &#39;&quot; + (String) value + &quot;&#39;,&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else if (value instanceof Integer) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; js += &quot;&#39;&quot; + key + &quot;&#39;: &#39;&quot; + (Integer) value + &quot;&#39;,&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else if (value instanceof Double) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; js += &quot;&#39;&quot; + key + &quot;&#39;: &#39;&quot; + (Double) value + &quot;&#39;,&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else if (value instanceof Boolean) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; js += &quot;&#39;&quot; + key + &quot;&#39;: &#39;&quot; + (Boolean) value + &quot;&#39;,&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else if (value instanceof Color) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; js += &quot;&#39;&quot; + key + &quot;&#39;: &#39;&quot; + convertColorToName((Color) value) + &quot;&#39;,&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else if (value instanceof Date) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //2016-08-17
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DateFormat format = new SimpleDateFormat(&quot;yyyy-MM-dd&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; js += &quot;&#39;&quot; + key + &quot;&#39;: &#39;&quot; + format.format((Date) value) + &quot;&#39;,&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } catch (Exception e) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.err.println(e);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; js += &quot;};&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; js += &quot;for(var key in map) {&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; js += &quot;&nbsp;&nbsp;&nbsp; document.getElementsByName(key)[0].value = map[key];&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; js += &quot;}&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; js += &quot;}&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; js += &quot;&lt;/script&gt;&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return js;
+&nbsp;&nbsp;&nbsp; }
+</pre>
+<p>
+	Dann gehen wir alle Felder des übergebenen Objekts o durch, benutzen etwas Reflection-Magic (rot markiert), und füllen eine JavaScript Map mit key-value Paaren.&nbsp; Hier ist der Key der Name des jeweiligen Form Elements und value ist der Wert den es haben soll.&nbsp; Mit der kleinen Schleifen am Ende dann,</p>
+<pre style="margin-left: 40px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for(var key in map) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     document.getElementsByName(key)[0].value = map[key];
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</pre>
+<p>
+	setzen wir die Input Felder auf die gewünschten Werte.&nbsp; Damit das Ganze funktoiniert, müssen die Form Elemente die gleichen Namen haben wie die Attribute der User Klasse.&nbsp; Man nennt das auch &quot;coding by convention&quot;.&nbsp;&nbsp; Ausserdem, ist das unser zweites Beispiel für &quot;generative coding&quot;, in diesem Fall generieren wir JavaScript Code.</p>
+<p>
+	.</p>
+<hr />
+<h1>
+	Research</h1>
+<p>
+	Manche Themen haben wir hier nur sehr oberflächlich behandelt.&nbsp; Man könnte sich aber das eine oder andere noch etwas detailierter ansehen.</p>
+<p>
+	.</p>
+<h2>
+	Cookies</h2>
+<p>
+	Zu Cookies gibt es immer ganz viele Fragen.&nbsp; Z.B. was sind den &quot;Secure Cookies&quot; oder &quot;Super-Cookies&quot;?&nbsp; Auch interessant, wo werden die Cookies den gespeichert?&nbsp; Interessant ist auch ein Firefox Plugin namens Lightbeam.</p>
+<p>
+	.</p>
+<h2>
+	RFC 3986</h2>
+<p>
+	RFC 3986 definiert u.a&nbsp; den Uniform Resource Identifier (URI).&nbsp; Auch diese Spezifikation sollten wir uns mal ansehen, und auch da nach bekannten Namen unter den Autoren suchen.&nbsp; Ausserdem sollten wir uns den Unterschied zwischen URI, URL und URN klar machen.</p>
+<p>
+	.</p>
+<h2>
+	Cross-Site Scripting und SQL Injection</h2>
+<p>
+	Wir sollten im Internet mal nachlesen was es denn mit &quot;Cross-Site Scripting (XSS)&quot; und &quot;SQL Injection&quot; so auf sich hat.</p>
+<p>
+	.</p>
+<h2>
+	Reflection</h2>
+<p>
+	Leider wird nirgendwo die Magie der Reflection ordentlich unterrichtet, ausser vielleicht in Hogwarts.&nbsp; Aber mit Sicherheit gibt es im Internet irgendwo ein gutes Tutorial.&nbsp; Bitte Bescheid geben, falls Sie eines finden!</p>
+<p>
+	.</p>
+<h2>
+	Generative Coding und Coding by Convention</h2>
+<p>
+	Im letzten Abschnitt haben wir die Begriffe &quot;Generative Coding&quot; und &quot;Coding by Convention&quot; mehrmals gesehen.&nbsp; Auch hier macht es Sinn sich mal schlau zu machen was denn dahinter steckt.</p>
+<p>
+	.</p>
+<hr />
+<h1>
+	Fragen</h1>
+<ol>
+	<li>
+		Nennen Sie drei Unterschiede zwischen einer HTTP GET und POST Anfrage.<br />
+		&nbsp;</li>
+	<li>
+		Welche Informationen enthält der HTTP Header? Nennen Sie fünf.<br />
+		&nbsp;</li>
+	<li>
+		Welche Informationen kann man aus dem JSP &quot;request&quot; Objekt beziehen?&nbsp; Nennen Sie drei Beispiele.</li>
+</ol>
+<p>
+	.</p>
+<hr />
+<h1>
+	Referenzen</h1>
+<p>
+	Anbei die Referenzen die in diesem Kapitel verwendet wurden.</p>
+<p>
+	[1] Uniform Resource Identifier, https://en.wikipedia.org/wiki/Uniform_Resource_Identifier</p>
+<p>
+	[2] Apache Commons Bibliothek, https://commons.apache.org/</p>
+<p>
+	[3] Craigslist, https://nuremberg.craigslist.de/</p>
+<p>
+	[4] RFC 3986, https://www.ietf.org/rfc/rfc3986.txt</p>
+<p>
+	[5] Apache Struts, https://struts.apache.org/</p>
+<p>
+	[6] JavaServer Faces Technology,, JSF, www.oracle.com/technetwork/java/javaee/javaserverfaces-139869.html</p>
+<p>
+	[7] spring, https://spring.io/</p>
+<p>
+	.</p>
+<p class="footer">
+Copyright &copy; 2016-2021 <a href="http://www.lano.de">Ralph P. Lano</a>.  All rights reserved.
+</p>
+</div>
+</center>
+</div>
+</body>
+</html>

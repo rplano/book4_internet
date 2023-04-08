@@ -1,0 +1,130 @@
+<!DOCTYPE html><html lang="de"><head>
+  <title>Variationen zum Thema: Internet</title>
+  <meta name="title" content="Variationen zum Thema: Internet">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta charset="UTF-8">
+  <meta name="description" content="Eine Einführung in Java Enterprise">
+  <meta name="keywords" content="Java Enterprise,Internet,Einführung">
+  <meta name="author" content="Ralph P. Lano">
+  <meta name="robots" content="index,follow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="book.css">
+</head>
+<body><center>
+<div id="wrap">
+  <ul class="sidenav">
+    <p><a href="index.html">Variationen zum Thema</a><a href="index.html">Internet</a></p>
+    <li><a href="Basics.html">Basics</a></li>
+    <li><a href="JSP.html">JSP</a></li>
+    <li><a href="Request.html">Request</a></li>
+    <li><a href="Session.html">Session</a></li>
+    <li><a href="Database.html">Database</a></li>
+    <li><a href="Services.html">Services</a></li>
+    <li><a href="Projects.html">Projects</a></li>
+    <li><a href="NetBeans.html">NetBeans</a></li>
+    <li><a href="JavaScript.html" class="active">JavaScript</a></li>
+  </ul>
+<div class="content"><h1>
+	JavaScript</h1>
+<p>
+	JavaScript ist ein wenig wie Englisch: oberflächlich scheint es eine sehr einfache Sprache zu sein, und fast jeder kann kleine Programme mit JavaScript schreiben.&nbsp; Aber wie mit dem Englischen ist das sehr trügerisch.&nbsp; Wir werden hier aber nur kurz die oberflächlichen Aspekte der JavaScript Sprache ansprechen.&nbsp; Eine kurze Warnung: obwohl JavaScript das Wort &quot;Java&quot; im Namen trägt, hat es eigentlich gar nichts mit Java zu tun.</p>
+<p>
+	.</p>
+<h2>
+	HTML</h2>
+<p>
+	Das JavaScript das uns interessiert ist jenes das im Browser läuft.&nbsp; Deswegen gehen wir immer davon aus, dass es irgendeine HTML Datei gibt die entweder den JavaScript Code direkt enthält, oder einen Link auf eine JavaScript Datei.</p>
+<p>
+	Im Prinzip können wir JavaScript sowohl im Body Teil des HTMLs schreiben,</p>
+<pre style="margin-left: 40px;">
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;head&gt;
+&nbsp;&nbsp;&nbsp; &lt;/head&gt;
+&nbsp;&nbsp;&nbsp; &lt;body&gt;
+<span style="color:#0000ff;">&lt;script type=&quot;text/javascript&quot;&gt;
+&nbsp;&nbsp;&nbsp; document.write(&quot;This message is written by JavaScript&quot;);
+&lt;/script&gt;</span>
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>
+	als auch im Header:</p>
+<pre style="margin-left: 40px;">
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;head&gt;
+<span style="color:#0000ff;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;script type=&quot;text/javascript&quot;&gt;
+function message() {
+&nbsp;&nbsp;&nbsp; alert(&quot;This alert box was called with the onload event&quot;);
+}
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/script&gt;</span>
+&nbsp;&nbsp;&nbsp; &lt;/head&gt;
+&nbsp;&nbsp;&nbsp; &lt;body <span style="color:#0000ff;">onload=&quot;message()</span>&quot;&gt;
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>
+	Bevorzugt ist letzteres, aber im Prinzip kommt es wie immer auf die genauen Umstände an.&nbsp; Das Problem mit dem direkten Einfügen von Code ist aber allgemein, dass man ihn nicht wiederverwenden kann.&nbsp; Deswegen ist es eigentlich bevorzugt das JavaScript in eine externe Datei auszulagern:</p>
+<pre style="margin-left: 40px;">
+&lt;head&gt;
+&nbsp;&nbsp;&nbsp; &lt;script type=&quot;text/javascript&quot; src=&quot;<span style="color:#0000ff;">myJavaScript.js</span>&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>
+	Die kann dann nämlich auch in anderen Seiten wiederverwendet werden.</p>
+<p>
+	.</p>
+<h2>
+	Basics</h2>
+<p>
+	JavaScript ist dem Augenschein nach sehr ähnlich zu Java oder anderen Programmiersprachen.&nbsp; So gibt es Statements, wie z.B.</p>
+<pre style="margin-left: 40px;">
+document.write(&quot;Hello Dolly&quot;);</pre>
+<p>
+	und auch Variablen,</p>
+<pre style="margin-left: 40px;">
+var x;
+var carName = &quot;Mini&quot;;</pre>
+<p>
+	Aber vieles ist in JavaScript optional: so sind die Strichpunkte am Ende eine Statements optional, und auch die Deklaration ist optional.&nbsp; Also auch</p>
+<pre style="margin-left: 40px;">
+y = x - 5
+carName2 = &quot;Mercedes&quot;</pre>
+<p>
+	ist vollkommen korrekt.&nbsp; Auch sehen wir keine Datentypen: JavaScript ist &quot;weakly typed&quot;, d.h. die Datentypen werden zur Laufzeit bestimmt.&nbsp; Das ist zwar ganz praktisch, aber nicht ganz ungefährlich.</p>
+<p>
+	In JavaScript gibt es auch Funktionen und Objekte, allerdings keine wirklichen Klassen.&nbsp; Was wirklich toll ist, dass wir Funktionen auch basierend auf Events aufrufen können, z.B., verwenden wir im Services Kapitel den <em>onclick</em> Event eines Links,</p>
+<pre style="margin-left: 40px;">
+&lt;body&gt;
+    &lt;a href=&quot;#&quot; <span style="color:#0000ff;">onclick=&quot;sendGetRequest(&#39;service/highscores/&#39;)</span>;
+            return false;&quot;&gt;
+        GET&lt;/a&gt;
+    &lt;span id=&quot;<span style="color:#0000ff;">responseGET</span>&quot;&gt;&amp;nbsp;&lt;/span&gt;&lt;br/&gt;
+&lt;/body&gt;</pre>
+<p>
+	um JavaScript auszuführen.&nbsp; Und JavaScript kann auf HTML Elemente zugreifen, diese verändern, sogar neu kreiiren und existierende löschen.&nbsp; Z.B., würde das JavaScript</p>
+<pre>
+            document.getElementById(&quot;<span style="color:#0000ff;">responseGET</span>&quot;).innerHTML = &quot;hi there&quot;;</pre>
+<p>
+	in dem &lt;span&gt; Tag oben den Text &quot;hi there&quot; einfügen.</p>
+<p>
+	Mit dieser kleinen Einführung und unseren existierenden Java Kenntnissen, müssten wir jetzt eigentlich den JavaScript Code den wir an verschiedenen Stellen im Buch verwenden verstehen können.</p>
+<p>
+	.</p>
+<h1>
+	Referenzen</h1>
+<p>
+	Wenn es um das klassische JavaScript geht, also keine Libraries, dann ist der Klassiker von David Flanagan wohl immer noch eine gute Quelle der Inspiration.&nbsp; Natürlich die papierlose Generation möchte auch bedient werden, hier sollte wie immer W3Schools nützliche Dienste erweisen.</p>
+<p>
+	[1] JavaScript: The Definitive Guide von David Flanagan</p>
+<p>
+	[2] JavaScript Tutorial - W3Schools, <a href="http://www.w3schools.com/js/">www.w3schools.com/js/</a></p>
+<p>
+	.</p>
+<p class="footer">
+Copyright &copy; 2016-2021 <a href="http://www.lano.de">Ralph P. Lano</a>.  All rights reserved.
+</p>
+</div>
+</center>
+</div>
+</body>
+</html>

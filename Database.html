@@ -1,0 +1,2167 @@
+<!DOCTYPE html><html lang="de"><head>
+  <title>Variationen zum Thema: Internet</title>
+  <meta name="title" content="Variationen zum Thema: Internet">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta charset="UTF-8">
+  <meta name="description" content="Eine Einführung in Java Enterprise">
+  <meta name="keywords" content="Java Enterprise,Internet,Einführung">
+  <meta name="author" content="Ralph P. Lano">
+  <meta name="robots" content="index,follow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="book.css">
+</head>
+<body><center>
+<div id="wrap">
+	<ul class="sidenav">
+	  <p><a href="index.html">Variationen zum Thema</a><a href="index.html">Internet</a></p>
+	  <li><a href="Basics.html">Basics</a></li>
+	  <li><a href="JSP.html">JSP</a></li>
+	  <li><a href="Request.html">Request</a></li>
+	  <li><a href="Session.html">Session</a></li>
+	  <li><a href="Database.html" class="active">Database</a></li>
+	  <li><a href="Services.html">Services</a></li>
+	  <li><a href="Projects.html">Projects</a></li>
+	  <li><a href="NetBeans.html">NetBeans</a></li>
+	  <li><a href="JavaScript.html">JavaScript</a></li>
+	</ul>
+<div class="content"><p>
+	<img alt="" src="images/Quizs.png" style="display: block; margin-left: auto; margin-right: auto; width: 240px; height: 217px;" /></p>
+<h1>
+	Database</h1>
+<p>
+	Fast hinter jeder Webanwendung steckt eine Datenbank.&nbsp; Datenbanken sind unser Langzeit-Gedächtnis.&nbsp; Deswegen werden wir in diesem Kapitel Webanwendungen schreiben, die ihre Daten in Datenbanken ablegen.&nbsp; Wir werden allerdings relative wenig mit Datenbanken direkt zu tun haben, da wir nach einer kurzen Einführung eigentlich nur Object-Relational-Mapping verwenden werden.&nbsp; Dies erlaubt es uns, uns auf das Wesentliche zu konzentrieren: die Webanwendung.&nbsp;</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/UserDatabase.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Database</h2>
+<p>
+	Obwohl viele Leute höllischen Respekt vor Datenbanken haben, sind die eigentlich gar nicht so schwer.&nbsp; Für uns ist eine Datenbank erst einmal ein paar Excel Tabellen.&nbsp; Beginnen wir mit einer Tabelle für Nutzer unserer Webanwendung, wir nennen sie mal &quot;User&quot;.&nbsp; Ein User hat einen Nachnamen, einen Vornamen und eine Email Adresse.&nbsp; In der Tabelle werden daraus Spalten (Columns).&nbsp; Die einzelnen Einträge für die Leute sind dann die Reihen (Rows).&nbsp; Bei Datenbank Tabellen fügt man dann meist noch eine Spalte für die &quot;Id&quot; ein: eine Id ist einfach ein Zähler, der bei 1 anfängt, und für jeden neuen Eintrag um eins erhöht wird.&nbsp; Damit hat jeder Eintrag eine eigene Id, und es kann nie doppelte Ids geben.&nbsp; Was aber passieren könnte, dass es zwei Leute mit dem gleichen Namen gibt.&nbsp; Gibt&#39;s ja auch in echt.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/NetbeansDatabase.png" style="width: 400px; height: 210px; float: right; margin-right: 10px; margin-left: 10px;" />JavaDB</h2>
+<p>
+	Das schöne an Netbeans ist, dass es mit einer einfachen Datenbank kommt, der JavaDB, manchmal auch Derby genannt.&nbsp; JavaDB ist eine OpenSource Datenbank, in Java geschrieben, die für unsere Zwecke vollauf genügt.&nbsp; Sie ist ziemlich schnell, da sie alles im RAM macht, das ist aber auch ihr grösster Nachteil, man kann nicht soviel Daten in ihr speichern, also ein paar hundert Megabytes Maximum.&nbsp; Da wir gar nicht soviel Daten haben, ist das kein Problem.</p>
+<p>
+	Wenn man eine neue Datenbank anlegen will, klickt man einfach auf JavaDB mit der rechten Maustaste und sagt &quot;Create Database&quot;.&nbsp; Danach verbindet man sich mit ihr in dem man einfach auf die neue Verbindung doppel-klickt.&nbsp; Will man dann SQL Kommandos ausführen (und wir wollen das), dann macht man wieder einen Rechtsklick und sagt &quot;Execute Command&quot;, das öffnet dann den SQL Query Editor, so wie in dem Bild rechts.</p>
+<p>
+	.</p>
+<h2>
+	SQL</h2>
+<p>
+	Die &quot;Structured Query Language&quot;, kurz SQL, ist die Sprache die die meisten Datenbanken sprechen.&nbsp; Es ist eine etwas ältere Sprache (so wie Altgriechisch, sieht man daran, dass alles groß geschrieben ist und die Befehle immer weniger als acht Buchstaben haben), aber sie funktioniert immer noch recht gut.</p>
+<p>
+	Als erstes ist es immer eine gute Idee evtl. existierende Tabellen zu löschen.&nbsp; Das geht mit</p>
+<pre style="margin-left: 40px;">
+<span style="color:#0000ff;">DROP TABLE</span> Users;</pre>
+<p>
+	ganz einfach.&nbsp; Sollte man natürlich nur machen, wenn da keine wichtigen Daten drin waren, die sind nämlich sonst futsch.</p>
+<p>
+	Danach legen wir eine neue Tabelle an.&nbsp; Hierfür gibt es das &quot;CREATE TABLE&quot; Kommando:</p>
+<pre style="margin-left: 40px;">
+<span style="color:#0000ff;">CREATE TABLE</span> Users (
+&nbsp;&nbsp;&nbsp; Id INTEGER not null,
+&nbsp;&nbsp;&nbsp; LastName VARCHAR(255) not null,
+&nbsp;&nbsp;&nbsp; FirstName VARCHAR(255), &nbsp;
+&nbsp;&nbsp;&nbsp; Email VARCHAR(255),
+&nbsp;&nbsp;&nbsp; PRIMARY KEY (Id)
+);</pre>
+<p>
+	Wir sagen also, dass die Tabelle &quot;Users&quot; heißen soll, dass es eine Spalte Id geben soll die eine Ganzzahl sein soll und die immer einen Wert haben muss (not null).&nbsp; Dann deklarieren wir noch die anderen Spalten.&nbsp; Dabei heißt &quot;VARCHAR(255)&quot; soviel wie ein String der Länge 255 auf Altgriechisch.&nbsp; Am Ende sagen wir noch, dass &quot;Id&quot; der Primary Key sein soll.&nbsp;</p>
+<p>
+	Nachdem wir die Tabelle angelegt haben, wollen wir auch ein paar Daten einfügen, und das geht folgendermaßen:</p>
+<pre style="margin-left: 40px;">
+<span style="color:#0000ff;">INSERT INTO</span> Users (Id, LastName, FirstName, Email)
+    VALUES (1,&#39;Lano&#39;,&#39;Ralph&#39;,&#39;ralph@lano.de&#39;);</pre>
+<p>
+	Ganz wichtig sind die Apostrophen, auch <em>Single Quotes</em> genannt.&nbsp; Das sind also die geraden Striche die von oben nach unten gehen, und sich weder leicht nach links, noch leicht nach rechts lehnen.</p>
+<p>
+	Und schließlich wollen wir mal schauen was inzwischen in unserer Tabelle alles drin steht, und das geht mit:</p>
+<pre style="margin-left: 40px;">
+<span style="color:#0000ff;">SELECT</span> * FROM Users;</pre>
+<p>
+	Es gibt dann noch ein DELETE Kommando, aber im Prinzip war&#39;s das schon.</p>
+<p>
+	.</p>
+<h2>
+	ORM</h2>
+<p>
+	Wir könnten jetzt im 20. Jahrhundert bleiben und fleißig unsere SQL Statements tippen, und die Welt wäre auch in Ordnung.&nbsp; Da wir aber schon seit längerem im 21. Jahrhundert sind werden wir das nicht tun.&nbsp; Stattdessen werden wir ORM machen, also Object-Relational-Mapping.&nbsp; Das hört sich kompliziert an, ist aber eigentlich ganz einfach.&nbsp;</p>
+<p>
+	Java ist eine objekt-orientierte Sprache, und wenn wir Java schreiben, dann denken wir immer in Objekten.&nbsp; Alle unsere Daten sind in Form von Objekten.&nbsp; Bisher war es so, wenn wir unseren Rechner ausgeschaltet haben, und unsere Objekte nicht in Dateien gespeichert hatten, dann waren sie weg.&nbsp; Was wir jetzt machen wollen, wir wollen unsere Objekte in einer Datenbank speichern.&nbsp; Und genau das macht ORM für uns.</p>
+<p>
+	.</p>
+<h2>
+	POJOs</h2>
+<p>
+	POJO steht für &quot;Plain Old Java Object&quot;, also einfach ein Java Objekt.&nbsp; Nehmen wir unseren User und machen daraus ein POJO:</p>
+<pre style="margin-left: 40px;">
+package de.variationenzumthema.internet;
+
+public class User {
+&nbsp;&nbsp;&nbsp; private Long id;
+&nbsp;&nbsp;&nbsp; private String lastName;
+&nbsp;&nbsp;&nbsp; private String firstName;
+&nbsp;&nbsp;&nbsp; private String email;
+}</pre>
+<p>
+	Meistens haben POJOs noch ein oder zwei Konstuktoren und natürlich Getters und Setters.&nbsp; Eine <em>toString()</em> Methode schadet auch nichts.&nbsp; Kann man ja alles autogenerieren lassen, deswegen kümmern wir uns der Einfachheit halber nur um die Attribute (Instanzvariablen).&nbsp;</p>
+<p>
+	Wenn wir jetzt dieses Objekt in die Datenbank speichern wollen, müssen wir es mit <em>Annotationen</em> versehen.&nbsp; Annotationen sagen dem ORM Engine (in unserem Fall Hibernate [1]) wie er denn das POJO in der Datenbank speichern soll.&nbsp; Nehmen wir unser User POJO:</p>
+<pre style="margin-left: 40px;">
+package de.variationenzumthema.internet;
+
+<span style="color:#0000ff;">@Entity
+@Table(name = &quot;Users&quot;)</span>
+public class User {
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">@Id</span>
+    <span style="color:#0000ff;">@GeneratedValue(strategy = GenerationType.IDENTITY)</span>
+&nbsp;&nbsp;&nbsp; private Long id;
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">@Column(nullable = false)</span>
+&nbsp;&nbsp;&nbsp; private String lastName;
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; private String firstName;
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; private String email;
+
+    // Hibernate needs a default constructor.
+&nbsp;&nbsp;&nbsp; public User() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; super();
+&nbsp;&nbsp;&nbsp; }
+}</pre>
+<p>
+	Die erste Annotation, <em>@Entity</em>, sagt einfach dass die Klasse User in der Datenbank gespeichert werden soll.&nbsp; Die zweite Annotation, <em>@Table</em>, sagt wie die Datenbanktabelle heißen soll in der das POJO gespeichert wird.&nbsp; Normal wäre &quot;User&quot;.&nbsp; Da aber &quot;User&quot; bei den meisten Datenbanken schon existiert, nennen wir sie &quot;Users&quot;.&nbsp; &quot;Loosers&quot; geht auch, wäre aber problematisch wenn unsere Nutzer mal unseren Code zu sehen bekommen.&nbsp; Normalerweise sollte aber der Tabellenname identisch mit dem POJO Namen sein.</p>
+<p>
+	Danach kommen die Annotationen für die Attribute.&nbsp; Aus Attributen werden Spalten in der Tabelle.&nbsp; Wenn wir nichts sagen, dann macht Hibernate das automatisch.&nbsp; Wir können aber auch sagen, dass eine Spalte nicht leer sein darf mit <em>@Column(nullable = false)</em>.&nbsp; Und wir sollten immer eines der Attribute als Primary Key deklarieren, das machen wir mit der <em>@Id</em> Annotation.&nbsp; Wenn wir noch wollen, dass die Datenbank die Ids automatisch vergibt, dann fügen wir noch <em>@GeneratedValue</em> nach der @Id hinzu.</p>
+<p>
+	.</p>
+<h2>
+	hibernate.cfg.xml</h2>
+<p>
+	Nachdem wir unsere POJOs mit Annotationen versehen haben, müssen wir unseren ORM Engine konfigurieren.&nbsp; Wir verwenden Hibernate.&nbsp; Deswegen müssen wir einmal die nötigen Libraries zum Projekt hinzufügen (macht man meist gleich am Anfang wenn man das Projekt neu anlegt), und Hibernate konfiguieren in der <em>hibernate.cfg.xml</em> Datei:</p>
+<pre style="margin-left: 40px;">
+&lt;hibernate-configuration&gt;
+&nbsp;&nbsp;&nbsp; &lt;session-factory&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;property name=&quot;hibernate.dialect&quot;&gt;org.hibernate.dialect.DerbyDialect&lt;/property&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;property name=&quot;hibernate.connection.driver_class&quot;&gt;org.apache.derby.jdbc.ClientDriver&lt;/property&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;property name=&quot;hibernate.connection.url&quot;&gt;jdbc:derby://localhost:1527/Ch5_Database&lt;/property&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;property name=&quot;hibernate.connection.username&quot;&gt;app&lt;/property&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;property name=&quot;hibernate.connection.password&quot;&gt;app&lt;/property&gt;
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;!-- e.g. validate | update | create | create-drop --&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;property name=&quot;hibernate.hbm2ddl.auto&quot;&gt;create-drop&lt;/property&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;property name=&quot;show_sql&quot;&gt;true&lt;/property&gt;
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;!-- Persistent classes --&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">&lt;mapping class=&quot;de.variationenzumthema.internet.User&quot;/&gt;</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; &lt;/session-factory&gt;
+&lt;/hibernate-configuration&gt;</pre>
+<p>
+	Der erste Abschnitt erklärt Hibernate wie es sich mit der Datenbank verbinden kann.&nbsp; Der zweite Teil sagt Hibernate, dass es bei jedem Neustart alle Tabellen in der Datenbank löschen und neu anlegen soll.&nbsp; So etwas sollte man natürlich nicht in einer Produktionsumgebung machen, denn sonst sind alle Daten weg.&nbsp; Beim Debuggen hilft es manchmal sich das SQL das Hibernate generiert anzeigen zu lassen, deswegen setzt man <em>show_sql</em> auf true.&nbsp; Und schliesslich müssen wir Hibernate noch erzählen welches POJO denn in die Datenbank geschrieben werden soll.&nbsp; In unserem Fall ist es das User POJO.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/UserPNG2.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />User</h2>
+<p>
+	Nach all der Vorarbeit, ist es jetzt so weit: wir wollen unser User POJO in der Datenbank speichern.&nbsp; Zunächst brauchen wir ein ganz einfaches HTML Formular für die Eingabe der User Daten:</p>
+<pre style="margin-left: 40px;">
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;body&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h1&gt;User&lt;/h1&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;p&gt;Please enter new user information:&lt;/p&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;form action=&quot;userLogic.jsp&quot; method=&quot;GET&quot;&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Last name:&nbsp; &lt;input type=&quot;text&quot; name=&quot;lastName&quot;/&gt;&lt;br/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; First name: &lt;input type=&quot;text&quot; name=&quot;firstName&quot;/&gt;&lt;br/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Email: &lt;input type=&quot;text&quot; name=&quot;email&quot;/&gt;&lt;br/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;input type=&quot;submit&quot; value=&quot;Create new user&quot;/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/form&gt;
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>
+	In der <em>userLogic.jsp</em> speichern wir diese mit Hilfe von Hibernate in der Datenbank.&nbsp; Das geht über die Hibernate Session:</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp;&nbsp; // write user to database
+&nbsp;&nbsp;&nbsp; String lastName = request.getParameter(&quot;lastName&quot;);
+&nbsp;&nbsp;&nbsp; String firstName = request.getParameter(&quot;firstName&quot;);
+&nbsp;&nbsp;&nbsp; String email = request.getParameter(&quot;email&quot;);
+&nbsp;&nbsp;&nbsp; if (lastName != null) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Session hibSession = HibernateUtil.getSessionFactory().openSession();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hibSession.beginTransaction();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; User usr = new User(lastName,firstName,email);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">hibSession.merge(usr);</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hibSession.getTransaction().commit();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hibSession.close();
+&nbsp;&nbsp;&nbsp; }
+%&gt;</pre>
+<p>
+	Wir verwenden das <em>merge()</em> Kommando, was wie ein Update funktioniert: also falls es den Eintrag schon gibt wird er geändert, falls nicht wird er neu angelegt.&nbsp; Bei allen Operationen die etwas in der Datenbank verändern, müssen wir den ganzen Code immer zwischen einem <em>beginTransaction()</em> und einem <em>commit()</em> stecken, denn es könnte ja etwas schief gehen.&nbsp; Falls etwas schief geht, würde man einen <em>rollback()</em> machen, sehen wir später noch.&nbsp; Am Ende immer schön brav seine Sessions zu machen mit <em>close()</em>.</p>
+<p>
+	Wenn wir dann alle User auflisten wollen geht das folgendermaßen:</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp;&nbsp; Session hibSession = HibernateUtil.getSessionFactory().openSession();
+
+&nbsp;&nbsp;&nbsp; Query q = hibSession.createQuery(<span style="color:#0000ff;">&quot;from User usr order by usr.lastName desc&quot;</span>);
+&nbsp;&nbsp;&nbsp; Collection&lt;User&gt; allUsrs = q.list();
+
+&nbsp;&nbsp;&nbsp; for (User usr : allUsrs) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(usr.toString()+&quot;&lt;br/&gt;&quot;);
+&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; hibSession.close();
+%&gt;
+</pre>
+<p>
+	Wir verwenden hier eine Query um die Datenbankabfrage zu erledigen.&nbsp; Die Querysprache ist HQL (Hbernate Query Language) die vom Syntax her sehr ähnlich zu SQL ist, später mehr dazu.</p>
+<p>
+	.</p>
+<h2>
+	HibernateUtil</h2>
+<p>
+	HibernateUtil ist eine Klasse, die man sich durch Netbeans ganz einfach autogenerieren lassen kann, aber man kann sie auch selbst von Hand anlegen:</p>
+<pre style="margin-left: 40px;">
+package de.variationenzumthema.internet;
+
+public class HibernateUtil {
+
+&nbsp;&nbsp;&nbsp; private static final SessionFactory sessionFactory;
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; static {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; try {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sessionFactory = new AnnotationConfiguration().configure().buildSessionFactory();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } catch (Throwable ex) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; throw new ExceptionInInitializerError(ex);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; public static SessionFactory getSessionFactory() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return sessionFactory;
+&nbsp;&nbsp;&nbsp; }
+}
+</pre>
+<p>
+	Die HibernateUtil ist ein Singleton Pattern, und gibt uns Zugriff auf die Hibernate SessionFactory.&nbsp; Die SessionFactory benötigen wir um neue Hibernate Sessions zur Datenbank aufzumachen.&nbsp; Haben wir ja oben schon verwendet.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/HighScoreDB.png" style="width: 200px; height: 210px; float: right; margin-right: 10px; margin-left: 10px;" />HighScore</h2>
+<p>
+	Beginnen wir mit ein paar Beispielen um uns mit ORM anzufreunden.&nbsp; Viele Spiele im Internet haben eine HighScore Liste.&nbsp; Die muss natürlich irgendwo gespeichert werden, und wir werden eine kleine Anwendung dafür schreiben.&nbsp; Zu einem HighScore gehört eine UserId, z.B. ein Alias oder eine Email Adresse, und ein Score.&nbsp; Damit lässt sich auch schon unser HighScore definieren:</p>
+<pre style="margin-left: 40px;">
+@Entity
+@Table(name = &quot;HighScore&quot;)
+public class HighScore {
+
+&nbsp;&nbsp;&nbsp; @Id
+&nbsp;&nbsp;&nbsp; private String userId;
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; @Column(nullable = false)
+&nbsp;&nbsp;&nbsp; private int score;
+
+    ... constructors, getters, setters, toString
+}
+</pre>
+<p>
+	<img alt="" src="images/HighScoreJSP3.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Dieses Mal haben wir bei unserem Primary Key die <em>@GeneratedValue</em> Annotation weggelassen, was Sinn macht, da <em>wir</em> ja die UserId wählen wollen und nicht die Datenbank das machen soll.&nbsp; Es bedeutet aber auch, dass die UserId eindeutig sein muss, es kann also keine zwei Personen mit gleicher UserId geben.&nbsp; Was wir nicht vergessen dürfen, wir müssen noch einen Eintrag für unser neues POJO in der <em>hibernate.cfg.xml</em> Datei machen.</p>
+<p>
+	Zum Testen der Anwendung schreiben wir wieder ein Formular, wie rechts zu sehen.&nbsp; In diesem Fall wollen wir den GET Request verwenden, da wir später ja evtl von unserem Spiel aus über einen ganz einfachen Aufruf wie etwa</p>
+<pre style="margin-left: 40px;">
+http://localhost:8080/Ch5_Database/highScoreLogic.jsp?<span style="color:#0000ff;">userId=ralphlano&amp;score=42</span></pre>
+<p>
+	einen neuen Eintrag in die HighScore Liste generieren wollen (kann man mit der Java URL Klasse ganz einfach machen).</p>
+<p>
+	Das Schreiben der Daten in die Datenbank erfolgt wieder vollkommen analog wie in unserem User Beispiel.&nbsp; Wir tun das in der <em>highScoreLogic.jsp</em> Datei:</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp;&nbsp; // write score to database
+&nbsp;&nbsp;&nbsp; String userId = request.getParameter(&quot;userId&quot;);
+&nbsp;&nbsp;&nbsp; String score = request.getParameter(&quot;score&quot;);
+&nbsp;&nbsp;&nbsp; if ((userId != null) &amp;&amp; (score != null)) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Session hibSession = HibernateUtil.getSessionFactory().openSession();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hibSession.beginTransaction();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HighScore hs = new HighScore(userId, Integer.parseInt(score));
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hibSession.merge(hs);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hibSession.getTransaction().commit();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hibSession.close();
+&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; // show high scores:
+%&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;body&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h1&gt;HighScore&lt;/h1&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;ol&gt;
+&lt;%
+&nbsp;&nbsp;&nbsp; Session hibSession = HibernateUtil.getSessionFactory().openSession();
+
+&nbsp;&nbsp;&nbsp; Query q = hibSession.createQuery(&quot;from HighScore hs order by hs.score desc&quot;);
+&nbsp;&nbsp;&nbsp; Collection&lt;HighScore&gt; highScrs = q.list();
+
+&nbsp;&nbsp;&nbsp; for (HighScore hs : highScrs) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(hs.toString()+&quot;&lt;br/&gt;&quot;);
+&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; hibSession.close();
+%&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/ol&gt;
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/DAO.png" style="width: 125px; height: 78px; float: right; margin-right: 10px; margin-left: 10px;" />DAO</h2>
+<p>
+	Wenn wir die beiden Dateien <em>userLogic.jsp</em> und <em>highScoreLogic.jsp</em> vergleichen sehen wir, dass diese fast identisch sind.&nbsp; Immer wenn etwas fast identisch ist, dann deutet das auf eine mögliche Vereinfachung hin.&nbsp; Im Falle von Datenbanken (und auch Hibernate) läuft das fast immer auf die sogenannten DAOs hinaus, die <em>Data Access Objects</em>.&nbsp;</p>
+<p>
+	Ein DAO sollte die standard Datenbank Operationen, Create, Read, Update und Delete, auch CRUD genannt, beherrschen.&nbsp; Für unsere HighScore Anwendung würde die folgende HighScoreDao Klasse genau das machen (wir haben der Lesbarkeit halber das Exception Handling weggelassen):</p>
+<pre style="margin-left: 40px;">
+package de.variationenzumthema.internet;
+
+public class HighScoreDao {
+
+&nbsp;&nbsp;&nbsp; private Session hibSession = null;
+
+&nbsp;&nbsp;&nbsp; public HighScoreDao() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; this.hibSession = HibernateUtil.getSessionFactory().openSession();
+&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; public HighScore merge(HighScore entity) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hibSession.beginTransaction();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HighScore e = (HighScore) hibSession.merge(entity);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hibSession.getTransaction().commit();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return e;
+&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; public void delete(HighScore entity) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hibSession.beginTransaction();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hibSession.delete(entity);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hibSession.getTransaction().commit();
+&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; public HighScore findById(String id) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return (HighScore) hibSession.get(&quot;HighScore&quot;, id);
+&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; @SuppressWarnings(&quot;unchecked&quot;)
+&nbsp;&nbsp;&nbsp; public List&lt;HighScore&gt; findAll() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return hibSession.createQuery(&quot;Select e From HighScore e&quot;).list();
+&nbsp;&nbsp;&nbsp; }
+}
+</pre>
+<p>
+	Die Methode <em>merge()</em> ist sowohl für Create als auch für Update zuständig, die Methode <em>delete()</em> kümmert sich um das Delete, und mit <em>findById()</em> und <em>findAll()</em> wird das Read abgedeckt.</p>
+<p>
+	Unsere <em>highScoreLogic.jsp</em> Datei wird dann um einiges einfacher:</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp;&nbsp; // write score to database
+&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">HighScoreDao dao = new HighScoreDao();</span>
+&nbsp;&nbsp;&nbsp; String userId = request.getParameter(&quot;userId&quot;);
+&nbsp;&nbsp;&nbsp; String score = request.getParameter(&quot;score&quot;);
+&nbsp;&nbsp;&nbsp; if ((userId != null) &amp;&amp; (score != null)) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HighScore hs = new HighScore(userId, Integer.parseInt(score));
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">dao.merge(hs);</span>
+&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; // show high scores:
+%&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;body&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h1&gt;HighScore&lt;/h1&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;ol&gt;
+&lt;%
+&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">Collection&lt;HighScore&gt; highScrs = dao.findAll();</span>
+
+&nbsp;&nbsp;&nbsp; for (HighScore hs : highScrs) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(hs.toString()+&quot;&lt;br/&gt;&quot;);
+&nbsp;&nbsp;&nbsp; }
+%&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/ol&gt;
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>
+	Unser Datenbank Code reduziert sich auf drei Zeilen.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/MensaJSP1.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Mensa</h2>
+<p>
+	Als nächstes wollen wir uns Datenbanken widmen mit mehr als nur einer Tabelle.&nbsp; Wir nehmen dazu unser Mensa Beispiel aus dem ersten Semester:</p>
+<p>
+	&quot;Die Mensa hat Gerichte und Zutaten. Ein Gericht hat einen Namen, einen Preis und eine Liste von Zutaten. Eine Zutat hat einen Namen, einen Preis und Kalorien.&quot;</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/ClassDiagrams_Mensa.png" style="width: 200px; height: 55px; float: right; margin-right: 10px; margin-left: 10px;" />Mensa POJOs</h2>
+<p>
+	Wir beginnen mit unseren POJOs, in diesem Fall <em>Dish</em>:</p>
+<pre style="margin-left: 40px;">
+@Entity
+@Table(name = &quot;Dish&quot;)
+public class Dish {
+
+&nbsp;&nbsp;&nbsp; @Id
+&nbsp;&nbsp;&nbsp; private String name;
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; @Column(nullable = false)
+&nbsp;&nbsp;&nbsp; private double price;
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">@OneToMany</span>
+&nbsp;&nbsp;&nbsp; private <span style="color:#0000ff;">Set&lt;Ingredient&gt;</span> ingredients;
+
+    ... constructors, getters, setters, toString
+}
+</pre>
+<p>
+	und <em>Ingredient</em>:</p>
+<pre style="margin-left: 40px;">
+@Entity
+@Table(name = &quot;Ingredient&quot;)
+public class Ingredient {
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; @Id
+&nbsp;&nbsp;&nbsp; private String name;
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; private String size;
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; private double calories;
+
+    ... constructors, getters, setters, toString
+}</pre>
+<p>
+	<img alt="" src="images/MensaDB.png" style="width: 200px; height: 210px; float: right; margin-right: 10px; margin-left: 10px;" />Das Einzige was hier neu ist, ist die Verknüpfung zwischen den beiden POJOs: eine <em>OneToMany</em> Beziehung.&nbsp; Soll heißen, ein Dish kann mehrere Ingredients haben.&nbsp; Wir können als Datenstruktur ein Set oder eine Liste verwenden.&nbsp; Wenn uns die Reihenfolge der Ingredients egal ist, nehmen wir ein Set, ansonsten eine Liste.</p>
+<p>
+	Interessant ist zu sehen was hier in der Datenbank passiert:&nbsp; Hibernate generiert jeweils eine Tabelle für die Dish und Ingredient POJOs.&nbsp; Zusätzlich wird aber noch eine Tabelle DISH_INGREDIENT angelegt, eine sogenannte Intersection Table, mit der die <em>OneToMany</em> Beziehung in der Datenbank abgebildet wird.</p>
+<p>
+	.</p>
+<h2>
+	Mensa DAOs</h2>
+<p>
+	Nachdem wir unsere POJOs definiert haben, und auch zur <em>hibernate.cfg.xml</em> Datei hinzugefügt haben, definieren wir die DAOs.&nbsp; In diesem Fall zwei, weil wir ja zwei POJOs haben.&nbsp; Wenn wir uns die beiden POJOs ansehen, dann sehen wir das die faktisch identisch sind.&nbsp; Sowas ruft natürlich förmlich nach Vererbung, und wenn man ein klein bischen was von Generics versteht, denn sehen unsere beiden DAOs sehr einfach aus:</p>
+<pre style="margin-left: 40px;">
+public class MensaDishDao <span style="color:#0000ff;">extends GenericDao&lt;String, Dish&gt;</span> {
+&nbsp;&nbsp;&nbsp; public MensaDishDao() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; super();
+&nbsp;&nbsp;&nbsp; }
+}</pre>
+<p>
+	und</p>
+<pre style="margin-left: 40px;">
+public class MensaIngredientDao <span style="color:#0000ff;">extends GenericDao&lt;String, Ingredient&gt;</span> {
+&nbsp;&nbsp;&nbsp; public MensaIngredientDao() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; super();
+&nbsp;&nbsp;&nbsp; }
+}</pre>
+<p>
+	.</p>
+<h2>
+	Generics</h2>
+<p>
+	Wir haben bisher Generics eigentlich nur indirekt gesehen, wenn wir Listen, Maps oder Sets verwendet haben.&nbsp; Hier bietet sich jetzt die Gelegenheit Generics einmal selbst anzuwenden:</p>
+<pre style="margin-left: 40px;">
+public class GenericDao&lt;<span style="color:#0000ff;">K</span> extends Serializable, <span style="color:#0000ff;">E</span>&gt; {
+
+&nbsp;&nbsp;&nbsp; private Class&lt;<span style="color:#0000ff;">E</span>&gt; entityClass;
+&nbsp;&nbsp;&nbsp; private Session hibSession = null;
+
+&nbsp;&nbsp;&nbsp; public GenericDao() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; this.hibSession = HibernateUtil.getSessionFactory().openSession();
+        // some reflection magic:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ParameterizedType genericSuperclass = (ParameterizedType) getClass().getGenericSuperclass();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; this.entityClass = (Class&lt;<span style="color:#0000ff;">E</span>&gt;) genericSuperclass.getActualTypeArguments()[1];
+&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; public void delete(E entity) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hibSession.beginTransaction();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hibSession.delete(entity);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hibSession.getTransaction().commit();
+&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; public <span style="color:#0000ff;">E</span> merge(<span style="color:#0000ff;">E</span> entity) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hibSession.beginTransaction();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">E</span> e = (<span style="color:#0000ff;">E</span>) hibSession.merge(entity);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hibSession.getTransaction().commit();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return e;
+&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; public E findById(<span style="color:#0000ff;">K</span> id) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return (<span style="color:#0000ff;">E</span>) hibSession.get(entityClass, id);
+&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; @SuppressWarnings(&quot;unchecked&quot;)
+&nbsp;&nbsp;&nbsp; public List&lt;<span style="color:#0000ff;">E</span>&gt; findAll() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return hibSession.createQuery(&quot;Select e From &quot; + entityClass.getCanonicalName() + &quot; e&quot;).list();
+&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; protected Session getHibernateSession() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return hibSession;
+&nbsp;&nbsp;&nbsp; }
+}
+</pre>
+<p>
+	Obwohl man anfangs vielleicht etwas überwältigt ist, wenn man sich den Code lange genug ansieht und ihn mit der HighScoreDao vergleicht, beginnt man das Licht am Ende des Tunnels zu erblicken.</p>
+<p>
+	.</p>
+<h2>
+	Mensa Test</h2>
+<p>
+	Etwas später werden wir die Mensa Web Anwendung komplett implementieren.&nbsp; Aber nur zum Testen wollen wir eine kleine JSP Seite schreiben, <em>mensa.jsp</em>, die ein paar Ingredients und Dishes anlegt, und dann alle auflistet, damit wir sehen, dass auch alles funktioniert.</p>
+<p>
+	Das Anlegen von Test Objekten macht man am besten in der DAO.&nbsp; Wir fügen zu jeder der beiden DAOs eine Methode <em>initDatabase()</em> hinzu.&nbsp; Einmal bei den Ingredients:</p>
+<pre style="margin-left: 40px;">
+public class MensaIngredientDao extends GenericDao&lt;String, Ingredient&gt; {
+
+&nbsp;&nbsp;&nbsp; public MensaIngredientDao() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; super();
+&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">public void initDatabase() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; save( new Ingredient(&quot;Egg&quot;, &quot;large&quot;, 80) );
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; save( new Ingredient(&quot;Butter&quot;, &quot;1 table spoon&quot;, 100) );
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; save( new Ingredient(&quot;Milk&quot;, &quot;1 cup&quot;, 150) );
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; save( new Ingredient(&quot;Flour&quot;, &quot;100 g&quot;, 364) );
+&nbsp;&nbsp;&nbsp; }</span>
+}</pre>
+<p>
+	und dann bei den Dishes:</p>
+<pre style="margin-left: 40px;">
+public class MensaDishDao extends GenericDao&lt;String, Dish&gt; {
+
+&nbsp;&nbsp;&nbsp; public MensaDishDao() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; super();
+&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">public void initDatabase(MensaIngredientDao daoIng) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Set&lt;Ingredient&gt; ingrds = new HashSet&lt;Ingredient&gt;();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ingrds.add(daoIng.findById(&quot;Egg&quot;));
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ingrds.add(daoIng.findById(&quot;Butter&quot;));
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ingrds.add(daoIng.findById(&quot;Milk&quot;));
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ingrds.add(daoIng.findById(&quot;Flour&quot;));
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; save(new Dish(&quot;Pancake&quot;, 2.50, ingrds));
+&nbsp;&nbsp;&nbsp; }</span>
+}</pre>
+<p>
+	Mit diesen Modifikationen wird <em>mensa.jsp</em> Seite relativ einfach:</p>
+<pre style="margin-left: 40px;">
+&lt;%!&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; public void jspInit() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ServletContext application = getServletConfig().getServletContext();
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MensaIngredientDao daoIng = new MensaIngredientDao();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; daoIng.initDatabase();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; application.setAttribute(&quot;Mensa.IngredientDao&quot;, daoIng);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MensaDishDao daoDish = new MensaDishDao();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; daoDish.initDatabase(daoIng);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; application.setAttribute(&quot;Mensa.DishDao&quot;, daoDish);
+&nbsp;&nbsp;&nbsp; }
+%&gt;</pre>
+<p>
+	In der <em>jspInit()</em> Methode kreiieren wir je ein MensaIngredientDao und ein MensaDishDao, initialisieren jede Tabelle mit Daten, und fügen die DAO-Objekte zum <em>application</em> Objekt hinzu.&nbsp; Das hat den Vorteil, dass wir später nicht immer wieder den Konstruktor neu aufrufen müssen, bedeutet aber auch ein gewisses Bottleneck, denn es existiert jeweils nur ein Objekt von jeder DAO.</p>
+<p>
+	Kommen wir zum zweiten Teil der <em>mensa.jsp</em> Seite:</p>
+<pre style="margin-left: 40px;">
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;body&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h2&gt;Mensa&lt;/h2&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;p&gt;Available dishes:&lt;/p&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;ul&gt;
+&lt;%
+&nbsp;&nbsp;&nbsp; MensaDishDao daoDish = (MensaDishDao)application.getAttribute(&quot;Mensa.DishDao&quot;);
+&nbsp;&nbsp;&nbsp; List&lt;Dish&gt; dishs = daoDish.findAll();
+&nbsp;&nbsp;&nbsp; for (Dish di : dishs) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(&quot;&lt;li&gt;&quot;+di+&quot;&lt;/li&gt;&quot;);
+&nbsp;&nbsp;&nbsp; }
+%&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/ul&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;p&gt;Available ingredients:&lt;/p&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;ul&gt;
+&lt;%
+&nbsp;&nbsp;&nbsp; MensaIngredientDao daoIng = (MensaIngredientDao)application.getAttribute(&quot;Mensa.IngredientDao&quot;);
+&nbsp;&nbsp;&nbsp; List&lt;Ingredient&gt; ings = daoIng.findAll();
+&nbsp;&nbsp;&nbsp; for (Ingredient ing : ings) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(&quot;&lt;li&gt;&quot;+ing+&quot;&lt;/li&gt;&quot;);
+&nbsp;&nbsp;&nbsp; }
+%&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/ul&gt;
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>
+	Wir holen uns das jeweilige DAO Objekt, und listen einfach alle Dishes und Ingredients auf.</p>
+<p>
+	.</p>
+<h2>
+	OneToOne, ManyToOne, OneToMany und ManyToMany</h2>
+<p>
+	Was ORM ein klein wenig kompliziert macht sind die Beziehungen zwischen POJOs.&nbsp; Im Mensa Beispiel haben wir unsere erste <em>OneToMany</em> Beziehung gesehen.&nbsp; Es gibt aber noch andere Beziehungen.&nbsp; Um ein bischen ein Gefühl für die verschiedenen X-To-Y Beziehungen zwischen Tabellen zu bekommen, betrachten wir das Beispiel mit Usern und ihren Emails.&nbsp; Nehmen wir an, es gibt eine Klasse User und eine Klasse Email:</p>
+<table align="left" border="0" cellpadding="5" cellspacing="5">
+	<tbody>
+		<tr>
+			<td style="vertical-align:top;">
+				<pre style="margin-left: 40px;">
+public class User {
+&nbsp;&nbsp;&nbsp; private String lastName;
+&nbsp;&nbsp;&nbsp; private Email email;
+}</pre>
+			</td>
+			<td style="vertical-align:top;">
+				<pre style="margin-left: 40px;">
+public class Email {
+&nbsp;&nbsp;&nbsp; private String emailAddress;
+}</pre>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<p>
+	&nbsp;</p>
+<p>
+	&nbsp;</p>
+<p>
+	&nbsp;</p>
+<p>
+	&nbsp;</p>
+<p>
+	&nbsp;</p>
+<p>
+	Je nach Anwendung kann es die folgenden vier Szenarien geben:</p>
+<ul>
+	<li>
+		OneToOne</li>
+	<li>
+		ManyToOne</li>
+	<li>
+		OneToMany</li>
+	<li>
+		ManyToMany</li>
+</ul>
+<p>
+	Ausserdem müssen wir noch zwischen uni-direktional und bi-direktional unterscheiden: im ersten Fall, kennt der User seine Email, die Email weiß aber nicht zu welchem User sie gehört.&nbsp; Im bi-direktional Fall, kennt der User seine Email, und die Email weiß zu welchem User sie gehört.&nbsp; Der uni-direktionale Fall ist immer einfacher und auch performanter.&nbsp; Nur wenn absolut nötig sollte man den bi-direktionalen Fall verwenden.&nbsp; Wir werden fast ausschließlich uni-direktional arbeiten.</p>
+<p>
+	.</p>
+<h2>
+	OneToOne</h2>
+<p>
+	Die einfachste Beziehung ist die OneToOne Beziehung:&nbsp; Ein User hat eine Email:</p>
+<table align="center" border="0" cellpadding="10" cellspacing="10" style="width: 100%;">
+	<tbody>
+		<tr>
+			<td style="vertical-align: top;">
+				<pre>
+public class User {
+
+    @Id
+&nbsp;&nbsp;&nbsp; private String lastName;
+
+    <span style="color:#0000ff;">@OneToOne</span>
+    @JoinColumn(<span style="color:#0000ff;">unique=true</span>)
+&nbsp;&nbsp;&nbsp; private Email email;
+}</pre>
+			</td>
+			<td style="vertical-align: top;">
+				<pre>
+public class Email {
+
+    @Id
+&nbsp;&nbsp;&nbsp; private String emailAddress;
+}</pre>
+			</td>
+			<td style="vertical-align: top;">
+				<img alt="" src="images/OneToOneUni.png" style="width: 200px; height: 200px;" /></td>
+		</tr>
+	</tbody>
+</table>
+<p>
+	In dieser Beziehung hat ein User eine Email.&nbsp; Wenn wir allerdings möchten, dass eine Email nicht zu zwei Usern gehören darf, müssen wir noch den Uniqueness Constraint angeben.&nbsp; Denn ohne ist es möglich, dass die gleiche Email zu zwei Usern gehört.&nbsp;</p>
+<p>
+	.</p>
+<h2>
+	ManyToOne</h2>
+<p>
+	Die nächst einfachere Beziehung ist die ManyToOne Beziehung:&nbsp; Auch, ein User hat eine Email:</p>
+<table align="center" border="0" cellpadding="10" cellspacing="10" style="width: 100%;">
+	<tbody>
+		<tr>
+			<td style="vertical-align: top;">
+				<pre>
+public class User {
+
+    @Id
+&nbsp;&nbsp;&nbsp; private String lastName;
+
+    <span style="color:#0000ff;">@ManyToOne</span>
+&nbsp;&nbsp;&nbsp; private Email email;
+}</pre>
+			</td>
+			<td style="vertical-align: top;">
+				<pre>
+public class Email {
+
+    @Id
+&nbsp;&nbsp;&nbsp; private String emailAddress;
+}</pre>
+			</td>
+			<td style="vertical-align: top;">
+				<img alt="" src="images/ManyToOneUni.png" style="width: 200px; height: 200px;" /></td>
+		</tr>
+	</tbody>
+</table>
+<p>
+	Wenn wir uns das Datenbank Schema ansehen, bemerken wir, dass es identisch zur OneToOne Beziehung ist.&nbsp; Wenigstens im uni-direktional Fall.&nbsp; Deswegen wird die ManyToOne Beziehung eigentlich nie alleine verwendet, sondern immer zusammen mit einer OneToMany Beziehung auf der anderen Seite.</p>
+<p>
+	.</p>
+<h2>
+	OneToMany</h2>
+<p>
+	Das ist eigentlich die Beziehung die am häufigsten vorkommt:&nbsp; Ein User hat mehrere Emails:</p>
+<table align="center" border="0" cellpadding="10" cellspacing="10" style="width: 100%;">
+	<tbody>
+		<tr>
+			<td style="vertical-align: top;">
+				<pre>
+public class User {
+
+    @Id
+&nbsp;&nbsp;&nbsp; private String lastName;
+
+    <span style="color:#0000ff;">@OneToMany</span>
+&nbsp;&nbsp;&nbsp; private <span style="color:#0000ff;">Set&lt;Email&gt;</span> email;
+}</pre>
+			</td>
+			<td style="vertical-align: top;">
+				<pre>
+public class Email {
+
+    @Id
+&nbsp;&nbsp;&nbsp; private String emailAddress;
+}</pre>
+			</td>
+			<td style="vertical-align: top;">
+				<img alt="" src="images/OneToManyUni.png" style="width: 200px; height: 200px;" /></td>
+		</tr>
+	</tbody>
+</table>
+<p>
+	In dieser Beziehung kann ein User mehrere Emails haben.&nbsp; Interessant ist allerdings, dass eine Email nicht zu zwei Usern gehören kann.&nbsp;</p>
+<p>
+	.</p>
+<h2>
+	ManyToMany</h2>
+<p>
+	Schliesslich kommen wir zur komplexesten Beziehung:&nbsp; Ein User hat mehrere Emails und eine Email kann zu mehreren Usern gehören:</p>
+<table align="center" border="0" cellpadding="10" cellspacing="10" style="width: 100%;">
+	<tbody>
+		<tr>
+			<td style="vertical-align: top;">
+				<pre>
+public class User {
+
+    @Id
+&nbsp;&nbsp;&nbsp; private String lastName;
+
+    <span style="color:#0000ff;">@ManyToMany</span>
+&nbsp;&nbsp;&nbsp; private <span style="color:#0000ff;">Set&lt;Email&gt;</span> email;
+}</pre>
+			</td>
+			<td style="vertical-align: top;">
+				<pre>
+public class Email {
+
+    @Id
+&nbsp;&nbsp;&nbsp; private String emailAddress;
+}</pre>
+			</td>
+			<td style="vertical-align: top;">
+				<img alt="" src="images/ManyToManyUni.png" style="width: 200px; height: 200px;" /></td>
+		</tr>
+	</tbody>
+</table>
+<p>
+	In dieser Beziehung kann ein User mehrere Emails haben.&nbsp; Und eine Email kann auch zu mehreren Usern gehören.</p>
+<p>
+	.</p>
+<hr />
+<h1>
+	Review</h1>
+<p>
+	Was haben wir in diesem Kapitel gelernt?&nbsp; Wir haben</p>
+<ul>
+	<li>
+		eine einfache Datenbank kennengelernt</li>
+	<li>
+		die Grundkommandos von SQL gesehen und das Akronym CRUD</li>
+	<li>
+		unsere ersten Schritte mit ORM unternommen</li>
+	<li>
+		und die Unterschiede zwischen den verschiedenen X-To-Y Beziehungen</li>
+</ul>
+<p>
+	.</p>
+<hr />
+<h1>
+	Projekte</h1>
+<p>
+	Jetzt wird es Ernst: wir können in Prinzip fast jede existierende Webanwendung nachbauen.&nbsp; Natürlich macht es Sinn sich langsam vorzuarbeiten.&nbsp; Machen wir hier.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="images/StocksJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Stocks</h2>
+<p>
+	Im ersten Semester haben wir eine kleine Anwendung geschrieben um Aktienkursen anzuzeigen.&nbsp; Wir wollen das Beispiel jetzt webifizieren.&nbsp; Wichtig ist uns dabei, dass die Daten nicht aus der Datei kommen, sondern aus der Datenbank.&nbsp;&nbsp;&nbsp;</p>
+<p>
+	Für uns besteht ein Aktienkurs aus dem Aktienkürzel, oder Symbol, und den Kursen, einfach einer Liste von Double.&nbsp; Das Ganze fassen wir in dem POJO StockSymbol zusammen:</p>
+<pre style="margin-left: 40px;">
+@Entity
+@Table(name = &quot;StockSymbol&quot;)
+public class StockSymbol {
+
+&nbsp;&nbsp;&nbsp; @Id
+&nbsp;&nbsp;&nbsp; private String symbol;
+&nbsp;
+&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">@ElementCollection</span>
+&nbsp;&nbsp;&nbsp; @Column(name = &quot;prices&quot;, nullable = false)
+&nbsp;&nbsp;&nbsp; private <span style="color:#0000ff;">List&lt;Double&gt;</span> prices;
+
+    ... constructors, getters, setters, toString
+}</pre>
+<p>
+	<img alt="" src="images/StocksDB.png" style="width: 200px; height: 160px; float: right; margin-right: 10px; margin-left: 10px;" />Was hier neu ist ist das Attribut <em>@ElementCollection</em>: es ist effektiv wie eine OneToMany Beziehung für primitive Datentypen.&nbsp; Wie das in der Datenbank abgebildet wird sehen wir rechts.&nbsp; Es gibt also eine Tabelle für die Symbole und eine für die Aktienkurse.</p>
+<p>
+	Nachdem unser POJO steht, sehen wir uns die DAO an.&nbsp; Wir machen nicht viel mit der Datenbank: wir initialisieren sie einmal, danach greifen wir nur lesend darauf zu, deswegen brauchen wir eigentlich nicht die GenericDao zu bemühen.</p>
+<pre style="margin-left: 40px;">
+public class StockDao {
+
+&nbsp;&nbsp;&nbsp; private Session hibSession = null;
+
+&nbsp;&nbsp;&nbsp; public StockDao() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; this.hibSession = HibernateUtil.getSessionFactory().openSession();
+&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; public StockSymbol getStockPrice(String symbol) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return (StockSymbol) hibSession.get(StockSymbol.class, symbol);
+&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; public List&lt;String&gt; initStockPriceTable(String path) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; List&lt;String&gt; dates = null;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; try {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">hibSession.beginTransaction();</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BufferedReader br = new BufferedReader(new FileReader(path));
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // first line contains dates:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String line = br.readLine();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dates = readDates(line);
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // other lines contain data:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; while (true) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; line = br.readLine();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (line == null) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; break;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; StockSymbol entry = new StockSymbol(line);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">hibSession.merge(entry);</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; br.close();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">hibSession.getTransaction().commit();</span>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } catch (Exception e) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; e.printStackTrace();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return dates;
+&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; private List&lt;String&gt; readDates(String line) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; List&lt;String&gt; dates = new ArrayList&lt;String&gt;();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String[] datesArray = line.split(&quot;,&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for (int i = 1; i &lt; datesArray.length; i++) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dates.add(datesArray[i]);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return dates;
+&nbsp;&nbsp;&nbsp; }</pre>
+<p>
+	<img alt="" src="images/StocksData.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />In der Methode <em>initStockPriceTable()</em> lesen wir die Aktienkurs aus der Datei und speichern sie in der Datenbank.&nbsp; Interessant ist dabei, dass wir nicht jedesmal einen Commit machen, sondern erst nachdem wir alle Daten gespeichert haben.&nbsp; Das ist ungefähr dreimal so schnell.&nbsp; Trotzdem dauert das Ganze ca eine halbe Minute.&nbsp; Nachdem die Daten aber in der Datenbank sind, ist die Anwendung sehr schnell.</p>
+<p>
+	In der <em>stocksLogic.jsp</em> Seite initialisieren wir alles in der jspInit() Methode.&nbsp; Wir kreiieren das Dao Objekt, rufen die <em>initStockPriceTable()</em> Methode auf, und fügen es dem <em>application</em> Objekt hinzu, damit wir später ganz einfach darauf zugreifen können.&nbsp; Über den Request-Parameter erhalten wir das gewünschte Symbol, für das wir die Daten aus der Datenbank abfragen, und schließlich in einer HTML Tabelle anzeigen.</p>
+<pre style="margin-left: 40px;">
+&lt;%!&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; public void jspInit() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String path = getServletContext().getRealPath(&quot;/&quot;) + &quot;stocks/SP500_HistoricalStockDataMonthly.csv&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ServletContext application = getServletConfig().getServletContext();
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // init database with data from file:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; StockDao dao = new StockDao();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; List&lt;String&gt; dates = dao.initStockPriceTable(path);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; application.setAttribute(&quot;Stocks.dao&quot;, dao);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; application.setAttribute(&quot;Stocks.dates&quot;, dates);
+&nbsp;&nbsp;&nbsp; }
+%&gt;
+&lt;%
+&nbsp;&nbsp;&nbsp; // query database for symbol
+&nbsp;&nbsp;&nbsp; String symbol = request.getParameter(&quot;symbol&quot;);
+&nbsp;&nbsp;&nbsp; StockDao dao = (StockDao) application.getAttribute(&quot;Stocks.dao&quot;);
+&nbsp;&nbsp;&nbsp; List&lt;String&gt; dates = (List&lt;String&gt;) application.getAttribute(&quot;Stocks.dates&quot;);
+&nbsp;&nbsp;&nbsp; StockSymbol sp = dao.getStockPrice(symbol);
+
+&nbsp;&nbsp;&nbsp; // show stock prices:
+%&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;body&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h1&gt;Stocks&lt;/h1&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;p&gt;Prices for &lt;strong&gt;&lt;%= sp.getSymbol()%&gt;&lt;/strong&gt;:&lt;/p&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;table border=&quot;1&quot;&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;tr&gt;
+&lt;%
+&nbsp;&nbsp;&nbsp; for (int i = 0; i &lt; dates.size(); i++) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(&quot;&lt;td&gt;&quot;+dates.get(i)+&quot;&lt;/td&gt;&quot;);
+&nbsp;&nbsp;&nbsp; }
+%&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/tr&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;tr&gt;
+&lt;%
+&nbsp;&nbsp;&nbsp; List&lt;Double&gt; prices = sp.getPrices();
+&nbsp;&nbsp;&nbsp; for (int i = 0; i &lt; prices.size(); i++) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(&quot;&lt;td&gt;&quot;+prices.get(i)+&quot;&lt;/td&gt;&quot;);
+&nbsp;&nbsp;&nbsp; }
+%&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/tr&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/table&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;p&gt;&lt;a href=&quot;stocksGraphics.jsp?symbol=&lt;%= symbol %&gt;&quot;&gt;Graph&lt;/a&gt;&lt;/p&gt;
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+<p>
+	.</p>
+<h3>
+	<img alt="" src="images/StocksGraph.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Challenge</h3>
+<p>
+	Eigentlich sind wir mit unserer Hauptaufgabe, Aktienkurse in eine Datenbank zu schreiben und dann daraus zu lesen fertig.&nbsp; Nur die Darstellung als HTML Tabelle ist nicht besonders sexy.&nbsp; Mit ein klein wenig JavaScript und der JavaScript Library D3JS [2] ist es aber ein Leichtes die Aktienkurse auch grafisch darzustellen.&nbsp; Wir müssen lediglich die Kursdaten in eine Form bringen, die die D3JS Bibliothek versteht, in diesem Fall &quot;TabSeperatedValues&quot; auch TSV genannt.&nbsp; Das macht die Datei <em>stocksTSV.jsp</em>:</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp;&nbsp; // query database for symbol
+&nbsp;&nbsp;&nbsp; String symbol = request.getParameter(&quot;symbol&quot;);
+&nbsp;&nbsp;&nbsp; StockDao dao = (StockDao) application.getAttribute(&quot;Stocks.dao&quot;);
+&nbsp;&nbsp;&nbsp; List&lt;String&gt; dates = (List&lt;String&gt;) application.getAttribute(&quot;Stocks.dates&quot;);
+&nbsp;&nbsp;&nbsp; StockSymbol sp = dao.getStockPrice(symbol);
+
+&nbsp;&nbsp;&nbsp; // from 20121011 to 11-Oct-12
+&nbsp;&nbsp;&nbsp; DateFormat formater1 = new SimpleDateFormat(&quot;yyyyMMdd&quot;);
+&nbsp;&nbsp;&nbsp; DateFormat formater2 = new SimpleDateFormat(&quot;dd-MMM-yy&quot;);
+
+&nbsp;&nbsp;&nbsp; // show stock prices in TSV form: &nbsp;
+&nbsp;&nbsp;&nbsp; out.println(&quot;date&nbsp;&nbsp; &nbsp;close&quot;);
+&nbsp;&nbsp;&nbsp; List&lt;Double&gt; prices = sp.getPrices();
+&nbsp;&nbsp;&nbsp; for (int i = 0; i &lt; dates.size(); i++) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date dte = (Date)formater1.parse(dates.get(i));
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(formater2.format(dte) +&quot;&nbsp;&nbsp; &nbsp;&quot;+prices.get(i));
+&nbsp;&nbsp;&nbsp; }
+%&gt;
+</pre>
+<p>
+	Diese Daten können dann mit Hilfe der JavaScript Datei <em>stocksGraphics.jsp</em> grafisch dargestellt werden.&nbsp; Der JavaScript stammt von Mike Bostock&rsquo;s Line Chart Beispiel [3].</p>
+<p>
+	<strong>SI: notice you can download the stock data directly: SP500_HistoricalStockDataMonthly.csv, you may not want that!</strong></p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="http://127.0.0.1:8000../images/WikiJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Wiki</h2>
+<p>
+	Wir sind jetzt soweit unser eigenes kleines Wiki zu schreiben.&nbsp; Die Anforderungen dazu und die UI haben wir ja bereits im ersten Kapitel beschrieben und umgesetzt.&nbsp; Was noch fehlt ist der Wiki-Markup.&nbsp; Wir lassen uns von Wikipedia&#39;s Markup inspirieren, und beschränken uns aber auf folgenden:</p>
+<ul>
+	<li>
+		&#39;=&#39; für Überschriften (evtl auch &#39;==&#39; und &#39;===&#39;),</li>
+	<li>
+		&#39;----&#39; für eine horizontale Trennlinie,</li>
+	<li>
+		eine leere Zeile für eine Leerzeile,</li>
+	<li>
+		&#39;*&#39; für eine Aufzählungsliste,</li>
+	<li>
+		und natürlich [[...]] für Links.</li>
+</ul>
+<h3>
+	<img alt="" src="images/WikiDB.png" style="width: 200px; height: 160px; float: right; margin-right: 10px; margin-left: 10px;" />POJOs</h3>
+<p>
+	Kümmern wir uns als nächstes um das Datenmodel, die POJOs.&nbsp; In diesem Fall genügt ein POJO:</p>
+<pre style="margin-left: 40px;">
+public class WikiPage {
+
+&nbsp;&nbsp;&nbsp; @Id
+&nbsp;&nbsp;&nbsp; private String pageId;
+
+&nbsp;&nbsp;&nbsp; @Column(<span style="color:#0000ff;">length = 32000</span>, nullable = false)
+&nbsp;&nbsp;&nbsp; private String content;
+
+&nbsp;&nbsp;&nbsp; @Column(nullable = false)
+&nbsp;&nbsp;&nbsp; private Date date;
+
+    ... constructors, getters, setters, toString
+}</pre>
+<p>
+	Nichts besonders kompliziertes.&nbsp; Auch die DAO ist eigentlich trivial:</p>
+<pre style="margin-left: 40px;">
+public class WikiDao extends GenericDao&lt;String, WikiPage&gt; {
+
+&nbsp;&nbsp;&nbsp; public WikiDao() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; super();
+&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; public List&lt;WikiPage&gt; search(String searchTerm) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; List&lt;WikiPage&gt; pageList = null;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; searchTerm = <span style="color:#ff0000;">Utility.escapeSql(searchTerm)</span>;
+<span style="color:#0000ff;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Query q = getHibernateSession().createQuery(
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &quot;from WikiPage as pg where lower(pg.content) &quot;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; + &quot;like lower(&#39;%&quot;+searchTerm+&quot;%&#39;) &quot;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; + &quot;order by pg.pageId asc&quot;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pageList = (List&lt;WikiPage&gt;) q.list();&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return pageList;
+&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; /**
+&nbsp;&nbsp;&nbsp;&nbsp; * we want pages to be sorted, hence override default behavior
+&nbsp;&nbsp;&nbsp;&nbsp; */
+&nbsp;&nbsp;&nbsp; public List&lt;WikiPage&gt; findAll() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return getHibernateSession().createQuery(<span style="color:#0000ff;">&quot;from WikiPage as pg order by pg.pageId asc&quot;</span>).list();
+&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; public void initDatabase() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String homePage
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = &quot;= Wiki =\n&quot;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; + &quot;Welcome to &#39;Wiki&#39;.\n&quot;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; + &quot;\n&quot;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; + &quot;Help can be found under [[help]].\n&quot;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; + &quot;----\n&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; merge(new WikiPage(&quot;home&quot;, homePage));
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String helpPage
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = &quot;= Help =\n&quot;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; + &quot;How to use this simple Wiki.&nbsp; The following markup exists:\n&quot;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; + &quot;* &#39;=&#39; for heading (=, ==, === exist)\n&quot;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; + &quot;* &#39;----&#39; for horizontal line\n&quot;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; + &quot;* empty line for new line\n&quot;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; + &quot;* &#39;*&#39; for bulleted list\n&quot;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; + &quot;* \\[\\[...\\]\\] for links\n&quot;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; + &quot;That&#39;s it.&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; merge(new WikiPage(&quot;help&quot;, helpPage));
+&nbsp;&nbsp;&nbsp; }
+}</pre>
+<p>
+	In der <em>initDatabase()</em> Methode initialisieren wir wie üblich die Datenbank, in diesem Fall mit zwei Wikiseiten.</p>
+<h3>
+	<img alt="" src="images/HQL_Editor.png" style="width: 200px; height: 160px; float: right; margin-right: 10px; margin-left: 10px;" />HQL</h3>
+<p>
+	Interessanter sind allerdings die <em>findAll()</em> und die <em>search()</em> Methoden.&nbsp; In der <em>findAll()</em> Methode überschreiben wir das normale Verhalten der Elternklasse, wir wollen nämlich dass die Seiten in alphabetischer Reihenfolge gelistet werden.&nbsp; Das erreichen wir mit dem &quot;order by&quot; Argument, und &quot;asc&quot; steht für <em>ascending</em>, also aufsteigend.</p>
+<p>
+	Noch interessanter ist die <em>search()</em> Methode:&nbsp; die Sprache die wir hier verwenden ist die Hibernate Query Language (HQL), die vom Syntax her stark an SQL erinnert:</p>
+<pre style="margin-left: 40px;">
+&quot;from WikiPage as pg where lower(pg.content) &quot;
++ &quot;<span style="color:#0000ff;">like</span> lower(&#39;%&quot;+searchTerm+&quot;%&#39;) &quot;
++ &quot;order by pg.pageId asc&quot;</pre>
+<p>
+	Eigentlich ist die Query selbsterklärend.&nbsp;</p>
+<p>
+	In Netbeans gibt es einen HQL Editor, der es einem erlaubt HQL Queries zu testen.&nbsp; Man erreicht ihn, in dem auf die <em>hibernate.cfg.xml</em> Datei mit der rechten Maustaste klickt und dann &quot;Run HQL Query&quot; auswählt.&nbsp; Der HQL Editor hat allerdings zwei kleine Quirks: zum einen müssen alle POJOs einen Default Konstruktor haben.&nbsp; Und zum anderen, müssen wir bevor wir den HQL Editor aufrufen, in der <em>hibernate.cfg.xml</em> Datei das &quot;create-drop&quot; durch &quot;validate&quot; ersetzen.&nbsp; Aus irgendeinem Grund, werden beim Start des HQL Editor anscheinend alle Tabellen erst einmal gedropped.&nbsp; Aber ansonsten funktioniert der HQL Editor &quot;like a charm&quot;.</p>
+<h3>
+	Prepared Statements</h3>
+<p>
+	Im vorletzten Kapitel haben wir ganz kurz das Wort &quot;SQL Injection&quot; verwendet als wir über Cross-Site Scripting (XSS) und <em>escapeXML()</em> gesprochen haben.&nbsp; Was ist &quot;SQL Injection&quot;?&nbsp; Nehmen wir an wir fragen einen Nutzer nach <em>userName</em> und <em>password</em>, und würden dann daraus folgendes SQL konstruieren:</p>
+<pre style="margin-left: 40px;">
+String sql = &quot;SELECT id FROM users WHERE username=&#39;&quot;+userName+&quot;&#39; AND password=&#39;&quot;+password+&quot;&#39;&quot;;</pre>
+<p>
+	Wenn der Nutzer so etwas wie &quot;ralph&quot; und &quot;123456&quot; eingibt, dann funktioniert das auch super.&nbsp; Wenn aber ein Schlaumeier für password das folgende eingibt:</p>
+<pre style="margin-left: 40px;">
+222222&#39; OR &#39;1&#39; = &#39;1</pre>
+<p>
+	dann passiert etwas interessantes: obwohl das Passwort falsch ist, wird er trotzdem eingeloggt.&nbsp; Das hat damit zu tun, dass die Datenbank folgendes sieht:</p>
+<pre style="margin-left: 40px;">
+false AND false OR true</pre>
+<p>
+	und das ergibt immer <em>true</em>.&nbsp; Und das ist &quot;SQL Injection&quot;.&nbsp; Es ist überraschend wieviele echte Webseiten sich mit diesem Trick überrumpeln lassen.</p>
+<p>
+	Wir wollen das natürlich nicht, und deswegen verwenden wir zum einen immer die <em>escapeSql()</em> Methode, aber zum anderen sollten wir auch Prepared Statements verwenden.&nbsp; In Hibernate Speek würde das so aussehen:</p>
+<pre style="margin-left: 40px;">
+createQuery(&quot;from User where userName=:userName&quot;).setParameter(&quot;userName&quot;, userName).getSingleResult();</pre>
+<p>
+	Im Beispiel für die <em>search()</em> Methode gerade haben wir das fälschlicherweise nicht so gemacht, aber jetzt können wir es ja richtig machen.</p>
+<h3>
+	Regular Expressions</h3>
+<p>
+	Kommen wir zum letzten interessanten Thema in diesem Projekt: reguläre Ausdrücke.&nbsp; Die Frage ist nämlich wie macht man aus dem Wiki Markup</p>
+<pre style="margin-left: 40px;">
+= Wiki =
+Welcome to &#39;Wiki&#39;.
+
+Help can be found under [[help]].
+----</pre>
+<p>
+	das folgende HTML?</p>
+<pre style="margin-left: 40px;">
+<span>&lt;<span class="start-tag">h1</span>&gt;</span><span> Wiki </span><span>&lt;/<span class="end-tag">h1</span>&gt;</span><span>
+Welcome to &#39;Wiki&#39;.
+</span><span>&lt;<span class="start-tag">br</span><span>/</span>&gt;</span><span>
+Help can be found under </span><span>&lt;<span class="start-tag">a</span> <span class="attribute-name">href</span>=&#39;<a class="attribute-value">index.jsp?page=help</a>&#39;&gt;</span><span>help</span><span>&lt;/<span class="end-tag">a</span>&gt;</span><span>.</span>
+<span>&lt;<span class="start-tag">hr</span><span>/</span>&gt;</span></pre>
+<p>
+	Wenn wir uns an unsere reguläre Ausdrücke aus dem zweiten Semester erinnern, dann ist das fast trivial.&nbsp; Was unser Leben einfach macht ist dass die Methode <em>replaceAll()</em> der Klasse String reguläre Ausdrücke verwendet.</p>
+<pre style="margin-left: 40px;">
+&nbsp;&nbsp;&nbsp; private String parseLine(String line) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String regex;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // &#39; &#39; &lt;br/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (line.length() == 0) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; line = &quot;&lt;br/&gt;\n&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return line;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // ---- &lt;hr/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (line.equals(&quot;----&quot;)) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; line = &quot;&lt;hr/&gt;\n&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return line;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // escape html tags: &#39;&lt;&#39; and &#39;&gt;&#39;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; line = line.replaceAll(&quot;&lt;&quot;, &quot;&amp;lt;&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; line = line.replaceAll(&quot;&gt;&quot;, &quot;&amp;gt;&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // * &lt;ul&gt;&lt;li&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (line.startsWith(&quot;*&quot;)) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; line = &quot;&lt;ul&gt;&lt;li&gt;&quot; + line.substring(1) + &quot;&lt;/li&gt;&lt;/ul&gt;\n&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // = &lt;h1&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (line.startsWith(&quot;=&quot;)) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; regex = &quot;(=(.+?)=)&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; line = line.replaceAll(regex, &quot;&lt;h1&gt;$2&lt;/h1&gt;\n&quot;);
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // == &lt;h2&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; regex = &quot;(==(.+?)==)&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; line = line.replaceAll(regex, &quot;&lt;h2&gt;$2&lt;/h2&gt;\n&quot;);
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // === &lt;h3&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; regex = &quot;(===(.+?)===)&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; line = line.replaceAll(regex, &quot;&lt;h3&gt;$2&lt;/h3&gt;\n&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // [[]] &lt;a&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; regex = &quot;(\\[\\[(.+?)\\]\\]*)&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; line = line.replaceAll(regex, &quot;&lt;a href=&#39;index.jsp?page=$2&#39;&gt;$2&lt;/a&gt;&quot;);
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // \[ -&gt; [
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; line = line.replaceAll(&quot;\\\\\\[&quot;, &quot;[&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; line = line.replaceAll(&quot;\\\\\\]&quot;, &quot;]&quot;);
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return line;
+&nbsp;&nbsp;&nbsp; }</pre>
+<p>
+	Langsam werden wir warm mit den regulären Ausdrücken, oder?&nbsp; I love them.</p>
+<h3>
+	Challenge</h3>
+<p>
+	Wenn man noch etwas Zeit und Lust hat, kann man das Wiki ein bischen erweitern:</p>
+<ul>
+	<li>
+		sich überlegen wie man mit multi-user Edits umgeht, oder alternativ</li>
+	<li>
+		eine Versionierung einführt</li>
+	<li>
+		ein Login hinzufügt, damit nur eingeloggte Nutzer Änderungen vornehmen dürfen</li>
+	<li>
+		ein Image Upload ermöglicht, natürlich mit dazugehörigem Markup.</li>
+</ul>
+<p>
+	<strong>SI: always use escapeSql() and escapeXml() when you dont trust user input, which you should never</strong></p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="http://127.0.0.1:8000../images/MensaJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Mensa</h2>
+<p>
+	Kommen wir noch einmal zurück zu unserem Mensa Beispiel.&nbsp; Im ersten Kapitel haben wir ja ausführlich die Requirements gelistet und auch die UI umgesetzt.&nbsp; Am Anfang dieses Kapitels haben wir das Problem aus der Datenbank/POJO Sicht beleuchtet.&nbsp; Allerdings ist uns dabei ein kleiner Fehler unterlaufen.&nbsp; Denn die Beziehung zwischen Dish und Ingredient ist keine OneToMany Beziehung, sondern eine ManyToMany Beziehung.&nbsp; Warum?&nbsp; Weil die Zutat &quot;Milch&quot; durchaus in mehreren Gerichten vorkommen kann.&nbsp;&nbsp; Also, ein Dish hat mehrere Ingredients und ein Ingredient kann zu mehreren Dishes gehören, deswegen müssen wir hier eine ManyToMany Beziehung wählen.&nbsp; Wir müssen noch klären ob die Beziehung uni-direktional oder bi-direktional sein soll.&nbsp; In unseren Anforderungen steht nichts, dass wir auflisten sollen in welchen Dishes ein bestimmtes Ingredient vorkommt, deswegen ist die Beziehung uni-direktional.&nbsp; Also müssen wir im POJO Dish lediglich OneToMany durch ManyToMany ersetzen.</p>
+<p>
+	Nach diese kleine Änderung kümmern wir uns um die JSP Seiten.&nbsp; Die UI steht ja schon, wir müssen lediglich die Datenbank Logik hinzufügen.&nbsp; Beginnen wir mit der <em>listIngredients.jsp</em> Seite:</p>
+<pre style="margin-left: 40px;">
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;body&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;%@include file=&quot;mensaNavigation.jsp&quot; %&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h2&gt;List all Ingredients&lt;/h2&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;ul&gt;
+<span style="color:#0000ff;">&lt;%
+&nbsp;&nbsp;&nbsp; IngredientDao daoIng = (IngredientDao)application.getAttribute(&quot;Mensa.IngredientDao&quot;);
+&nbsp;&nbsp;&nbsp; List&lt;Ingredient&gt; ings = daoIng.findAll();
+&nbsp;&nbsp;&nbsp; for (Ingredient ing : ings) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(&quot;&lt;li&gt;&quot;+ing+&quot;&lt;/li&gt;&quot;);
+&nbsp;&nbsp;&nbsp; }
+%&gt;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/ul&gt;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>
+	Die Liste der Ingredients ist jetzt nicht mehr statisch, sondern kommt aus der Datenbank.&nbsp;</p>
+<p>
+	Die <em>addIngredient.jsp</em> Seite wird ein klein wenig modifiziert, damit die Logik richtig funktioniert:</p>
+<pre style="margin-left: 40px;">
+&lt;html&gt;
+&nbsp;&nbsp;&nbsp; &lt;body&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;%@include file=&quot;mensaNavigation.jsp&quot; %&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h2&gt;Add New Ingredient&lt;/h2&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;form action=&quot;<span style="color:#0000ff;">mensaLogic.jsp</span>&quot; method=&quot;GET&quot;&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Name:&nbsp; &lt;input type=&quot;text&quot; name=&quot;name&quot;/&gt;&lt;br/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Size:&nbsp; &lt;input type=&quot;text&quot; name=&quot;size&quot;/&gt;&lt;br/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Calories: &lt;input type=&quot;text&quot; name=&quot;calories&quot;/&gt;&lt;br/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">&lt;input type=&quot;hidden&quot; name=&quot;addIngredient&quot;/&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;input type=&quot;submit&quot; value=&quot;Add Ingredient&quot;/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/form&gt;
+&nbsp;&nbsp;&nbsp; &lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>
+	Denn wir wollen die Logik zentral in der <em>mensaLogic.jsp</em> Seite zusammenführen:</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp;&nbsp; // add new ingredient
+&nbsp;&nbsp;&nbsp; if ( <span style="color:#0000ff;">request.getParameter(&quot;addIngredient&quot;) != null</span> ) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String name = request.getParameter(&quot;name&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String size = request.getParameter(&quot;size&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; double calories = Double.parseDouble(request.getParameter(&quot;calories&quot;));
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (name != null) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Ingredient ingr = new Ingredient(name,size,calories);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IngredientDao daoIng = (IngredientDao)application.getAttribute(&quot;Mensa.IngredientDao&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; daoIng.merge(ingr);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; response.sendRedirect(&quot;listIngredients.jsp&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return;
+&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; // delete ingredient
+&nbsp;&nbsp;&nbsp; ...
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; // add new dish
+&nbsp;&nbsp;&nbsp; ...
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; // delete dish
+&nbsp;&nbsp;&nbsp; ...
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; response.sendRedirect(&quot;mensa.jsp&quot;);
+%&gt;</pre>
+<p>
+	Analog müssen wir jetzt nur noch die Seiten</p>
+<ul>
+	<li>
+		listDishes.jsp</li>
+	<li>
+		addDish.jsp</li>
+	<li>
+		deleteDish.jsp</li>
+	<li>
+		deleteIngredient.jsp</li>
+</ul>
+<p>
+	modifizieren und mit Leben füllen.&nbsp; Ist aber gar nicht so schwer.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="http://127.0.0.1:8000../images/LoginJSP3.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Login</h2>
+<p>
+	Die wohl am häufigsten benötigte Anwendung ist die Login Anwendung.&nbsp; Im ersten Kapitel haben wir unsere Anforderungen aufgestellt und die UI Screen bereits umgesetzt.&nbsp; Was noch fehlt ist die Logik.&nbsp;&nbsp; Die fassen wir ein einer <em>loginLogic.jsp</em> Seite zusammen.&nbsp;</p>
+<p>
+	Die Loginseite, <em>login.jsp</em>, haben wir ja schon angelegt.&nbsp; Die Logindaten werden in der <em>loginLogic.jsp</em> Seite überprüft.&nbsp; Anstelle eines response.sendRedirect() verwenden wir das erste Mal den RequestDispatcher, der es uns erlaubt Daten mitzuschicken.&nbsp; Das ist nicht möglich mit sendRedirect().</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp;&nbsp; // user login
+&nbsp;&nbsp;&nbsp; if (request.getParameter(&quot;login&quot;) != null) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String emailId = request.getParameter(&quot;emailId&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String passwd = request.getParameter(&quot;password&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ((emailId != null) &amp;&amp; (passwd != null)) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // try to create a user object
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; UserDao usrDao = (UserDao)application.getAttribute(&quot;Login.UserDao&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; User usr = usrDao.loginUser(emailId,passwd);
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ( usr != null ) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; session.setAttribute(&quot;Login.User&quot;,usr);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; response.sendRedirect(&quot;protected.jsp&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; request.setAttribute(&quot;error&quot;, &quot;Wrong username and/or password.&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; request.getRequestDispatcher(&quot;login.jsp&quot;).forward(request, response);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; request.setAttribute(&quot;error&quot;, &quot;Please enter username and password.&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">request.getRequestDispatcher(&quot;login.jsp&quot;).forward(request, response);</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return;
+&nbsp;&nbsp;&nbsp; }
+%&gt;</pre>
+<p>
+	Als nächstes kümmern wir uns um die Registrierung.&nbsp; Die Seite <em>register.jsp</em>, existiert schon.&nbsp; Die Daten werden wieder in der <em>loginLogic.jsp</em> Seite überprüft.&nbsp; Interessant an diesem Beispiel, ist, dass wir das ganze <em>request</em> Objekt einfach als Argument an die Dao übergeben.&nbsp; Wir werden weiter unten sehen warum das super-praktisch ist.&nbsp; Wenn die eigentliche Registrierung erfolgreich war, dann bekommt der Nutzer eine Email zugesandt.&nbsp; Da wir noch nicht wissen wie das geht, geben wir einfach den Text der Email im Browser aus.&nbsp; Wenn der Nutzer aber auf den Link klickt, dann funktioniert alles wie gewünscht.</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp;&nbsp; // registration
+&nbsp;&nbsp;&nbsp; if (request.getParameter(&quot;registration&quot;) != null) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; UserDao usrDao = (UserDao)application.getAttribute(&quot;Login.UserDao&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String errorMsg = <span style="color:#0000ff;">usrDao.verifyRegistrationData(request);</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ( errorMsg == null ) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String email = <span style="color:#0000ff;">usrDao.createUser(request);</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(&quot;Registration success!&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(email);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; request.setAttribute(&quot;error&quot;, errorMsg);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; request.getRequestDispatcher(&quot;register.jsp&quot;).forward(request, response);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp; }
+%&gt;</pre>
+<p>
+	Es folgt das Ändern des Passworts.&nbsp; Die Seite <em>changePassword.jsp</em> ist schon implementiert.&nbsp; Die Daten gehen wieder an die <em>loginLogic.jsp</em> Seite, aber die eigentlich Arbeit macht wieder die UserDao.</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp;&nbsp; // change password
+&nbsp;&nbsp;&nbsp; if (request.getParameter(&quot;changePassword&quot;) != null) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; UserDao usrDao = (UserDao)application.getAttribute(&quot;Login.UserDao&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; User usr = (User)session.getAttribute(&quot;Login.User&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String errorMsg = <span style="color:#0000ff;">usrDao.changePassword(request,usr)</span>;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ( errorMsg == null ) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(&quot;Change of password success!&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; request.setAttribute(&quot;error&quot;, errorMsg);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; request.getRequestDispatcher(&quot;changePassword.jsp&quot;).forward(request, response);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; }
+%&gt;</pre>
+<p>
+	Es folgt das vergessene Passwort.&nbsp; Die Seite <em>forgotPassword.jsp</em> fragt nach EmailId und Lieblingsfarbe, und schickt die Daten an die <em>loginLogic.jsp</em> Seite.&nbsp; Wie üblich macht die UserDao die meiste Arbeit.&nbsp;</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp;&nbsp; // forgot password
+&nbsp;&nbsp;&nbsp; if (request.getParameter(&quot;forgotPassword&quot;) != null) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String emailId = request.getParameter(&quot;emailId&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String favoriteColor = request.getParameter(&quot;favoriteColor&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ((emailId != null) &amp;&amp; (favoriteColor != null)) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; UserDao usrDao = (UserDao)application.getAttribute(&quot;Login.UserDao&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String email = <span style="color:#0000ff;">usrDao.forgotPassword(emailId,favoriteColor);</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ( email == null ) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; request.setAttribute(&quot;error&quot;, 
+                    &quot;The information you provided do not match any of our records.&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; request.getRequestDispatcher(&quot;forgotPassword.jsp&quot;).forward(request, response);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(&quot;The following email was sent to you: &quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(email);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(&quot;You should change your password at your next login!&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp; }&nbsp;&nbsp; &nbsp;
+
+&nbsp;&nbsp;&nbsp; // just make sure we did not forget an if or something
+&nbsp;&nbsp;&nbsp; response.sendRedirect(&quot;login.jsp&quot;);
+%&gt;</pre>
+<p>
+	Auch hier ist das Versenden der Emails nur angedeutet, aber das Passwort ist das neue Passwort.&nbsp;</p>
+<p>
+	Was noch fehlt ist die <em>verifyEmail.jsp</em> Seite.&nbsp; Man hätte sie auch Teil der <em>loginLogic.jsp</em> Seite machen können, aber da der Link nach außen hin sichtbar ist, scheint es Sinn zu machen dieser separat zu handeln.&nbsp; Wie üblich macht die UserDao die meiste Arbeit.&nbsp;</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp;&nbsp; String emailId = request.getParameter(&quot;emailId&quot;);
+&nbsp;&nbsp;&nbsp; String verificationToken = request.getParameter(&quot;verificationToken&quot;);
+&nbsp;&nbsp;&nbsp; if ((emailId != null) &amp;&amp; (verificationToken != null)) {
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; UserDao usrDao = (UserDao) application.getAttribute(&quot;Login.UserDao&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (usrDao.<span style="color:#0000ff;">verifyUser(emailId, verificationToken)</span>) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(&quot;Your account is now activated!&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.println(&quot;Try to &lt;a href=&#39;login.jsp&#39;&gt;login&lt;/a&gt;&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp; out.println(&quot;You must provide a valid emailId and a valid verificationToken.&quot;);
+%&gt;</pre>
+<p>
+	Wie wir die <em>protected.jsp</em> Seite schützen haben wir im Login Beispiel des letzten Kapitels gesehen.</p>
+<p>
+	.</p>
+<h3>
+	<img alt="" src="images/LoginDB.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />POJOs</h3>
+<p>
+	Aus Datenbanksicht ist die Login Anwendung trivial.&nbsp; Wir haben ein POJO für den Nutzer:</p>
+<pre style="margin-left: 40px;">
+@Entity
+<span style="color:#0000ff;">@Table(name = &quot;Users&quot;)</span>
+public class User {
+
+&nbsp;&nbsp;&nbsp; @Id
+&nbsp;&nbsp;&nbsp; private String emailId;
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; @Column(nullable = false)
+&nbsp;&nbsp;&nbsp; private String alias;
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; @Column(length = 256, nullable = false)
+&nbsp;&nbsp;&nbsp; private String hashOfPasswd;
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; @Column(nullable = false)
+&nbsp;&nbsp;&nbsp; private String favoriteColor;
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; @Column(nullable = true)
+&nbsp;&nbsp;&nbsp; private String verificationToken = &quot;New user, not verified.&quot;;
+
+    ... constructors, getters, setters, toString
+
+&nbsp;&nbsp;&nbsp; public boolean <span style="color:#0000ff;">isVerifiedUser()</span> {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (verificationToken == null) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return true;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return false;
+&nbsp;&nbsp;&nbsp; }
+}
+</pre>
+<p>
+	Interessant ist die Tatsache, dass es bei vielen Datenbanken bereits eine Tabelle namens &quot;User&quot; gibt, deswegen geben wir unserer Tabelle den Namen &quot;Users&quot;, damit es hier nicht zu komischen Fehlermeldungen kommt.&nbsp; Aus Bequemlichkeit fügen wir noch eine Methode <em>isVerifiedUser()</em> hinzu.</p>
+<h3>
+	DAO</h3>
+<p>
+	Etwas komplizierter wird allerdings die UserDao, hier passiert die ganze Arbeit.&nbsp;&nbsp; Deswegen besprechen die verschiedenen Teile separate.&nbsp; Wir beginnen mit dem Konstruktor.&nbsp; UserDao erbt von GenericDao, also alle CRUD Standardmethoden werden übernommen.&nbsp; Was wir allerdings noch benötigen sind Informationen zum Hashen des Passwortes, denn wir wollen das Passwort nicht im Klartext in der Datenbank speichern.&nbsp; Dazu benötigen wir das Salt, und die Anzahl der Iterationen wie häufig gehasht werden soll.&nbsp;</p>
+<pre style="margin-left: 40px;">
+public class UserDao extends GenericDao&lt;String, User&gt; {
+
+&nbsp;&nbsp;&nbsp; private byte[] salt;
+&nbsp;&nbsp;&nbsp; private int iterations;
+&nbsp;&nbsp;&nbsp; private int passwordHashedLength;
+
+&nbsp;&nbsp;&nbsp; public UserDao() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; super();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // TODO: the following should be loaded from config file:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; salt = Utility.hexStringToByteArray(&quot;3577b8a868cce281cc76cf859613d5ad&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; iterations = 881;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; passwordHashedLength = 256;&nbsp;&nbsp;&nbsp; // when changed need to adjust User.hashOfPasswd length
+&nbsp;&nbsp;&nbsp; }
+
+}</pre>
+<p>
+	Betrachten wir als nächstes die <em>initDatabase()</em> Methode: hier wird ein Testnutzer angelegt.&nbsp; Es zeigt wie wir aus dem Klartext-Passwort &quot;123456&quot; ein &quot;gehashtes&quot; Passwort erzeugen.</p>
+<pre style="margin-left: 40px;">
+&nbsp;&nbsp;&nbsp; public void initDatabase() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String pwdHash = Utility.<span style="color:#0000ff;">generatePasswordHash</span>(&quot;123456&quot;, salt, iterations, passwordHashedLength);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; merge(new User(&quot;ralph@lano.de&quot;, &quot;ralphlano&quot;, pwdHash, &quot;red&quot;, null));
+&nbsp;&nbsp;&nbsp; }
+</pre>
+<p>
+	Wenn sich ein Nutzer einloggen möchte, rufen wir die <em>loginUser()</em> Methode auf.&nbsp; Wir prüfen zuerst ob es einen Nutzer mit der gewünschten emailId gibt, dann überprüfen wir ob der Nutzer schon verifiziert wurde, um schliesslich zu prüfen ob auch das richtige Passwort eingegeben wurde.&nbsp; Falls alles passt, geben wir eine Instanz des User Objektes zurück, sonst gibts <em>null</em>.</p>
+<pre style="margin-left: 40px;">
+&nbsp;&nbsp;&nbsp; public User loginUser(String emailId, String passwd) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; User usr = findById(emailId);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (usr != null) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (usr.isVerifiedUser()) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String pwdHash = 
+                    Utility.generatePasswordHash(passwd, salt, iterations, passwordHashedLength);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (pwdHash.equals(usr.getHashOfPasswd())) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return usr;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return null;
+&nbsp;&nbsp;&nbsp; }</pre>
+<p>
+	Wenn wir es mit einem neuen Nutzer zu tun haben, dann müssen wir erst mal verifizieren, dass es kein Roboter ist (wir wollen keine Roboter als Nutzer, ziemlich fies, ich weiss) und dass alle wichtigen Daten eingegenen wurden:</p>
+<pre style="margin-left: 40px;">
+&nbsp;&nbsp;&nbsp; public String verifyRegistrationData(HttpServletRequest request) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String error = &quot;An unknown error occured.&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String emailId = request.getParameter(&quot;emailId&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String alias = request.getParameter(&quot;alias&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String passwd = request.getParameter(&quot;password&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String favoriteColor = request.getParameter(&quot;favoriteColor&quot;);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String sum = request.getParameter(&quot;sum&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String result = request.getParameter(&quot;result&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String acceptTerms = request.getParameter(&quot;acceptTerms&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // check if robot
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ((sum != null) &amp;&amp; (result != null) &amp;&amp; (sum.equals(result))) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // check if terms accepted.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ((acceptTerms != null) &amp;&amp; (acceptTerms.equals(&quot;on&quot;))) {
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // check if user entered proper data
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ((emailId!=null)&amp;&amp;(passwd!=null)&amp;&amp;(alias!=null)&amp;&amp;(favoriteColor!=null)) {
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (Utility.isValidEmail(emailId)) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (Utility.isStrongPassword(passwd)) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ((alias.length()&gt;2)&amp;&amp;(favoriteColor.length()&gt;2)) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // now check if a user with this emailId already exists:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (findById(emailId) == null) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // everything is fine!
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; error = null;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; error = &quot;A user with this email address already exists.&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; error = &quot;Your alias and/or favorite color must be at least 3 chars long.&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; error = &quot;Your password must be at least 6 chars long &quot;+
+                                    &quot;and contain a small letter, a capital letter, &quot;+
+                                    &quot;a digit and a special character.&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; error = &quot;Email is not a valid email address.&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; error = &quot;All fields are required.&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; error = &quot;You must accept the terms.&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; error = &quot;Wrong captcha.&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return error;
+&nbsp;&nbsp;&nbsp; }</pre>
+<p>
+	Danach können wir die createUser() Methode aufrufen, und übergeben ihr das komplette <em>request</em> Objekt.&nbsp; Das ist viel praktischer als sechs Parameter individuell zu übergeben.&nbsp; Wir holen uns die Information die wir brauchen, und legen einen neuen User an.&nbsp; Wir generieren anschliessend einen String, den wir als Email an den Nutzer schicken können damit dieser seine Email verifizieren kann.&nbsp; Solange er das nicht getan hat, ist sein Status nicht verifiziert, was wir daran erkennen, das sein Attribut <em>verificationToken</em> nicht auf null gesetzt ist.</p>
+<pre style="margin-left: 40px;">
+&nbsp;&nbsp;&nbsp; public String createUser(HttpServletRequest request) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String emailId = request.getParameter(&quot;emailId&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String alias = request.getParameter(&quot;alias&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String passwd = request.getParameter(&quot;password&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String favoriteColor = request.getParameter(&quot;favoriteColor&quot;); &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String verificationToken = Utility.createVerificationToken();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String hashOfPasswd = 
+            Utility.generatePasswordHash(passwd, salt, iterations, passwordHashedLength);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; User usr = new User( emailId,&nbsp; alias,&nbsp; hashOfPasswd,&nbsp; favoriteColor,&nbsp; verificationToken);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; save(usr);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String email = &quot;Click on this link to verify your email identity: &quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; email += 
+&quot;&lt;a href=&#39;verifyEmail.jsp?emailId=&quot;+emailId+&quot;&amp;verificationToken=&quot;+verificationToken+&quot;&#39;&gt;link&lt;/a&gt;&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return email;
+&nbsp;&nbsp;&nbsp; }</pre>
+<p>
+	Allerdings ist in dem Code ein kleiner Denkfehler: was passiert denn wenn der Nutzer schon existiert?</p>
+<p>
+	So, der User existiert jetzt in der Datenbank, als nächstes erwarten wir, dass er auf den Verifizierungslink in seiner Email klickt.&nbsp; Also müssen wir ihn verifizieren:</p>
+<pre style="margin-left: 40px;">
+&nbsp;&nbsp;&nbsp; public boolean verifyUser(String emailId,String verificationToken) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ((emailId!=null)&amp;&amp;(verificationToken!=null)) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; User usr = findById(emailId);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (usr != null) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (verificationToken.equalsIgnoreCase(usr.getVerificationToken())) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; usr.setVerificationToken(null);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; merge(usr);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return true;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return false;
+&nbsp;&nbsp;&nbsp; }</pre>
+<p>
+	Fehlt noch die Möglichkeit sein Passwort zu ändern.&nbsp; Natürlich müssen wir erst checken ob das alte Passwort richtig war, und dann muss das neue Passwort natürlich was taugen, sonst bleibts beim alten:</p>
+<pre style="margin-left: 40px;">
+    public String changePassword(HttpServletRequest request, User usr) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String error = &quot;An unknown error occured.&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String password = request.getParameter(&quot;password&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String newPassword1 = request.getParameter(&quot;newPassword1&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String newPassword2 = request.getParameter(&quot;newPassword2&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ((password != null) &amp;&amp; (newPassword1 != null) &amp;&amp; (newPassword2 != null)) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ( newPassword1.equals(newPassword2)) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (usr != null) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String hashOfPasswd = 
+                        Utility.generatePasswordHash(password, salt, iterations, passwordHashedLength);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (hashOfPasswd.equals(usr.getHashOfPasswd())) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (Utility.isStrongPassword(newPassword1)) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String hashOfNewPasswd1 = 
+                                Utility.generatePasswordHash(
+                                    newPassword1, salt, iterations, passwordHashedLength);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; usr.setHashOfPasswd(hashOfNewPasswd1);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; merge(usr);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // everything is fine!
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; error = null;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; error = &quot;Your password must be at least 6 chars long &quot;+
+                                    &quot;and contain a small letter, a capital letter, &quot;+
+                                    &quot;a digit and a special character.&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; error = &quot;You entered the wrong password.&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; error = &quot;You must login before changing your password.&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; error = &quot;Your new passwords do not match.&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; error = &quot;You must enter all fields.&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return error;
+&nbsp;&nbsp;&nbsp; }</pre>
+<p>
+	Zum Schluß soll es ja solche Dödels geben die ihr Passwort vergessen.&nbsp; Die sollten dann wenigstens ihre Lieblingsfarbe wissen.&nbsp; Falls sie die wissen, bekommen sie eine Email, ansonsten behandeln wir sie wie Roboter:</p>
+<pre style="margin-left: 40px;">
+&nbsp;&nbsp;&nbsp; public String forgotPassword(String emailId, String favoriteColor) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; User usr = findById(emailId);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (usr != null) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (favoriteColor.equalsIgnoreCase(usr.getFavoriteColor())) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String verificationToken = Utility.createVerificationToken();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; usr.setVerificationToken(verificationToken);&nbsp;&nbsp;&nbsp; // make sure usr cannot login
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String passwd = Utility.createStrongPassword();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String hashOfPasswd = Utility.generatePasswordHash(
+                    passwd, salt, iterations, passwordHashedLength);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; usr.setHashOfPasswd(hashOfPasswd);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; merge(usr);
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String email = &quot;Your new password is: &quot; + passwd +&quot;&lt;br/&gt;&quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; email += &quot;Click on this link to verify your email identity: &quot;;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; email += &quot;&lt;a href=&#39;verifyEmail.jsp?emailId=&quot;+emailId+&quot;&amp;verificationToken=&quot;+
+                    verificationToken+&quot;&#39;&gt;link&lt;/a&gt;&quot;;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return email;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return null;
+&nbsp;&nbsp;&nbsp; }</pre>
+<p>
+	Das war jetzt ziemlicher schwerer Tobak, aber mit dem Top-Down Ansatz aus dem ersten Semester haben wir das auch geschafft.</p>
+<p>
+	Fassen wir noch einmal zusammen was wir gelernt haben:</p>
+<ul>
+	<li>
+		Datenbank Tabellen sollten nie &quot;User&quot; heißen</li>
+	<li>
+		die Datenbank initialisieren wir in <em>jspInit()</em> (allerdings nur zum Testen, sollte man nicht auf einer Production Maschine machen)</li>
+	<li>
+		die Logik ist idealerweise an einer Stelle <em>loginLogic.jsp</em> zusammengefasst</li>
+	<li>
+		die DAO kann sehr viel Arbeit erledigen</li>
+	<li>
+		den Workflow von Registration, Verification über Change Password hinzu Forgot Password</li>
+	<li>
+		security issues, hashing, regular expressions, strong passwords, passwordHashed, salt</li>
+	<li>
+		dem Nutzer Feedback bei falschen Eingaben geben kann</li>
+	<li>
+		wie man die Sessions verwendet um geschützte Seite zu schützen</li>
+	<li>
+		wie ein Verification Link funktioniert</li>
+	<li>
+		wie man aus einem Bytearray einen String generiert</li>
+</ul>
+<p>
+	Wenn man jetzt noch eine kleine Herausforderung sucht, dann könnte man sich überlegen was noch fehlt damit man zwei verschiedene Arten von Nutzern haben könnte, also z.B. normale Nutzer und solche mit Administratorrechten.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="http://127.0.0.1:8000../images/ChirprJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Chirpr</h2>
+<p>
+	Unser Mini-Soziales-Netzwerk Chirpr haben wir auch schon gegen Ende des ersten Kapitels vorgestellt.&nbsp; Die UI Seiten haben wir&nbsp; schon angelegt, es fehlt nur noch ein wenig Logik.&nbsp; Ein Teil davon&nbsp; passiert in der <em>chirprLogic,jsp</em> Seite:</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp;&nbsp; // user login
+&nbsp;&nbsp;&nbsp; if (request.getParameter(&quot;login&quot;) != null) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String emailId = request.getParameter(&quot;emailId&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ((emailId != null) &amp;&amp; (emailId.length() &gt; 3)) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // try to create a user object
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BirdDao brdDao = (BirdDao)application.getAttribute(&quot;Chirpr.BirdDao&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Bird brd = <span style="color:#0000ff;">brdDao.getBird(emailId)</span>;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (brd != null) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; session.setAttribute(&quot;Chirpr.Bird&quot;,brd);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; response.sendRedirect(&quot;protected.jsp&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; request.setAttribute(&quot;error&quot;, &quot;Your username must be at least 4 characters long.&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; request.getRequestDispatcher(&quot;index.jsp&quot;).forward(request, response);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return;
+&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; // chirp
+&nbsp;&nbsp;&nbsp; if (request.getParameter(&quot;chirp&quot;) != null) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Bird brd = (Bird)session.getAttribute(&quot;Chirpr.Bird&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ( brd != null) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String text = request.getParameter(&quot;text&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ((text != null) &amp;&amp; (text.length() &gt;= 5) &amp;&amp; (text.length() &lt;= 42)) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Chirp crp = new Chirp(text);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ChirpDao crpDao = (ChirpDao) application.getAttribute(&quot;Chirpr.ChirpDao&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">crpDao.save(crp);</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; brd.addChirp(crp);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BirdDao brdDao = (BirdDao)application.getAttribute(&quot;Chirpr.BirdDao&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">brdDao.merge(brd);</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TagDao tagDao = (TagDao)application.getAttribute(&quot;Chirpr.TagDao&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">tagDao.parseChirpForTags(crp);</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; response.sendRedirect(&quot;protected.jsp&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; // just make sure we did not forget an if or something
+&nbsp;&nbsp;&nbsp; response.sendRedirect(&quot;index.jsp&quot;);
+%&gt;</pre>
+<p>
+	Der andere Teil passiert in den Daos.</p>
+<h3>
+	<img alt="" src="images/ClassDiagrams_Chirpr.png" style="width: 200px; height: 119px; float: right; margin-right: 10px; margin-left: 10px;" />POJOs</h3>
+<p>
+	Bevor wir zu den Daos kommen, kümmern wir uns um die POJOs.&nbsp; Wir beginnen mit den Birds, also den Nutzern. Die Birds setzen Chirps ab, haben also keinen, einen oder mehrere, also eine OneToMany Beziehung.&nbsp; Ob man ein Set oder eine Liste als Container verwendet hängt davon ab ob einem die Reihenfolge der Chirps wichtig ist.&nbsp; Uns ist sie nicht wichtig.</p>
+<pre style="margin-left: 40px;">
+public class Bird {
+
+&nbsp;&nbsp;&nbsp; @Id
+&nbsp;&nbsp;&nbsp; private String emailId;
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">@OneToMany</span>
+&nbsp;&nbsp;&nbsp; private <span style="color:#0000ff;">Set&lt;Chirp&gt; chirps</span>;
+
+    ... constructors, getters, setters, toString
+}&nbsp;&nbsp; </pre>
+<p>
+	<img alt="" src="images/ChirprDB.png" style="width: 200px; height: 300px; float: right; margin-right: 10px; margin-left: 10px;" />Kommen wir zu den Chirps.&nbsp; Jeder Chirp kann Tags enthalten und jedes Tag kann in mehreren Chirps vorkommen, also eigentlich eine ManyToMany Beziehung.&nbsp; Wenn wir unsere Anforderungen aber genau durchlesen, gibt es niemals die Anforderung dass wir die Tags eines Chirps auflisten müssen.&nbsp; D.h. die Chirps müssen gar nichts über ihre Tags wissen.&nbsp; Das erlaubt es uns die viel komplexere ManyToMany Beziehung durch eine OneToMany Beziehung auf der Tag Seite zu ersetzen.</p>
+<pre style="margin-left: 40px;">
+public class Chirp {
+
+&nbsp;&nbsp;&nbsp; @Id
+&nbsp;&nbsp;&nbsp; @GeneratedValue(strategy = GenerationType.IDENTITY)
+&nbsp;&nbsp;&nbsp; private Long id;
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; @Column(length = 140, nullable = false)
+&nbsp;&nbsp;&nbsp; private String text;
+
+    ... constructors, getters, setters, toString
+}&nbsp;&nbsp; </pre>
+<p>
+	Und damit ergibt sich das Tag POJO:</p>
+<pre style="margin-left: 40px;">
+public class Tag {
+
+&nbsp;&nbsp;&nbsp; @Id
+&nbsp;&nbsp;&nbsp; private String tagId;
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">@OneToMany</span>
+&nbsp;&nbsp;&nbsp; private Set&lt;Chirp&gt; chirps;
+
+    ... constructors, getters, setters, toString
+}&nbsp;&nbsp; </pre>
+<p>
+	Das ist gar nicht so kompliziert, oder?</p>
+<h3>
+	DAOs</h3>
+<p>
+	Kommen wir zu den DAOs. Die BirdDao ist ganz einfach, wir haben nur eine Zusatzanforderung, wenn ein Bird noch nicht existiert, soll einfach ein neuer angelegt werden:</p>
+<pre style="margin-left: 40px;">
+public class BirdDao extends GenericDao&lt;String, Bird&gt; {
+
+&nbsp;&nbsp;&nbsp; public BirdDao() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; super();
+&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; public Bird getBird(String emailId) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Bird brd = findById(emailId);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (brd == null) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; brd = new Bird(emailId);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; save(brd);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return brd;
+&nbsp;&nbsp;&nbsp; }
+}</pre>
+<p>
+	Die ChirpDao übernimmt alle Eigenschaften der GenericDao und initialisiert die Datenbank mit zwei Birds und drei Chiprs:</p>
+<pre style="margin-left: 40px;">
+public class ChirpDao extends GenericDao&lt;Long, Chirp&gt; {
+
+&nbsp;&nbsp;&nbsp; public ChirpDao() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; super();
+&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; public void initDatabase(BirdDao brdDao,TagDao tagDao) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Bird bd1 = new Bird(&quot;ralph&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; brdDao.save(bd1);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Bird bd2 = new Bird(&quot;vince&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; brdDao.save(bd2);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Chirp cp1 = new Chirp(&quot;Welcome to #Chirpr&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; save(cp1);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; bd1.addChirp(cp1);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; tagDao.parseChirpForTags(cp1);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Chirp cp2 = new Chirp(&quot;#Java is the greatest!&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; save(cp2);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; bd2.addChirp(cp2);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; tagDao.parseChirpForTags(cp2);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Chirp cp3 = new Chirp(&quot;#Chirpr is written in #Java&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; save(cp3);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; bd2.addChirp(cp3);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; tagDao.parseChirpForTags(cp3);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; brdDao.merge(bd1);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; brdDao.merge(bd2);
+&nbsp;&nbsp;&nbsp; }
+}</pre>
+<p>
+	Schliesslich kommen wir zur TagDao.&nbsp; Hier übernehmen wir wieder alle Eigenschaften der GenericDao.&nbsp; Dann müssen wir aber noch zwei Dinge tun: erst einmal müssen wir in der Methode <em>parseChirpForTags()</em> einen Chirp nach Hash-Tags durchsuchen.&nbsp; Das machen wir mit einem Regulären Ausdruck (got to love them by now).&nbsp; Und wir müssen die Tags mit all ihren Chiprs speichern, das machen wir in <em>addChirpToTag()</em>.&nbsp;</p>
+<pre style="margin-left: 40px;">
+public class TagDao extends GenericDao&lt;String, Tag&gt; {
+
+&nbsp;&nbsp;&nbsp; public TagDao() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; super();
+&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; public void parseChirpForTags(Chirp crp) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Pattern pat = Pattern.compile(&quot;(^|\\s)\\#(\\w+)&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Matcher mat = pat.matcher(crp.getText());
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; while (mat.find()) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String tag = mat.group(2);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //System.out.println(&quot;.&quot;+tag+&quot;.&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; addChirpToTag(tag.toLowerCase(),crp);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; private void addChirpToTag(String tag, Chirp crp) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Tag tg = findById(tag);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ( tg == null ) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; tg = new Tag(tag);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; save(tg);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; tg.addChirp(crp);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; merge(tg);
+&nbsp;&nbsp;&nbsp; }
+}</pre>
+<p>
+	Und das wars dann eigentlich schon.</p>
+<h3>
+	Challenge</h3>
+<p>
+	Das Gefühl, dass alles immer einfach ist, kann manchmal täuschen.&nbsp; Nehmen wir an, wir hätten eine Anforderung die besagt, dass neben jedem Chirp der Bird (also Nutzer) stehen soll, der diesen Chirp geschrieben hat, z.B.</p>
+<pre style="margin-left: 40px;">
+#Java is the greatest! ralph
+</pre>
+<p>
+	Mit unserem momentanen Datenmodell ist diese Anforderung nicht zu erfüllen!&nbsp; Was müssten wir denn ändern damit das möglich wäre?&nbsp; Was wären denn die Konsequenzen?&nbsp; Ist es das wirklich wert?&nbsp; Das ist wieder unsere berühmte 80-20 Regel, auch Pareto Prinzip genannt.</p>
+<p>
+	.</p>
+<h2>
+	<img alt="" src="http://127.0.0.1:8000../images/QuizsJSP.png" style="width: 200px; height: 150px; float: right; margin-right: 10px; margin-left: 10px;" />Quizs</h2>
+<p>
+	Quizs ist eine Webanwendung mit der man anhand von Multiplechoice Fragen sein Wissen überprüfen kann.&nbsp; Ausserdem kann man auch Prüfungen erstellen.&nbsp; Auch diese Anwendung ist bereits aus dem ersten Semester bekannt, damals haben wir sie als Swing Anwendung programmiert aber ohne Datenbank.</p>
+<p>
+	Beginnen wir wieder mit unseren Anforderungen.&nbsp; Aus der Sicht eines Studierenden können wir</p>
+<ul>
+	<li>
+		uns identifizieren: login.jsp</li>
+	<li>
+		an einer Prüfung teilnehmen: exam.jsp</li>
+	<li>
+		die Resultate einsehen: results.jsp</li>
+	<li>
+		uns ausloggen: logout.jsp</li>
+</ul>
+<p>
+	Falls ein Studierender noch nicht exisitiert, wird einfach ein neuer angelegt.</p>
+<p>
+	Aus Sicht eines Lehrers können wir</p>
+<ul>
+	<li>
+		uns identifizieren: login.jsp</li>
+	<li>
+		neue Fragen erstellen: question.jsp</li>
+	<li>
+		neue Prüfungen erstellen: exam.jsp</li>
+	<li>
+		alle Studierende auflisten: results.jsp</li>
+	<li>
+		uns ausloggen: logout.jsp</li>
+</ul>
+<p>
+	Lehrer gibt es nur einen: den &#39;teacher&#39;.&nbsp; Wenn sich also jemand als mit der ID &#39;teacher&#39; einlogged, hat er die teacher Privilegien.&nbsp; Es gibt also zwei verschiedene Nutzer-Typen in dieser Webanwendung.</p>
+<h3>
+	JSPs</h3>
+<p>
+	Die UI Seiten haben wir ja schon angelegt.&nbsp; Ein wenig Logik passiert in der quizsLogic,jsp Seite:</p>
+<pre style="margin-left: 40px;">
+&lt;%
+&nbsp;&nbsp;&nbsp; // user login
+&nbsp;&nbsp;&nbsp; if (request.getParameter(&quot;login&quot;) != null) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String emailId = request.getParameter(&quot;emailId&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ((emailId != null) &amp;&amp; (emailId.length() &gt; 3)) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ( emailId.equals(&quot;teacher&quot;)) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; session.setAttribute(&quot;Quizs.Teacher&quot;,&quot;Teacher&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; response.sendRedirect(&quot;teacher/&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // try to create a user object
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; StudentDao stdntDao = (StudentDao)application.getAttribute(&quot;Quizs.StudentDao&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Student stdnt = stdntDao.getStudent(emailId);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (stdnt != null) {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; session.setAttribute(&quot;Quizs.Student&quot;,stdnt);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; response.sendRedirect(&quot;student/&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; request.setAttribute(&quot;error&quot;, &quot;Your username must be at least 4 characters long.&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; request.getRequestDispatcher(&quot;index.jsp&quot;).forward(request, response);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return;
+&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; // just make sure we did not forget an if or something
+&nbsp;&nbsp;&nbsp; response.sendRedirect(&quot;index.jsp&quot;);
+%&gt;</pre>
+<p>
+	Der Rest der Logik passiert in den Daos.</p>
+<h3>
+	POJOs</h3>
+<p>
+	In diesem Beispiel gibt es einige POJOs.&nbsp; Ein Student kann an Examen teilnehmen.&nbsp; Ein Examen besteht aus mehreren Fragen.&nbsp; Und jedes Examen hat Resultate.</p>
+<p>
+	Wir beginnen mit dem Question POJO, weil es das einfachste ist.&nbsp; Eine Frage hat mehrere Antworten, und Antworten sind einfache Strings.&nbsp; Bei den Antworten kommt es aber ausnahmsweise mal auf die Reihenfolge an, deswegen verwenden wir heute eine Liste:</p>
+<pre style="margin-left: 40px;">
+public class Question {
+
+&nbsp;&nbsp;&nbsp; @Id
+&nbsp;&nbsp;&nbsp; @GeneratedValue(strategy = GenerationType.IDENTITY)
+&nbsp;&nbsp;&nbsp; private Long id;
+
+&nbsp;&nbsp;&nbsp; @Column(nullable = false)
+&nbsp;&nbsp;&nbsp; private String question;
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">@ElementCollection</span>
+&nbsp;&nbsp;&nbsp; @Column(nullable = false)
+&nbsp;&nbsp;&nbsp; private <span style="color:#0000ff;">List&lt;String&gt; answers</span>;
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; @Column(nullable = false)
+&nbsp;&nbsp;&nbsp; private Integer correctAnswer;
+
+    ... constructors, getters, setters, toString
+}&nbsp;&nbsp; </pre>
+<p>
+	&nbsp;</p>
+<p>
+	<img alt="" src="images/QuizsDB.png" style="width: 200px; height: 450px; float: right; margin-right: 10px; margin-left: 10px;" />Ein Exam besteht aus mehreren Fragen, und da eine Frage durchaus in verschiedenen Exams sein darf, handelt es sich um eine ManyToMany Beziehung.&nbsp; Auch hier wollen wir, dass die Reihenfolge festgelegt ist, deswegen eine Liste als Datentyp:</p>
+<pre style="margin-left: 40px;">
+public class Exam {
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; @Id
+&nbsp;&nbsp;&nbsp; private String examName;
+
+&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">@ManyToMany</span>
+&nbsp;&nbsp;&nbsp; private <span style="color:#0000ff;">List&lt;Question&gt; questions</span>;
+
+    ... constructors, getters, setters, toString
+}&nbsp;&nbsp; &nbsp;&nbsp; </pre>
+<p>
+	Für die Resultate eines Exams verwenden wir das Result POJO.&nbsp; Resultate gehören immer zu einem Exam, deswegen eine OneToOne Beziehung zwischen Result und Exam.&nbsp; Muss diese <em>unique</em> sein?&nbsp; Die Antwort ist nein, da ja zwei Studierende am gleichen Exam teilnehmen können, aber durchaus zwei unterschiedliche Resultate erziehlen können.&nbsp; Kommen wir zu den Antworten:&nbsp; das sind die Antworten die der Studierende abgegeben hat.&nbsp; In diesem Fall ist unsere Collection eine Map, in der wir die Id der Frage der Key ist und die Antwort die der Studierende gegeben hat der Value.</p>
+<pre style="margin-left: 40px;">
+public class Result {
+&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; @Id
+&nbsp;&nbsp;&nbsp; @GeneratedValue(strategy = GenerationType.IDENTITY)
+&nbsp;&nbsp;&nbsp; private Long id;
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">@OneToOne</span>
+&nbsp;&nbsp;&nbsp; private <span style="color:#0000ff;">Exam exam</span>;
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">@ElementCollection</span>
+&nbsp;&nbsp;&nbsp; @Column(nullable = true)
+&nbsp;&nbsp;&nbsp; private <span style="color:#0000ff;">Map&lt;Long,Integer&gt; questionIdAnswerIdMap</span>;
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; @Column(nullable = false)
+&nbsp;&nbsp;&nbsp; private Date dateTestTaken;
+
+    ... constructors, getters, setters, toString
+}&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; </pre>
+<p>
+	Zum Schluß fehlt noch das Student POJO: ein Studierender muss über seine Resultate Bescheid wissen.&nbsp; Da ein Studierender an mehreren Tests teilnehmen kann ist es entweder eine OneToMany oder eine ManyToMany Beziehung.&nbsp; Fragt sich, ob ein bestimmtes Resultat eines bestimmten Tests zu mehr als einem Studierenden gehören kann.&nbsp; Da wir keine Gruppenarbeit zulassen wollen, ist die Antwort nein, und deswegen handelt es sich um eine OneToMany Beziehung.</p>
+<pre style="margin-left: 40px;">
+public class Student {
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; @Id
+&nbsp;&nbsp;&nbsp; private String emailId;
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; <span style="color:#0000ff;">@OneToMany</span>
+&nbsp;&nbsp;&nbsp; private <span style="color:#0000ff;">Set&lt;Result&gt; examResults</span>;
+
+    ... constructors, getters, setters, toString
+}&nbsp;&nbsp; </pre>
+<p>
+	Bei so vielen POJOs kann man schon den Überblick verlieren, da hilft ein Klassendiagramm die Übersicht zu bewahren.&nbsp;</p>
+<p>
+	<img alt="" src="images/ClassDiagrams_Quizs.png" style="margin-left: 10px; margin-right: 10px; width: 431px; height: 74px;" /></p>
+<p>
+	Interessanterweise ist das um einiges einfacher als das korrespondierende Entity Relationship Diagramm (ERD):</p>
+<p>
+	<img alt="" src="images/Quizs_ERD.png" style="margin-left: 10px; margin-right: 10px; width: 621px; height: 258px;" /></p>
+<p>
+	Aber natürlich ist das ERD genauer, es enthält mehr Information.</p>
+<h3>
+	DAOs</h3>
+<p>
+	Kommen wir zu den Daos.&nbsp; Die QuestionDao ist trivial:</p>
+<pre style="margin-left: 40px;">
+public class QuestionDao extends GenericDao&lt;Long, Question&gt;&nbsp; {
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; public QuestionDao() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; super();
+&nbsp;&nbsp;&nbsp; }
+}</pre>
+<p>
+	ebenso die ResultDao:</p>
+<pre style="margin-left: 40px;">
+public class ResultDao extends GenericDao&lt;Long, Result&gt;&nbsp; {
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; public ResultDao() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; super();
+&nbsp;&nbsp;&nbsp; }
+}</pre>
+<p>
+	Die ExamDao ist nur etwas komplizierter, aber nur weil wir die Datenbank mit wenigstens einem Exam initialisieren wollen:</p>
+<pre style="margin-left: 40px;">
+public class ExamDao extends GenericDao&lt;String, Exam&gt;&nbsp; {
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; public ExamDao() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; super();
+&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; public void initDatabase(QuestionDao qstnDao) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; List&lt;String&gt; anss1 = new ArrayList&lt;String&gt;();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; anss1.add(&quot;1&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; anss1.add(&quot;2&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; anss1.add(&quot;4&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Question q1 = new Question(&quot;What is 1 + 1?&quot;, anss1, 2);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; qstnDao.save(q1);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; List&lt;String&gt; anss2 = new ArrayList&lt;String&gt;();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; anss2.add(&quot;red&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; anss2.add(&quot;black&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; anss2.add(&quot;blue&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Question q2 = new Question(&quot;Which color is the sky?&quot;, anss2, 3);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; qstnDao.save(q2);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Exam ex = new Exam(&quot;Simple Exam&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ex.addQuestion(q1);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ex.addQuestion(q2);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; save(ex);
+&nbsp;&nbsp;&nbsp; }
+}</pre>
+<p>
+	Die StudentDao ist auch nicht besonders kompliziert.&nbsp; Auch hier wollen wir zwei Studenten vorinstallieren und wir überschreiben die <em>getStudent()</em> Methode, denn wir möchten, dass Studenten einfach neu angelegt werden, falls sie noch nicht exisiterien sollten.</p>
+<pre style="margin-left: 40px;">
+public class StudentDao extends GenericDao&lt;String, Student&gt;&nbsp; {
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; public StudentDao() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; super();
+&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; public Student getStudent(String emailId) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Student stdnt = findById(emailId);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (stdnt == null) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; stdnt = new Student(emailId);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; save(stdnt);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return stdnt;
+&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp; public void initDatabase() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Student st1 = new Student(&quot;ralph&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; save(st1);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Student st2 = new Student(&quot;vince&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; save(st2);
+&nbsp;&nbsp;&nbsp; }
+}</pre>
+<p>
+	Nach diesem Projekt sollte uns eines klar geworden sein: dadurch dass wir unsere Webanwendungen in kleine Teilprojekte zerlegen (Top-Down lässt grüßen) und dass wir die UI vom Datenmodell und Businesslogik trennen (View-Model-Controller), lassen sich selbst ursprünglich komplex anmutende Anwendung relativ problemlos implementieren.</p>
+<p>
+	.</p>
+<hr />
+<h1>
+	Research</h1>
+<p>
+	Manche Themen habe wir hier nur sehr oberflächlich behandelt.&nbsp; Man könnte sich aber das eine oder andere noch etwas detailierter ansehen.</p>
+<p>
+	.</p>
+<h2>
+	ORM Engines</h2>
+<p>
+	Hibernate ist nicht die einzige ORM Engine.&nbsp; Um sicher zu gehen, dass wir mit Hibernate auch eine gute Wahl getroffen haben, sollten wir erst einmal die alternativen ORM Engines für Java finden, und dann die wichtigsten vergleichen.&nbsp; Ausserdem sollten wir mal nach ORM Engines für andere Programmiersprachen wie ASP, PHP oder Python suchen.&nbsp; Falls eine Sprache keine ORM Engines hat, sollte man die Finger davon lassen.</p>
+<p>
+	.</p>
+<h2>
+	NoSql</h2>
+<p>
+	Unter dem Kürzel &quot;NoSql&quot; sind in den letzten Jahren sehr viele neue Datenbankkonzepte eingeführt worden.&nbsp; Bevor man sich allerdings blindlings auf das &quot;Neue&quot; stürzt, sollte man erst einmal wissen worauf man sich da einlässt und was eigentlich dahinter steckt.&nbsp; Eine Frage die uns natürlich interessiert, kann man ORM auch mit einer NoSql Datenbank verwenden, und macht das überhaupt Sinn?</p>
+<p>
+	.</p>
+<hr />
+<h1>
+	Fragen</h1>
+<ol>
+	<li>
+		Was ist ein POJO? Wofür steht &ldquo;POJO&rdquo;? Wofür sind POJOs nützlich?<br />
+		&nbsp;</li>
+	<li>
+		Schreiben Sie eine Klasse Book und fügen Sie Hibernate Annotationen hinzu. Die Klasse Book sollte die folgenden Eigenschaften haben: title, author und price. Achten Sie darauf dass Sie auch die Konstruktoren mit angeben. Bei den Gettern und Settern können Sie davon ausgehen, dass diese autogeneriert wurden.&nbsp; Hinweis, die folgenden Annotationen könnten hilfreich sein:<br />
+		@Column(length = 32000, nullable = false)<br />
+		@Entity<br />
+		@Gene<br />
+		&nbsp;</li>
+	<li>
+		Vergleichen Sie die normale Art und Weise mit Datenbanken zu arbeiten (also SQL) mit der objekt-orientierten Art und Weise (also ORM). Nennen Sie je zwei Vorteile.<br />
+		&nbsp;</li>
+	<li>
+		Was ist beim Speichern von Passwörtern in Datenbanken zu beachten, oder wie würden Sie Passwörter in einer Datenbank speichern?<br />
+		&nbsp;</li>
+	<li>
+		Zeigen Sie anhand eines konkreten Beispiels (z.B. Usern und ihren Email Addressen) den Unterschied zwischen One-to-One, Many-to-One und Many-to-Many Beziehungen. Geben Sie für jede konkrete Beispiele wie die Tabellen in der Datenbank aussehen. Beschreiben Sie auch genau welche evtl Constraints auf den jeweiligen Spalten (Columns) liegen müssen.<br />
+		&nbsp;</li>
+	<li>
+		Nennen Sie vier Gründe, warum man keine binären Dateien in der Datenbank speichern sollte.&nbsp; Nennen Sie einen warum es evtl manchmal doch Sinn macht.<br />
+		&nbsp;</li>
+	<li>
+		Angenommen eine Seite fragt Sie nach Benutzernamen und Passwort.&nbsp; Sie haben aber sowohl Ihren Benutzernamen als auch Ihr Passwort vergessen.&nbsp; Was müssten Sie tun um sich mittels SQL Injection trotzdem einloggen zu können?&nbsp; Ist dieses Vorgehen legal?<br />
+		&nbsp;</li>
+	<li>
+		Erklären Sie bitte wie SQL Injektion funktioniert (geben Sie evtl ein Beispiel) und nennen Sie drei Möglichkeiten wie man SQL Injektion verhindern kann.<br />
+		&nbsp;</li>
+	<li>
+		In diesem Kapitel habe wir viel mit Hibernate gearbeitet.&nbsp; Dabei haben wir die folgenden Dateien generiert oder verwendet.&nbsp; Erklären Sie bitte was diese enthalten, und wofür sie benötigt werden, evtl mit Beispiel:<br />
+		hibernate.cfg.xml:<br />
+		HibernateUtil.java:<br />
+		User.java:<br />
+		UserDao.java</li>
+</ol>
+<p>
+	.</p>
+<hr />
+<h1>
+	Referenzen</h1>
+<p>
+	Alles was mit Hibernate zu tun hat findet man in Referenz [1].&nbsp; Einen kleinen Überblick was sich mit D3JS anstellen lässt gibt [2].</p>
+<p>
+	[1] HIBERNATE - Relational Persistence for Idiomatic Java, Hibernate Reference Documentation, https://docs.jboss.org/hibernate/orm/3.6/reference/en-US/html/index.html</p>
+<p>
+	[2] D3.js - Data-Driven Documents, https://d3js.org</p>
+<p>
+	[3] Mike Bostock&rsquo;s Block, Line Chart, https://bl.ocks.org/mbostock/3883245</p>
+<p>
+	.</p>
+<p class="footer">
+Copyright &copy; 2016-2021 <a href="http://www.lano.de">Ralph P. Lano</a>.  All rights reserved.
+</p>
+</div>
+</center>
+</div>
+</body>
+</html>

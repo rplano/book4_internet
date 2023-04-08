@@ -1,0 +1,182 @@
+<!DOCTYPE html><html lang="de"><head>
+  <title>Variationen zum Thema: Internet</title>
+  <meta name="title" content="Variationen zum Thema: Internet">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta charset="UTF-8">
+  <meta name="description" content="Eine Einführung in Java Enterprise">
+  <meta name="keywords" content="Java Enterprise,Internet,Einführung">
+  <meta name="author" content="Ralph P. Lano">
+  <meta name="robots" content="index,follow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="book.css">
+</head>
+<body><center>
+<div id="wrap">
+	<ul class="sidenav">
+	  <p><a href="index.html">Variationen zum Thema</a><a href="index.html">Internet</a></p>
+	  <li><a href="Basics.html">Basics</a></li>
+	  <li><a href="JSP.html">JSP</a></li>
+	  <li><a href="Request.html">Request</a></li>
+	  <li><a href="Session.html">Session</a></li>
+	  <li><a href="Database.html">Database</a></li>
+	  <li><a href="Services.html">Services</a></li>
+	  <li><a href="Projects.html" class="active">Projects</a></li>
+	  <li><a href="NetBeans.html">NetBeans</a></li>
+	  <li><a href="JavaScript.html">JavaScript</a></li>
+	</ul>
+<div class="content"><h1>
+	Projects</h1>
+<p>
+	Falls man noch nach anderen Ideen für mögliche Projekte sucht wollen wir im folgenden einige auflisten, die man ohne große Problem mit dem Gelernten realisieren kann.</p>
+<h3>
+	Temperature</h3>
+<p>
+	Ein Programm das Fahrenheit in Celsius umrechnet.&nbsp; Der Nutzer gibt die Temperatur in Fahrenheit ein und mittels der Formel</p>
+<pre>
+    int c = (int) ( (5.0 / 9.0) * (f - 32) );</pre>
+<p>
+	können wir die Temperatur in Celsius umrechnen.</p>
+<h3>
+	LeapYear</h3>
+<p>
+	Mit der Formel aus dem ersten Semester können wir feststellen ob ein Jahr ein Schaltjahr ist.&nbsp; Der Nutzer gibt ein Jahr ein, vielleicht sein Geburtsjahr, und wir geben dann aus, ab es sich bei dem Jahr um ein Schaltjahr handelt.</p>
+<h3>
+	YearlyRate</h3>
+<p>
+	Es geht darum zu berechnen wie hoch die jährliche Rate ist, wenn man einen Kredit nach einer gewissen Laufzeit zu einem gewissen Zinssatz abbezahlt haben will.&nbsp;&nbsp; Karel will sich ein Auto kaufen, deswegen hat er angefangen zu sparen.&nbsp; Er will sich einen Mini kaufen (Mercedes ist zu teuer), und er hat einen gebrauchten für 5000 Euro gesehen.&nbsp; Er hat einen günstigen Kredit bei einer Bank von 5% pro Jahr gesehen.&nbsp; Wie hoch ist seine jährliche Rate, wenn er den Kredit in 5 Jahren abbezahlt haben will?&nbsp; Karel braucht also ein Programm bei dem er die Kreditsumme (k) eingeben kann, den Zinssatz (z) und die Laufzeit in Jahren (n).&nbsp; Das Programm soll ihm dann sagen wie hoch seine jährliche Rate (y) ist:</p>
+<pre>
+&nbsp;&nbsp; &nbsp;double q = 1.0 + z;
+&nbsp;&nbsp; &nbsp;double qn = Math.pow(q, n);    // q^n
+&nbsp;&nbsp; &nbsp;double y = k * qn * (q-1) / (qn-1);</pre>
+<p>
+	Die Formel dafür kann man in der Wikipedia unter Sparkassenformel nachsehen.</p>
+<h3>
+	Roulette</h3>
+<p>
+	In einer vereinfachten Version von Roulette spielt ein Spieler gegen den Computer.&nbsp; Der Spieler kann auf <em>odd</em> oder <em>even</em> (oder <em>high</em> oder <em>low</em>) setzen.&nbsp; Der Computer wählt dann eine Zufallszahl zwischen 0 und 36.&nbsp; In einem zweiten Schritt, könnte man noch mit Credits spielen.&nbsp; Der Spieler erhält am Anfang 100 Credits, und falls er gewinnt erhält er 10 zusätzliche Credits, falls er verliert werden 10 Credits abgezogen.&nbsp; Schliesslich könnte man auch noch ein MultiPlayer Spiel daraus machen.</p>
+<h3>
+	BlackJack</h3>
+<p>
+	Auch Black Jack können wir in einer etwas vereinfachten Version implementieren.&nbsp; Anstelle von Karten verwenden wir einfach Zahlen, und zwar Zahlen zwischen 1 und 11.&nbsp; Der Computer spielt den Croupier und beginnt indem er eine Zufallszahl zwischen 17 und 25 erzeugt. Dann ist der Spieler an der Reihe.&nbsp; Dieser fängt mit einer Karte an, also eine Zufallszahl zwischen 1 und 11.&nbsp; Er kann dann entscheiden ob er noch eine Karte möchte.&nbsp; Falls ja, wird wieder eine Zufallszahl zwischen 1 und 11 erzeugt und zur momentanen &quot;Hand&quot; hinzuaddiert.&nbsp; Wenn der Spieler keine neue Karte mehr haben möchte, wird die &quot;Hand&quot; des Spielers mit der des Computers verglichen.&nbsp; Gewonnen hat derjenige der 21 Punkte oder weniger hat und mehr als der andere.&nbsp; Ansonsten ist es ein Unentschieden.</p>
+<h3>
+	BattleShip</h3>
+<p>
+	Im ersten Semester haben wir den Spieleklassiker Schiffeversenken umgesetzt.&nbsp; Ähnlich wie TicTacToe oder Mines können wir das auch als Webanwendung realisieren.</p>
+<h3>
+	TicTacToe - Two Players</h3>
+<p>
+	In Kapitel vier haben wir die Single-Player Variante implementiert.&nbsp; Wie wäre es mit eine Zwei-Spieler Variante?&nbsp; Wahrscheinlich macht es vorher Sinn sich den TwoPlayer Chat noch einmal anzusehen.&nbsp; Ähnlich könnte man auch andere Spiele wie Dame, Schach und Go implementieren.</p>
+<h3>
+	ESP Game</h3>
+<p>
+	Das ESP Spiel wurde von Luis van Ahn, Professor an der Carnegie Mellon University, erfunden.&nbsp; Es handelt sich um eine TwoPlayer Game um Bilder zu klassifizieren.&nbsp; Um zu sehen worum es geht, sollte man seine Präsentation im Rahmen der Google TechTalks ansehen: https://www.youtube.com/watch?v=tx082gDwGcM</p>
+<h3>
+	Translate</h3>
+<p>
+	Google Translate hat auch einfach angefangen.&nbsp; In einer einfachen Version könnte man basierend auf dem Dictionary Beispiel, einen Internet-Übersetzungsservice anbieten.&nbsp; Einmal mit einem Webinterface, dass eingegebenen Text einfach Wort für Wort übersetzt.&nbsp; Daraus könnte man aber auch einen Web Service machen.&nbsp; Später könnte man auch eine Version schreiben, in der Nutzer neue Wörter hinzufügen könnten.</p>
+<h3>
+	SpellChecker</h3>
+<p>
+	Ein Service der die Rechtschreibung überprüft.&nbsp; Man würde das auf dem Dictionary Beispiel aufbauen, eine einfache Version würde einfach auf einem HashSet basieren.&nbsp; Wahrscheinlich wäre eine englische Version einfacher.&nbsp; Evtl. sind die folgenden beiden Resourcen hilfreich: Aspell, http://freedict.org/de/, http://sourceforge.net/projects/freedict/files/ und stackoverflow.com/questions/2294915/what-algorithm-gives-suggestions-in-a-spell-checker.</p>
+<h3>
+	Eliza</h3>
+<p>
+	Im ersten Semester haben wir den Psychiater Eliza kennengelernt.&nbsp; Natürlich könnte man daraus auch eine Webanwendung machen.</p>
+<h3>
+	ToDo List</h3>
+<p>
+	Eine einfach ToDo Liste in der jeder Nutzer seine eigenen ToDos listen kann.&nbsp; Evtl. wäre auch eine Priorisierung wünschenswert.&nbsp;</p>
+<h3>
+	Calendar</h3>
+<p>
+	Die Anwendung soll es einem Nutzer erlauben seinen Kalendar zu managen.&nbsp; Dazu gehört neue Einträge anlegen, löschen und auch die Ausgabe des Kalendars, evtl. mit Druckfunktion.&nbsp; Eine spätere Version könnte auch Email Reminders beinhalten.&nbsp; Auf jeden Fall sollte auch ein Web Service existieren, um eine spätere Anbindung an ein mobiles Endgerät zu ermöglichen.</p>
+<h3>
+	PhoneBook</h3>
+<p>
+	Es geht darum seine Adressen und Telefonnummern zu managen.&nbsp; Auch hier sollte wieder ein Web Service existieren, um eine spätere Anbindung an ein mobiles Endgerät zu ermöglichen.&nbsp; Es sollte auch möglich sein beliebige Key-Value Pairs zu speichern.&nbsp; Und eine Suche wäre auch praktisch.</p>
+<h3>
+	TimeSheet</h3>
+<p>
+	Wenn man als Freelancer arbeitet oder auch in manchen Firmen, muss man aufschreiben wieviel Zeit man für welches Projekt verwendet hat.&nbsp; Dies soll eine kleine Webanwendung werden, in der Nutzer ganz einfach ihre Zeiten managen können.&nbsp; Ein Web Service Interface wäre bestimmt auch nicht schlecht.</p>
+<h3>
+	StoreSecrets</h3>
+<p>
+	Heutzutage hat jeder zig Passwörter und PINs die man sich merken muss.&nbsp; Und kann man den Anwendungen die man da so im Internet oder auf dem Handy hat wirklich trauen?&nbsp; Deswegn nach dem Motto &quot;Max Selber&quot; wollen wir eine Webanwendung zum speichern von Passwörtern und anderen Geheimnissen schreiben.</p>
+<h3>
+	Votes</h3>
+<p>
+	Die Idee hinter Votes ist eine Art Umfrage, die es erlaubt mehrere Nutzer bzgl. eines bestimmte Themas abzustimmen.&nbsp; Sollte per Einladung über einen Weblink oder QR Code funktionieren.</p>
+<h3>
+	Who Has My Stuff</h3>
+<p>
+	Wenn man wie ich vielen Leuten viele Sachen ausleiht verliert man leicht den Überblick wem man was geliehen hat.&nbsp; Hier könnte eine einfache Webapp abhilfe schaffen.</p>
+<h3>
+	Library</h3>
+<p>
+	Wir haben im ersten Semester die Anforderungen für eine einfache Bibliothek erarbeitet.&nbsp; Jetzt könnten wir selbige als Webanwendung umsetzen.</p>
+<h3>
+	University</h3>
+<p>
+	Auch aus dem ersten Semester stammt die Idee eines universitären Studenten-Management Systems.&nbsp; Es geht einfach darum den Fortschritt von Studierenden während des Studiums zu managen.</p>
+<h3>
+	Doodle</h3>
+<p>
+	Bei der Webanwendung Doodle (doodle.com) geht es darum gemeinsame Termine für Meetings und Ähnliches zu finden.&nbsp; Es dürfte kein Problem sein eine ähnliche Anwendung mit dem hier gelernten umzusetzen.</p>
+<h3>
+	Flickr</h3>
+<p>
+	Flickr (flickr.com) ist eine Webanwendung zum Hochladen und Verwalten von Bildern.&nbsp; Jeder Nutzer sollte seinen eigenen Bereich haben, es sollte aber auch einen gemeinsamen Bereich geben.&nbsp; Bilder können privat, aber auch öffentlich sein.&nbsp; Und es könnte ein Ranking/Voting System geben mit dem man Bilder bewerten kann.&nbsp; Natürlich sollte es auch als Webservice zur Verfügung stehen um mobile Geräte direkt einbinden zu können.</p>
+<h3>
+	Facebook</h3>
+<p>
+	Inzwischen kennt Facebook (facebook.com) fast niemand mehr, aber die Idee war eigentlich ganz cool: seinem zukünftigen Arbeitgeber seine schlimmsten Seiten zu zeigen.&nbsp; Im Prinzip ist es ein ähnliches Konzept wie unsere Chirpr Anwendung.&nbsp; Es gibt Nutzer, Freunde und Gruppen, und jeder kann News posten.&nbsp; Das Ganze kann man dann zeitlich sortieren und nennt es Timeline.</p>
+<h3>
+	Stack Overflow</h3>
+<p>
+	Stack Overflow (stackoverflow.com) ist ein Beispiel für eine spezialisierte Form der klassischen NewsGroup.&nbsp; Ein Nutzer stellt eine Frage, idealerweise mit einigen Keywords assoziiert, und andere Nutzer können die Frage beantworten.&nbsp; Man kann dann noch ein Votingsystem einführen, etc., etc.</p>
+<h3>
+	Shop</h3>
+<p>
+	Ein einfacher Shop, z.B. für Bücher, CDs oder Lebensmittel.&nbsp; In einer einfachen Version ist das Inventar fest vorgegeben.&nbsp; Der Nutzer kann aber Sachen in einen Warenkorb legen und kaufen.&nbsp; In einer späteren Version könnte es auch ein Interface für den Händler geben, damit er neues Inventar anlegen kann, etc.</p>
+<h3>
+	Bugs</h3>
+<p>
+	Ein Tool zum Melden von Bugs, also Fehlern in einem Programm.&nbsp; Die Bugs bekommen eine Nummer, werden dann einem Mitarbeiter zugeordnet, und nachdem sie bearbeitet wurden, bekommt der Melder eine Nachricht.&nbsp; Man sollte u.a. alle offenen Bugs auflisten können.&nbsp; Das Ganze sollte natürlich für mehrere Projekte möglich sein.&nbsp;</p>
+<h3>
+	Bank</h3>
+<p>
+	Die Idee hier ist eine Spiel-Bank Anwendung zu schreiben.&nbsp; Kunden haben Konten und können einander Geld überweisen.&nbsp; Das ist eine sehr interessante Anwendung, denn beim Überweisen von Geld kann verdammt viel schief gehen.&nbsp; Da muss man viel nachdenken, damit auch wirklich nichts schief geht.&nbsp; Der nächste Schritt wäre dann sich ein bischen in Bitcoins einzulesen (z.B. <em>Bitcoin and Cryptocurrency Technologies</em>).</p>
+<h3>
+	Hospital</h3>
+<p>
+	In einem Krankenhaus gibt es Patienten und Doktoren.&nbsp; Jeder Patient hat eine Krankenakte, und die Doktoren dürfen da drin rumschreiben.&nbsp;</p>
+<h3>
+	Recipies</h3>
+<p>
+	Es geht um das Sammeln von Rezepten.&nbsp; Dabei könnte jeder Nutzer seine eigenen Rezepte haben, es könnte aber auch die Möglichkeit geben, das Rezepte global sind, also für jeden einsehbar.&nbsp; Natürlich sollten Rezepte auch Bilder haben, sonst schmecken sie nicht so gut.&nbsp; Man könnte sich auch Erweiterungen ausdenken, wir ein Voting System.&nbsp;</p>
+<h3>
+	Classifieds</h3>
+<p>
+	Bei Kleinanzeigen geht es darum irgendetwas zu verkaufen, anzubieten oder zu finden.&nbsp; Hier gibt es Nutzer und Anzeigen.&nbsp; Anzeigen sollten einen Titel, eine Kategorie, einen Text und ein Verfallsdatum haben.&nbsp; Das Ganze sollte natürlich durchsuchbar sein.&nbsp; Was Kleinanzeigen auch ausmacht ist, dass sie meist lokal sind, deswegen könnte man in einer Erweiterung auch noch den Ort/Lokation mit aufnehmen.&nbsp;</p>
+<h3>
+	Document / Image Management System</h3>
+<p>
+	Ein einfaches Dokumenten-Managementsystem erlaubt es einem auf seine Dokumente über ein Webinterface zuzugreifen.&nbsp; Dokumente sollten nach Namen, Schlüsselwörtern und evtl. Inhalt klassifiziert werden, damit man sie auch durchsuchen kann.&nbsp; Ein WebService zur Anbindung mobiler Endgeräte könnte sinnvoll sein.</p>
+<h3>
+	Crossword Puzzle</h3>
+<p>
+	Im zweiten Semester haben wir gesehen wie wir Kreuzworträtsel mit Hilfe der <em>Trie</em> Datenstruktur erzeugen können.&nbsp; Was uns aber fehlt sind die Inhalte.&nbsp; In diesem Projekt, sollen Nutzer Fragen und Antworten für Kreuzworträtsel eingeben können, und daraus dann Kreuzworträtsel generieren lassen können.&nbsp; Die Fragen sollten öffentlich sein, damit jeder sie nutzen kann.&nbsp; Evtl. macht es bei jeder Frage einen Schwierigkeitsgrad mit anzugeben.&nbsp; Auch ein Voting System vielleicht inspiriert von Stack Overflow könnte hilfreich sein.</p>
+<h3>
+	Newspaper</h3>
+<p>
+	Bei Newspaper geht es um eine Zeitung, z.B. eine Mitarbeiter- oder Vereinszeitung.&nbsp; Es gibt Autoren und Artikel, sowie Ausgaben.&nbsp; Evtl. macht es auch Sinn einen Administrator zu haben.&nbsp; Auf jeden Fall sollte es die Möglichkeit geben eine gedruckte Version der Zeitung zu erstellen.&nbsp; Hierfür gibt es in CSS die @media Regel &quot;@media print&quot;.</p>
+<p>
+	.</p>
+<p class="footer">
+Copyright &copy; 2016-2021 <a href="http://www.lano.de">Ralph P. Lano</a>.  All rights reserved.
+</p>
+</div>
+</center>
+</div>
+</body>
+</html>
